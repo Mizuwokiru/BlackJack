@@ -23,7 +23,7 @@ namespace BlackJack.DataAccess.Entities
         /// <summary>
         /// Player list.
         /// </summary>
-        public List<Player> Players { get; set; }
+        public ICollection<Player> Players { get; set; }
 
         /// <summary>
         /// Game winner.
@@ -36,7 +36,7 @@ namespace BlackJack.DataAccess.Entities
         public Player Loser { get; set; }
 
         /// <summary>
-        /// Game rounds.
+        /// Game rounds list.
         /// </summary>
         public ICollection<Round> Rounds { get; set; }
     }

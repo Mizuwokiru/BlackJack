@@ -1,4 +1,6 @@
-﻿namespace BlackJack.DataAccess.Entities
+﻿using System.Collections.Generic;
+
+namespace BlackJack.DataAccess.Entities
 {
     public class Player
     {
@@ -11,5 +13,10 @@
         /// Player name.
         /// </summary>
         public string Name { get; set; }
+
+        /// <summary>
+        /// Game list.
+        /// </summary>
+        public ICollection<Game> Games { get; set; }
     }
 }
