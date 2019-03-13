@@ -2,21 +2,20 @@
 
 namespace BlackJack.DataAccess.Entities
 {
-    public class Player
+    public class Player : IIdentifiable
     {
-        /// <summary>
-        /// Player identifier.
-        /// </summary>
         public int Id { get; set; }
 
-        /// <summary>
-        /// Player name.
-        /// </summary>
-        public string Name { get; set; }
+        public Round Round { get; set; }
 
-        /// <summary>
-        /// Game list.
-        /// </summary>
-        public ICollection<Game> Games { get; set; }
+        public User User { get; set; }
+
+        public bool IsDealer { get; set; }
+
+        public ICollection<GottenCard> GottenCards { get; set; }
+
+        public decimal Bet { get; set; }
+
+        public decimal Cash { get; set; }
     }
 }
