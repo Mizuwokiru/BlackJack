@@ -7,12 +7,13 @@ namespace BlackJack.DataAccess.EF
     {
         private const string ConnectionString = @"Data Source=(LocalDb)\MSSQLLocalDB;Database=BlackJack";
 
-        public DbSet<Game> Games { get; set; }
-        public DbSet<User> Users { get; set; }
-        public DbSet<Round> Rounds { get; set; }
         public DbSet<Player> Players { get; set; }
-        public DbSet<GottenCard> GottenCards { get; set; }
-        public DbSet<Card> Card { get; set; }
+        public DbSet<Game> Games { get; set; }
+        public DbSet<GamePlayer> GamePlayers { get; set; }
+        public DbSet<Round> Rounds { get; set; }
+        public DbSet<RoundGamePlayer> RoundGamePlayers { get; set; }
+        public DbSet<Card> Cards { get; set; }
+        public DbSet<RoundGamePlayerCard> RoundGamePlayerCards { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

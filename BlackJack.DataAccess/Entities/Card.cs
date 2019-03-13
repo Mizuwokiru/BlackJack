@@ -2,10 +2,8 @@
 
 namespace BlackJack.DataAccess.Entities
 {
-    public class Card : IIdentifiable
+    public class Card : BaseEntity
     {
-        public int Id { get; set; }
-
         public string Name { get; set; }
 
         public Suit Suit { get; set; }
