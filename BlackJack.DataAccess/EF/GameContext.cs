@@ -11,8 +11,9 @@ namespace BlackJack.DataAccess.EF
         public DbSet<Game> Games { get; set; }
         public DbSet<GamePlayer> GamePlayers { get; set; }
         public DbSet<Round> Rounds { get; set; }
+        public DbSet<RoundPlayer> RoundPlayers { get; set; }
         public DbSet<Card> Cards { get; set; }
-        public DbSet<RoundGamePlayerCard> RoundGamePlayerCards { get; set; }
+        public DbSet<RoundPlayerCard> RoundPlayerCards { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

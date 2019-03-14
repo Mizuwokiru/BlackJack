@@ -10,11 +10,11 @@ namespace BlackJack.DataAccess.Entities
         public int Id { get; set; }
 
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public DateTime CreationDate { get; set; }
+        public DateTime CreatioinTime { get; set; }
 
         public BaseEntity()
         {
-            CreationDate = DateTime.Now;
+            CreatioinTime = DateTime.Now;
         }
     }
 }

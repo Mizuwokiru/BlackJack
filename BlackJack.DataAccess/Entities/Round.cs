@@ -10,6 +10,6 @@ namespace BlackJack.DataAccess.Entities
         [Required]
         public int Number { get; set; }
 
-        public virtual ICollection<RoundGamePlayerCard> RoundGamePlayerCards { get; set; }
+        public ICollection<RoundPlayer> Players { get; set; }
     }
 }
