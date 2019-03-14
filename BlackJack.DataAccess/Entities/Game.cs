@@ -4,6 +4,8 @@ namespace BlackJack.DataAccess.Entities
 {
     public class Game : BaseEntity
     {
-        public ICollection<GamePlayer> GamePlayers { get; set; }
+        public virtual ICollection<GamePlayer> GamePlayers { get; set; }
+
+        public virtual ICollection<Round> Rounds { get; set; }
     }
 }
