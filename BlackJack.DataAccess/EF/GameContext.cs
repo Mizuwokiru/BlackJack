@@ -11,7 +11,6 @@ namespace BlackJack.DataAccess.EF
         public DbSet<Game> Games { get; set; }
         public DbSet<GamePlayer> GamePlayers { get; set; }
         public DbSet<Round> Rounds { get; set; }
-        public DbSet<RoundGamePlayer> RoundGamePlayers { get; set; }
         public DbSet<Card> Cards { get; set; }
         public DbSet<RoundGamePlayerCard> RoundGamePlayerCards { get; set; }
 

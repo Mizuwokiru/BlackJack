@@ -4,14 +4,16 @@ using BlackJack.DataAccess.EF;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace BlackJack.DataAccess.Migrations
 {
     [DbContext(typeof(GameContext))]
-    partial class GameContextModelSnapshot : ModelSnapshot
+    [Migration("20190314082654_ThirdMigration")]
+    partial class ThirdMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -25,12 +27,9 @@ namespace BlackJack.DataAccess.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<DateTime>("CreationDate")
-                        .ValueGeneratedOnAdd();
+                    b.Property<DateTime>("CreationDate");
 
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(10);
+                    b.Property<string>("Name");
 
                     b.Property<int>("Suit");
 
@@ -47,8 +46,7 @@ namespace BlackJack.DataAccess.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<DateTime>("CreationDate")
-                        .ValueGeneratedOnAdd();
+                    b.Property<DateTime>("CreationDate");
 
                     b.HasKey("Id");
 
@@ -61,8 +59,7 @@ namespace BlackJack.DataAccess.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<DateTime>("CreationDate")
-                        .ValueGeneratedOnAdd();
+                    b.Property<DateTime>("CreationDate");
 
                     b.Property<int?>("GameId");
 
@@ -83,14 +80,11 @@ namespace BlackJack.DataAccess.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<DateTime>("CreationDate")
-                        .ValueGeneratedOnAdd();
+                    b.Property<DateTime>("CreationDate");
 
                     b.Property<bool>("IsBot");
 
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(32);
+                    b.Property<string>("Name");
 
                     b.HasKey("Id");
 
@@ -103,8 +97,7 @@ namespace BlackJack.DataAccess.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<DateTime>("CreationDate")
-                        .ValueGeneratedOnAdd();
+                    b.Property<DateTime>("CreationDate");
 
                     b.Property<int?>("GameId");
 
@@ -125,8 +118,7 @@ namespace BlackJack.DataAccess.Migrations
 
                     b.Property<int?>("CardId");
 
-                    b.Property<DateTime>("CreationDate")
-                        .ValueGeneratedOnAdd();
+                    b.Property<DateTime>("CreationDate");
 
                     b.Property<int?>("GamePlayerId");
 

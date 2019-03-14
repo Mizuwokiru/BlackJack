@@ -2,7 +2,9 @@
 {
     public class RoundGamePlayerCard : BaseEntity
     {
-        public RoundGamePlayer RoundGamePlayer { get; set; }
+        public Round Round { get; set; }
+
+        public GamePlayer GamePlayer { get; set; }
 
         public Card Card { get; set; }
     }

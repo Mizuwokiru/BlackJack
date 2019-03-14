@@ -1,7 +1,9 @@
-﻿namespace BlackJack.DataAccess.Entities
+﻿using System.Collections.Generic;
+
+namespace BlackJack.DataAccess.Entities
 {
     public class Game : BaseEntity
     {
-        public int PlayerCount { get; set; }
+        public ICollection<GamePlayer> GamePlayers { get; set; }
     }
 }
