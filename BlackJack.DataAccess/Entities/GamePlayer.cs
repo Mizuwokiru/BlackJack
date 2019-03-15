@@ -1,7 +1,13 @@
-﻿namespace BlackJack.DataAccess.Entities
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace BlackJack.DataAccess.Entities
 {
     public class GamePlayer : BaseEntity
     {
-        public Player Player { get; set; }
+        [Required]
+        public virtual Game Game { get; set; }
+
+        [Required]
+        public virtual Player Player { get; set; }
     }
 }

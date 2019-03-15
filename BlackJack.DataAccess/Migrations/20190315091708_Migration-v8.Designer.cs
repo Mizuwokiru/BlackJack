@@ -4,14 +4,16 @@ using BlackJack.DataAccess.EF;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace BlackJack.DataAccess.Migrations
 {
     [DbContext(typeof(GameContext))]
-    partial class GameContextModelSnapshot : ModelSnapshot
+    [Migration("20190315091708_Migration-v8")]
+    partial class Migrationv8
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -57,9 +59,9 @@ namespace BlackJack.DataAccess.Migrations
 
                     b.Property<DateTime>("CreationTime");
 
-                    b.Property<int>("GameId");
+                    b.Property<int?>("GameId");
 
-                    b.Property<int>("PlayerId");
+                    b.Property<int?>("PlayerId");
 
                     b.HasKey("Id");
 
@@ -97,7 +99,7 @@ namespace BlackJack.DataAccess.Migrations
 
                     b.Property<DateTime>("CreationTime");
 
-                    b.Property<int>("GameId");
+                    b.Property<int?>("GameId");
 
                     b.Property<int>("Number");
 
@@ -118,9 +120,9 @@ namespace BlackJack.DataAccess.Migrations
 
                     b.Property<bool>("IsWon");
 
-                    b.Property<int>("PlayerId");
+                    b.Property<int?>("PlayerId");
 
-                    b.Property<int>("RoundId");
+                    b.Property<int?>("RoundId");
 
                     b.HasKey("Id");
 
@@ -137,11 +139,11 @@ namespace BlackJack.DataAccess.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("CardId");
+                    b.Property<int?>("CardId");
 
                     b.Property<DateTime>("CreationTime");
 
-                    b.Property<int>("RoundPlayerId");
+                    b.Property<int?>("RoundPlayerId");
 
                     b.HasKey("Id");
 
@@ -156,47 +158,40 @@ namespace BlackJack.DataAccess.Migrations
                 {
                     b.HasOne("BlackJack.DataAccess.Entities.Game", "Game")
                         .WithMany("GamePlayers")
-                        .HasForeignKey("GameId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("GameId");
 
                     b.HasOne("BlackJack.DataAccess.Entities.Player", "Player")
                         .WithMany()
-                        .HasForeignKey("PlayerId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("PlayerId");
                 });
 
             modelBuilder.Entity("BlackJack.DataAccess.Entities.Round", b =>
                 {
                     b.HasOne("BlackJack.DataAccess.Entities.Game", "Game")
                         .WithMany("Rounds")
-                        .HasForeignKey("GameId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("GameId");
                 });
 
             modelBuilder.Entity("BlackJack.DataAccess.Entities.RoundPlayer", b =>
                 {
                     b.HasOne("BlackJack.DataAccess.Entities.Player", "Player")
                         .WithMany()
-                        .HasForeignKey("PlayerId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("PlayerId");
 
                     b.HasOne("BlackJack.DataAccess.Entities.Round", "Round")
                         .WithMany("Players")
-                        .HasForeignKey("RoundId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("RoundId");
                 });
 
             modelBuilder.Entity("BlackJack.DataAccess.Entities.RoundPlayerCard", b =>
                 {
                     b.HasOne("BlackJack.DataAccess.Entities.Card", "Card")
                         .WithMany()
-                        .HasForeignKey("CardId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("CardId");
 
                     b.HasOne("BlackJack.DataAccess.Entities.RoundPlayer", "RoundPlayer")
                         .WithMany("Cards")
-                        .HasForeignKey("RoundPlayerId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("RoundPlayerId");
                 });
 #pragma warning restore 612, 618
         }

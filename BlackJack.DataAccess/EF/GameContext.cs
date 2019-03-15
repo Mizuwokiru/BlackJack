@@ -1,5 +1,9 @@
 ﻿using BlackJack.DataAccess.Entities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace BlackJack.DataAccess.EF
 {
@@ -19,6 +23,21 @@ namespace BlackJack.DataAccess.EF
         {
             base.OnConfiguring(optionsBuilder);
             optionsBuilder.UseSqlServer(ConnectionString);
+        }
+
+        public override int SaveChanges()
+        {
+            AddCreationTime();
+            return base.SaveChanges();
+        }
+
+        private void AddCreationTime()
+        {
+            IEnumerable<EntityEntry<BaseEntity>> entries = ChangeTracker.Entries<BaseEntity>().Where(entity => entity.State == EntityState.Added);
+            foreach (var entry in entries)
+            {
+                entry.Entity.CreationTime = DateTime.Now;
+            }
         }
     }
 }

@@ -6,6 +6,7 @@ namespace BlackJack.TestConsoleApp
     {
         static void Main(string[] args)
         {
+
             Console.WriteLine("Hello World!");
         }
     }
