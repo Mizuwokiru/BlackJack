@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BlackJack.DataAccess.Repositories
 {
-    public class RoundRepository : AbstractRepository<Round>
+    public class RoundRepository : BaseRepository<Round>
     {
         public RoundRepository(DbContext dbContext) : base(dbContext)
         {
