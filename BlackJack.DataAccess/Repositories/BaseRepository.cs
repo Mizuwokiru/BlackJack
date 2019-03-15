@@ -1,4 +1,4 @@
-﻿using BlackJack.DataAccess.Interfaces;
+﻿using BlackJack.DataAccess.Entities;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace BlackJack.DataAccess.Repositories
 {
-    public class BaseRepository<T> : IRepository<T> where T : class
+    public class BaseRepository<T> where T : BaseEntity
     {
         protected DbContext _dbContext;
 

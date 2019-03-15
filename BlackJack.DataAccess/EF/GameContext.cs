@@ -25,12 +25,6 @@ namespace BlackJack.DataAccess.EF
             optionsBuilder.UseSqlServer(ConnectionString);
         }
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            modelBuilder.Entity<Card>()
-                .HasData(CreateDeck());
-        }
-
         public override int SaveChanges()
         {
             AddCreationTime();
@@ -44,33 +38,6 @@ namespace BlackJack.DataAccess.EF
             {
                 entry.Entity.CreationTime = DateTime.Now;
             }
-        }
-
-        private IEnumerable<Card> CreateDeck()
-        {
-            var deck = new List<Card>();
-            var suits = (IEnumerable<Suit>) Enum.GetValues(typeof(Suit));
-            var ranks = (IEnumerable<CardRank>)Enum.GetValues(typeof(CardRank));
-
-            int id = 1;
-            foreach (var suit in suits)
-            {
-                deck.AddRange(CreateRanks(suit, ref id, ranks));
-            }
-
-            return deck;
-        }
-
-        private IEnumerable<Card> CreateRanks(Suit suit, ref int id, IEnumerable<CardRank> ranks)
-        {
-            var ranksBySuit = new List<Card>();
-            foreach (var rank in ranks)
-            {
-                ranksBySuit.Add(new Card { Id = id, CreationTime = DateTime.Now, Suit = suit, Rank = rank });
-                id++;
-            }
-
-            return ranksBySuit;
         }
     }
 }
