@@ -1,4 +1,4 @@
-﻿using BlackJack.DataAccess.Enums;
+﻿using BlackJack.Commons.Enums;
 
 namespace BlackJack.BusinessLogic.DTO
 {

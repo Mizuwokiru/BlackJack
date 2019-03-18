@@ -1,11 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using BlackJack.Commons.Enums;
 
 namespace BlackJack.Web.Models
 {
-    public class Card
+    public class Card : BaseModel
     {
+        public CardRank Rank { get; set; }
+
+        public Suit Suit { get; set; }
     }
 }

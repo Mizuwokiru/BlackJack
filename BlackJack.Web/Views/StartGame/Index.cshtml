@@ -1,0 +1,40 @@
+﻿@model IEnumerable<BlackJack.Web.Models.Card>
+
+@{
+    Layout = "_Layout";
+    ViewBag.Title = "Start game";
+}
+
+<table>
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Id)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.CreationTime)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Suit)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Rank)
+        </th>
+    </tr>
+@foreach (var card in Model)
+{
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => card.Id)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => card.CreationTime)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => card.Suit)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => card.Rank)
+        </td>
+    </tr>
+}
+</table>

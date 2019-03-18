@@ -1,5 +1,10 @@
 ﻿@{
-    ViewBag.Title = "Index page";
     Layout = "_Layout";
+    ViewBag.Title = string.Empty;
 }
-<p>Hello, world!</p>
+
+<div class="text-center">
+    <form class="lead" method="post" asp-controller="StartGame" asp-action="Index">
+        <button type="submit" class="btn btn-primary">Начать игру</button>
+    </form>
+</div>

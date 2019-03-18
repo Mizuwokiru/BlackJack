@@ -9,7 +9,7 @@ namespace BlackJack.DataAccess.EF
 {
     public class GameContext : DbContext
     {
-        private const string ConnectionString = @"Data Source=(LocalDb)\MSSQLLocalDB;Database=BlackJack";
+        private readonly string _connectionString;
 
         public DbSet<Player> Players { get; set; }
         public DbSet<Game> Games { get; set; }
@@ -19,9 +19,14 @@ namespace BlackJack.DataAccess.EF
         public DbSet<Card> Cards { get; set; }
         public DbSet<RoundPlayerCard> RoundPlayerCards { get; set; }
 
+        public GameContext(string connectionString)
+        {
+            _connectionString = connectionString;
+        }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer(ConnectionString);
+            optionsBuilder.UseSqlServer(_connectionString);
         }
 
         public override int SaveChanges()

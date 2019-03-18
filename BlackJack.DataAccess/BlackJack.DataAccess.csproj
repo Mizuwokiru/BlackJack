@@ -12,4 +12,8 @@
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\BlackJack.Commons\BlackJack.Commons.csproj" />
+  </ItemGroup>
+
 </Project>
