@@ -9,5 +9,10 @@ namespace BlackJack.DataAccess.Repositories
         public CardRepository(DbContext dbContext) : base(dbContext)
         {
         }
+
+        public Card GetCardOfRoundPlayerCard(int roundPlayerCard)
+        {
+            return _dbContext.Set<RoundPlayerCard>().Find(roundPlayerCard).Card;
+        }
     }
 }

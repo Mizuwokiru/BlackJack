@@ -1,5 +1,4 @@
 ﻿using BlackJack.DataAccess.Entities;
-using BlackJack.DataAccess.Enums;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System;

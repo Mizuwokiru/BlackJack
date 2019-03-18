@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace BlackJack.DataAccess.Repositories
 {
-    public class BaseRepository<T> where T : BaseEntity
+    public abstract class BaseRepository<T> where T : BaseEntity
     {
         protected DbContext _dbContext;
 
