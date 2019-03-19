@@ -12,6 +12,7 @@ namespace BlackJack.Web
         {
             //builder.RegisterType<CardService>().As<ICardService>();
             builder.RegisterAssemblyTypes(Assembly.Load("BlackJack.BusinessLogic"))
+                .Where(type => type.Name.EndsWith("Service"))
                 .AsImplementedInterfaces();
         }
     }
