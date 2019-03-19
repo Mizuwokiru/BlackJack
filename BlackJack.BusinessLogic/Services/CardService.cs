@@ -7,13 +7,10 @@ using BlackJack.DataAccess.Interfaces;
 
 namespace BlackJack.BusinessLogic.Services
 {
-    public class CardService : ICardService
+    public class CardService : BaseService, ICardService
     {
-        private IDbWorker _dbWorker;
-
-        public CardService(IDbWorker dbWorker)
+        public CardService(IDbWorker dbWorker) : base(dbWorker)
         {
-            _dbWorker = dbWorker;
         }
 
         public IEnumerable<CardDTO> GetCardList()

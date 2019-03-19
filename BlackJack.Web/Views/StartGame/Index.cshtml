@@ -1,4 +1,4 @@
-﻿@model IEnumerable<BlackJack.Web.Models.Card>
+﻿@model IEnumerable<BlackJack.Web.Models.Player>
 
 @{
     Layout = "_Layout";
@@ -14,26 +14,26 @@
             @Html.DisplayNameFor(model => model.CreationTime)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Suit)
+            @Html.DisplayNameFor(model => model.Name)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Rank)
+            @Html.DisplayNameFor(model => model.IsBot)
         </th>
     </tr>
-@foreach (var card in Model)
+@foreach (var player in Model)
 {
     <tr>
         <td>
-            @Html.DisplayFor(modelItem => card.Id)
+            @Html.DisplayFor(modelItem => player.Id)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => card.CreationTime)
+            @Html.DisplayFor(modelItem => player.CreationTime)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => card.Suit)
+            @Html.DisplayFor(modelItem => player.Name)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => card.Rank)
+            @Html.DisplayFor(modelItem => player.IsBot)
         </td>
     </tr>
 }

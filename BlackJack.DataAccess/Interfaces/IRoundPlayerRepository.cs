@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace BlackJack.DataAccess.Interfaces
 {
-    public interface IRoundPlayerRepository
+    public interface IRoundPlayerRepository : IRepository<RoundPlayer>
     {
         IEnumerable<RoundPlayer> GetRoundPlayers(int roundId);
     }

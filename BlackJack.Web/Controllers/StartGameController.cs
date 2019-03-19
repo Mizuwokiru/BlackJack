@@ -9,19 +9,21 @@ namespace BlackJack.Web.Controllers
 {
     public class StartGameController : Controller
     {
-        ICardService cardService;
+        private IPlayerService _playerService;
 
-        public StartGameController(ICardService service)
+        public StartGameController(IPlayerService service)
         {
-            cardService = service;
+            _playerService = service;
         }
 
         public IActionResult Index()
         {
-            var mapper = new MapperConfiguration(config => config.CreateMap<CardDTO, Card>()).CreateMapper();
-            var cards = mapper.Map<IEnumerable<CardDTO>, List<Card>>(cardService.GetCardList());
-
-            return View(cards);
+            var mapper = new MapperConfiguration(config => config.CreateMap<PlayerDTO, Player>()).CreateMapper();
+            var list = new List<PlayerDTO>(_playerService.GetPlayableList());
+            list.AddRange(_playerService.GetBotList());
+            var players = mapper.Map<IEnumerable<PlayerDTO>, List<Player>>(list);
+            
+            return View(players);
         }
     }
 }

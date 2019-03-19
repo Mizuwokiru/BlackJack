@@ -1,11 +1,9 @@
-﻿using BlackJack.BusinessLogic.Infrastructure;
+﻿using Autofac;
+using BlackJack.BusinessLogic.Infrastructure;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Ninject;
-using Ninject.Modules;
 
 namespace BlackJack.Web
 {
@@ -18,10 +16,15 @@ namespace BlackJack.Web
             ApplicationConfig = config;
         }
 
+        public void ConfigureContainer(ContainerBuilder builder)
+        {
+            builder.RegisterModule(new ServicesModule());
+            builder.RegisterModule(new DbWorkerModule(@"Data Source=(LocalDb)\MSSQLLocalDB;Database=BlackJack"));
+        }
+
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
-            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
@@ -39,10 +42,6 @@ namespace BlackJack.Web
             app.UseStatusCodePages();
             app.UseStaticFiles();
             app.UseMvcWithDefaultRoute();
-
-            /*NinjectModule cardModule = new CardModule();
-            NinjectModule serviceModule = new ServiceModule(@"Data Source=(LocalDb)\MSSQLLocalDB;Database=BlackJack");
-            var kernel = new StandardKernel(cardModule, serviceModule);*/
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿using BlackJack.Commons.Enums;
+﻿using BlackJack.DataAccess.Enums;
 
 namespace BlackJack.Web.Models
 {

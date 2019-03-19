@@ -9,16 +9,16 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Autofac" Version="4.9.1" />
+    <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="4.4.0" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.1.3" />
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.1.2" PrivateAssets="All" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.1.8" />
-    <PackageReference Include="Ninject" Version="3.3.4" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\BlackJack.BusinessLogic\BlackJack.BusinessLogic.csproj" />
-    <ProjectReference Include="..\BlackJack.Commons\BlackJack.Commons.csproj" />
   </ItemGroup>
 
 </Project>

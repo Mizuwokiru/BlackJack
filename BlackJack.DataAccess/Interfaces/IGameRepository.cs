@@ -2,7 +2,7 @@
 
 namespace BlackJack.DataAccess.Interfaces
 {
-    public interface IGameRepository
+    public interface IGameRepository : IRepository<Game>
     {
         Game GetGameOfGamePlayer(int gamePlayerId);
 

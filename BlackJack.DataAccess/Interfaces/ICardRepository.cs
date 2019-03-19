@@ -2,7 +2,7 @@
 
 namespace BlackJack.DataAccess.Interfaces
 {
-    public interface ICardRepository
+    public interface ICardRepository : IRepository<Card>
     {
         Card GetCardOfRoundPlayerCard(int roundPlayerCard);
     }

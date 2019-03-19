@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace BlackJack.Web.Models
+﻿namespace BlackJack.Web.Models
 {
-    public class Player
+    public class Player : BaseModel
     {
+        public string Name { get; set; }
+
+        public bool IsBot { get; set; }
     }
 }
