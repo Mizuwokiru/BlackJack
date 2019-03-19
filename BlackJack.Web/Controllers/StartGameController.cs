@@ -19,11 +19,10 @@ namespace BlackJack.Web.Controllers
         public IActionResult Index()
         {
             var mapper = new MapperConfiguration(config => config.CreateMap<PlayerDTO, Player>()).CreateMapper();
-            var list = new List<PlayerDTO>(_playerService.GetPlayableList());
-            list.AddRange(_playerService.GetBotList());
-            var players = mapper.Map<IEnumerable<PlayerDTO>, List<Player>>(list);
+            var playerList = new List<PlayerDTO>(_playerService.GetPlayableList());
+            playerList.AddRange(_playerService.GetBotList());
             
-            return View(players);
+            return View(mapper.Map<IEnumerable<PlayerDTO>, List<Player>>(playerList));
         }
     }
 }

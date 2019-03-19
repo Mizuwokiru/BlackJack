@@ -1,7 +1,5 @@
 ﻿using Autofac;
-using BlackJack.BusinessLogic.Interfaces;
 using BlackJack.BusinessLogic.Services;
-using BlackJack.DataAccess.Interfaces;
 using System.Reflection;
 
 namespace BlackJack.Web
@@ -10,9 +8,8 @@ namespace BlackJack.Web
     {
         protected override void Load(ContainerBuilder builder)
         {
-            //builder.RegisterType<CardService>().As<ICardService>();
             builder.RegisterAssemblyTypes(Assembly.Load("BlackJack.BusinessLogic"))
-                .Where(type => type.Name.EndsWith("Service"))
+                .Where(type => type.Name != nameof(BaseService) && type.Namespace.Equals("BlackJack.BusinessLogic.Services"))
                 .AsImplementedInterfaces();
         }
     }
