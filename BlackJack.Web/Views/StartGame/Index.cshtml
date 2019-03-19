@@ -1,40 +1,4 @@
-﻿@model IEnumerable<BlackJack.Web.Models.Player>
-
-@{
+﻿@{
     Layout = "_Layout";
     ViewBag.Title = "Start game";
 }
-
-<table>
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.Id)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.CreationTime)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Name)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.IsBot)
-        </th>
-    </tr>
-@foreach (var player in Model)
-{
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => player.Id)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => player.CreationTime)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => player.Name)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => player.IsBot)
-        </td>
-    </tr>
-}
-</table>

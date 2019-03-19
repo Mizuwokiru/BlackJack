@@ -1,5 +1,4 @@
 ﻿using Autofac;
-using BlackJack.BusinessLogic.Infrastructure;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -18,8 +17,7 @@ namespace BlackJack.Web
 
         public void ConfigureContainer(ContainerBuilder builder)
         {
-            builder.RegisterModule(new ServicesModule());
-            builder.RegisterModule(new DbWorkerModule(@"Data Source=(LocalDb)\MSSQLLocalDB;Database=BlackJack"));
+            
         }
 
         public void ConfigureServices(IServiceCollection services)

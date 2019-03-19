@@ -1,4 +1,4 @@
-﻿namespace BlackJack.DataAccess.Enums
+﻿namespace BlackJack.Commons.Enums
 {
     public enum Suit
     {
