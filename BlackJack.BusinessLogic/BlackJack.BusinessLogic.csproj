@@ -13,8 +13,4 @@
     <ProjectReference Include="..\BlackJack.DataAccess\BlackJack.DataAccess.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Interfaces\" />
-  </ItemGroup>
-
 </Project>

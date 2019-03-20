@@ -34,11 +34,13 @@ namespace BlackJack.DataAccess.Repositories
         public void Create(T item)
         {
             _dbContext.Set<T>().Add(item);
+            _dbContext.SaveChanges();
         }
 
         public void Update(T item)
         {
             _dbContext.Entry(item).State = EntityState.Modified;
+            _dbContext.SaveChanges();
         }
 
         public void Delete(int id)
@@ -48,6 +50,7 @@ namespace BlackJack.DataAccess.Repositories
             {
                 _dbContext.Set<T>().Remove(obj);
             }
+            _dbContext.SaveChanges();
         }
     }
 }

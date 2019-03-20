@@ -1,0 +1,18 @@
+﻿@model IEnumerable<BlackJack.BusinessLogic.Models.PlayerModel>
+
+@{
+    Layout = "_Layout";
+    ViewBag.Title = "Create game";
+}
+
+<div class="dropdown">
+    <button class="btn btn-outline-primary dropdown-toggle" id="dropdownButton" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        Выберите игрока
+    </button>
+    <div class="dropdown-menu" aria-labelledby="dropdownButton">
+        @foreach (var player in Model)
+        {
+            <a class="dropdown-item" href="#">@player.Name</a>
+        }
+    </div>
+</div>

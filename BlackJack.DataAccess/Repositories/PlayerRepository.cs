@@ -1,4 +1,6 @@
-﻿using BlackJack.DataAccess.Entities;
+﻿using System.Collections.Generic;
+using System.Linq;
+using BlackJack.DataAccess.Entities;
 using BlackJack.DataAccess.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
@@ -8,6 +10,16 @@ namespace BlackJack.DataAccess.Repositories
     {
         public PlayerRepository(DbContext dbContext) : base(dbContext)
         {
+        }
+
+        public IEnumerable<Player> GetBots()
+        {
+            return _dbContext.Set<Player>().Where(player => player.IsBot);
+        }
+
+        public IEnumerable<Player> GetPlayables()
+        {
+            return _dbContext.Set<Player>().Where(player => !player.IsBot);
         }
 
         public Player GetPlayerOfGamePlayer(int gamePlayerId)

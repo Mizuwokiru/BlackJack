@@ -1,6 +1,7 @@
 ﻿namespace BlackJack.Web.Models
 {
-    public class Round
+    public class GameCreationViewModel
     {
+        
     }
 }

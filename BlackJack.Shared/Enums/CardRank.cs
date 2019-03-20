@@ -1,4 +1,4 @@
-﻿namespace BlackJack.Commons.Enums
+﻿namespace BlackJack.Shared.Enums
 {
     public enum CardRank
     {

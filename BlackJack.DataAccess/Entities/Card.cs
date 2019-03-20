@@ -1,4 +1,4 @@
-﻿using BlackJack.Commons.Enums;
+﻿using BlackJack.Shared.Enums;
 
 namespace BlackJack.DataAccess.Entities
 {

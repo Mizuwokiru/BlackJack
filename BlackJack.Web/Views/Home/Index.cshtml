@@ -3,8 +3,10 @@
     ViewBag.Title = string.Empty;
 }
 
-<div class="text-center">
-    <form class="lead" method="post" asp-controller="StartGame" asp-action="Index">
-        <button type="submit" class="btn btn-primary">Начать игру</button>
-    </form>
+<div style="height: 100%; position: relative">
+    <div style="margin: 0; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%)">
+        <form method="post" asp-controller="GameCreation" asp-action="Index">
+            <button type="submit" class="btn btn-primary">Начать игру</button>
+        </form>
+    </div>
 </div>

@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlackJack.DataAccess", "Bla
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlackJack.BusinessLogic", "BlackJack.BusinessLogic\BlackJack.BusinessLogic.csproj", "{DF08D9C3-F2C6-43FE-B93A-B6DFC2C2B968}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlackJack.Commons", "BlackJack.Commons\BlackJack.Commons.csproj", "{997D818B-1B49-4EF0-A458-EA2F99505C12}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlackJack.Shared", "BlackJack.Shared\BlackJack.Shared.csproj", "{997D818B-1B49-4EF0-A458-EA2F99505C12}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

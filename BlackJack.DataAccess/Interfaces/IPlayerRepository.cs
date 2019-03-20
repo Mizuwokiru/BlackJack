@@ -1,4 +1,5 @@
 ﻿using BlackJack.DataAccess.Entities;
+using System.Collections.Generic;
 
 namespace BlackJack.DataAccess.Interfaces
 {
@@ -7,5 +8,11 @@ namespace BlackJack.DataAccess.Interfaces
         Player GetPlayerOfGamePlayer(int gamePlayerId);
 
         Player GetPlayerOfRoundPlayer(int roundPlayerId);
+
+        IEnumerable<Player> GetPlayables();
+
+        IEnumerable<Player> GetBots();
+
+
     }
 }
