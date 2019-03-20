@@ -8,7 +8,5 @@ namespace BlackJack.Web.Controllers
         {
             return View();
         }
-
-        
     }
 }
