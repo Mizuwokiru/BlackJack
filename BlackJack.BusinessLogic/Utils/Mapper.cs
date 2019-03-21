@@ -25,6 +25,24 @@ namespace BlackJack.BusinessLogic.Utils
             });
         }
 
+        public static CardViewModel MapCard(Card card)
+        {
+            return Map(card, c => new CardViewModel
+            {
+                Suit = c.Suit,
+                Rank = c.Rank
+            });
+        }
+
+        public static IEnumerable<CardViewModel> MapCards(IEnumerable<Card> cards)
+        {
+            return Map(cards, card => new CardViewModel
+            {
+                Suit = card.Suit,
+                Rank = card.Rank
+            });
+        }
+
         private static TDestination Map<TSource, TDestination>(TSource source, Func<TSource, TDestination> func)
         {
             return func(source);

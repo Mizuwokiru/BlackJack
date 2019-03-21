@@ -6,8 +6,6 @@ namespace BlackJack.BusinessLogic.Models
     {
         public int Id { get; set; }
 
-        [Required]
-        [StringLength(32, MinimumLength = 6)]
         public string Name { get; set; }
     }
 }

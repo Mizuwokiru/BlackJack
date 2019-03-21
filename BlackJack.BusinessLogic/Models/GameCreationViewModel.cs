@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace BlackJack.BusinessLogic.Models
+﻿namespace BlackJack.BusinessLogic.Models
 {
     public class GameCreationViewModel
     {

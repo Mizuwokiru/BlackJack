@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using BlackJack.BusinessLogic.Exceptions;
 using BlackJack.BusinessLogic.Models;
@@ -35,7 +34,7 @@ namespace BlackJack.BusinessLogic.Services
         {
             if (botCount > Constants.MaxBotCount)
             {
-                throw new ArgumentOutOfRangeException("Too many bots.");
+                throw new ValidationException("Too many bots.", botCount.ToString());
             }
             if (!Regex.IsMatch(playerName, @"^[a-zA-Z][a-zA-Z0-9]{5,}$"))
             {
