@@ -1,18 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using AutoMapper;
-using BlackJack.BusinessLogic.Interfaces;
+using System.Text.RegularExpressions;
+using BlackJack.BusinessLogic.Exceptions;
 using BlackJack.BusinessLogic.Models;
+using BlackJack.BusinessLogic.Services.Interfaces;
+using BlackJack.BusinessLogic.Utils;
 using BlackJack.DataAccess.Entities;
-using BlackJack.DataAccess.Interfaces;
+using BlackJack.DataAccess.Repositories.Interfaces;
+using BlackJack.Shared;
 
 namespace BlackJack.BusinessLogic.Services
 {
     public class GameCreationService : IGameCreationService
     {
-        private const int MaxBotCount = 7;
-
         private IPlayerRepository _playerRepository;
         private IGameRepository _gameRepository;
         private IGamePlayerRepository _gamePlayerRepository;
@@ -26,44 +26,24 @@ namespace BlackJack.BusinessLogic.Services
             _gamePlayerRepository = gamePlayerRepository;
         }
 
-        public IEnumerable<PlayerModel> GetPlayables()
+        public IEnumerable<PlayerViewModel> GetPlayables()
         {
-            var mapper = new MapperConfiguration(cfg => cfg.CreateMap<Player, PlayerModel>()).CreateMapper();
-            return mapper.Map<IEnumerable<Player>, List<PlayerModel>>(_playerRepository.GetPlayables());
+            return Mapper.MapPlayers(_playerRepository.GetPlayers());
         }
 
-        #region Privates for MakeGame
-        private Player GetOrMakePlayer(string playerName)
+        public GameCreationViewModel CreateGame(string playerName, int botCount)
         {
-            Player player = _playerRepository.Find(p => p.Name.Equals(playerName)).FirstOrDefault();
-            return (player == null) ? new Player { Name = playerName } : player;
-        }
-
-        private IEnumerable<Player> GetOrMakeBots(int botCount)
-        {
-            List<Player> bots = _playerRepository.GetBots().ToList();
-            if (bots.Count < botCount)
+            if (botCount > Constants.MaxBotCount)
             {
-                for (int i = bots.Count; i < botCount; i++)
-                {
-                    _playerRepository.Create(new Player { Name = $"Bot #{i + 1}", IsBot = true });
-                }
+                throw new ArgumentOutOfRangeException("Too many bots.");
             }
-            return bots;
-        }
-        #endregion
-
-        public int MakeGame(string playerName, int botCount)
-        {
-            if (botCount > MaxBotCount)
+            if (!Regex.IsMatch(playerName, @"^[a-zA-Z][a-zA-Z0-9]{5,}$"))
             {
-                throw new ArgumentOutOfRangeException("Слишком много ботов.");
+                throw new ValidationException("Invalid player name.", playerName);
             }
 
-            Player player = GetOrMakePlayer(playerName);
-            _playerRepository.Create(player);
-
-            IEnumerable<Player> bots = GetOrMakeBots(botCount);
+            Player player = _playerRepository.GetOrCreatePlayer(playerName);
+            IEnumerable<Player> bots = _playerRepository.GetOrCreateBots(botCount);
 
             var game = new Game();
             _gameRepository.Create(game);
@@ -74,7 +54,7 @@ namespace BlackJack.BusinessLogic.Services
                 _gamePlayerRepository.Create(new GamePlayer { Game = game, Player = bot });
             }
 
-            return game.Id;
+            return new GameCreationViewModel { PlayerId = player.Id, GameId = game.Id };
         }
     }
 }

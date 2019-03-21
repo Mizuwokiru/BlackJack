@@ -13,6 +13,6 @@ namespace BlackJack.DataAccess.Entities
 
         public bool IsWon { get; set; }
 
-        public virtual ICollection<RoundPlayerCard> Cards { get; set; }
+        public virtual IEnumerable<RoundPlayerCard> Cards { get; set; }
     }
 }

@@ -1,18 +1,25 @@
-﻿@model IEnumerable<BlackJack.BusinessLogic.Models.PlayerModel>
+﻿@model IEnumerable<BlackJack.BusinessLogic.Models.PlayerViewModel>
 
 @{
-    Layout = "_Layout";
-    ViewBag.Title = "Create game";
+    ViewBag.Title = "Game creation...";
 }
 
-<div class="dropdown">
-    <button class="btn btn-outline-primary dropdown-toggle" id="dropdownButton" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-        Выберите игрока
-    </button>
-    <div class="dropdown-menu" aria-labelledby="dropdownButton">
-        @foreach (var player in Model)
-        {
-            <a class="dropdown-item" href="#">@player.Name</a>
-        }
-    </div>
-</div>
+<table>
+    <tr>
+        <th>@Html.DisplayNameFor(model => model.Id)</th>
+        <th>@Html.DisplayNameFor(model => model.Name)</th>
+    </tr>
+@foreach (var player in Model)
+{
+    <tr>
+        <td>@Html.DisplayFor(model => player.Id)</td>
+        <td>@Html.DisplayFor(model => player.Name)</td>
+    </tr>
+}
+</table>
+
+<form method="post" asp-controller="GameCreation" asp-action="CreateGame">
+    <input type="text" name="playerName" value="Начать" />
+    <input type="number" name="botCount" value="1" max="7" min="1" />
+    <button type="submit">Create</button>
+</form>

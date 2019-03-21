@@ -1,5 +1,6 @@
-﻿using BlackJack.BusinessLogic.Interfaces;
-using BlackJack.BusinessLogic.Services;
+﻿using System.Collections.Generic;
+using BlackJack.BusinessLogic.Models;
+using BlackJack.BusinessLogic.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BlackJack.Web.Controllers
@@ -15,7 +16,16 @@ namespace BlackJack.Web.Controllers
 
         public IActionResult Index()
         {
-            return View(_gameCreationService.GetPlayables());
+            IEnumerable<PlayerViewModel> playerList = _gameCreationService.GetPlayables();
+
+            return View(playerList);
+        }
+
+        public IActionResult CreateGame(string playerName, int botCount)
+        {
+            GameCreationViewModel createdGame = _gameCreationService.CreateGame(playerName, botCount);
+
+            return View(createdGame);
         }
     }
 }

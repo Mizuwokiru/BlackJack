@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\BlackJack.Shared\BlackJack.Shared.csproj" />
+    <ProjectReference Include="..\BlackJack.DataAccess\BlackJack.DataAccess.csproj" />
   </ItemGroup>
 
 </Project>

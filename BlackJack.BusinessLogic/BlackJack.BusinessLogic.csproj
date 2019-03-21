@@ -5,12 +5,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Autofac" Version="4.9.1" />
-    <PackageReference Include="AutoMapper" Version="8.0.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\BlackJack.DataAccess\BlackJack.DataAccess.csproj" />
+    <ProjectReference Include="..\BlackJack.DataAccess.Dapper\BlackJack.DataAccess.Dapper.csproj" />
+    <ProjectReference Include="..\BlackJack.DataAccess.EntityFramework\BlackJack.DataAccess.EntityFramework.csproj" />
   </ItemGroup>
 
 </Project>
