@@ -1,4 +1,5 @@
 ﻿using BlackJack.DataAccess.Entities;
+using BlackJack.Shared.Enums;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System;
@@ -26,6 +27,9 @@ namespace BlackJack.DataAccess.EntityFramework
             modelBuilder.Entity<Player>()
                 .HasIndex(property => property.Name)
                 .IsUnique();
+
+            modelBuilder.Entity<Card>()
+                .HasData(GenerateCards());
         }
 
         public override int SaveChanges()
@@ -41,6 +45,23 @@ namespace BlackJack.DataAccess.EntityFramework
             {
                 entry.Entity.CreationTime = DateTime.Now;
             }
+        }
+
+        private Card[] GenerateCards()
+        {
+            var cards = new List<Card>();
+            var suits = (IEnumerable<Suit>)Enum.GetValues(typeof(Suit));
+            var ranks = (IEnumerable<Rank>)Enum.GetValues(typeof(Rank));
+            int i = 1;
+            foreach (var suit in suits)
+            {
+                foreach (var rank in ranks)
+                {
+                    cards.Add(new Card { Id = i, CreationTime = DateTime.Now, Suit = suit, Rank = rank });
+                    i++;
+                }
+            }
+            return cards.ToArray();
         }
     }
 }
