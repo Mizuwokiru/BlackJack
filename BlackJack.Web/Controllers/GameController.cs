@@ -5,11 +5,11 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace BlackJack.Web.Controllers
 {
-    public class GameCreationController : Controller
+    public class GameController : Controller
     {
         private IGameCreationService _gameCreationService;
 
-        public GameCreationController(IGameCreationService service)
+        public GameController(IGameCreationService service)
         {
             _gameCreationService = service;
         }

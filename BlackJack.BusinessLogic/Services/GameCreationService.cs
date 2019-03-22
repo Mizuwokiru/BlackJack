@@ -27,7 +27,8 @@ namespace BlackJack.BusinessLogic.Services
 
         public IEnumerable<PlayerViewModel> GetPlayables()
         {
-            return Mapper.MapPlayers(_playerRepository.GetPlayers());
+            return Mapper.MapPlayers(_playerRepository.GetAll());
+            //return Mapper.MapPlayers(_playerRepository.GetPlayers());
         }
 
         public GameCreationViewModel CreateGame(string playerName, int botCount)
