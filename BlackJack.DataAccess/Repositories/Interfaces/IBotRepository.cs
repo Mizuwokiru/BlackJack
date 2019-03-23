@@ -2,7 +2,7 @@
 
 namespace BlackJack.DataAccess.Repositories.Interfaces
 {
-    public interface IRoundRepository : IRepository<Round>
+    public interface IBotRepository : IRepository<Bot>
     {
     }
 }

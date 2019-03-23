@@ -1,7 +1,8 @@
-﻿using BlackJack.DataAccess.EntityFramework;
+﻿using BlackJack.DataAccess;
 using BlackJack.DataAccess.Repositories.Interfaces;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using System.Data.Common;
+using System.Data.SqlClient;
 
 namespace BlackJack.BusinessLogic.Configuration
 {
@@ -9,56 +10,25 @@ namespace BlackJack.BusinessLogic.Configuration
     {
         public static void AddDbAcсess(this IServiceCollection services, string connectionString)
         {
-            // EF BEGIN
-            services.AddDbContext<GameDbContext>(options => options.UseSqlServer(connectionString));
+            services.AddTransient<DbConnection>(provider => new SqlConnection(connectionString));
 
-            services.AddTransient<ICardRepository>(provider =>
-            {
-                var context = provider.GetService<GameDbContext>();
-                return new DataAccess.EntityFramework.Repositories.CardRepository(context);
-            });
-            services.AddTransient<IGameRepository>(provider =>
-            {
-                var context = provider.GetService<GameDbContext>();
-                return new DataAccess.EntityFramework.Repositories.GameRepository(context);
-            });
-            services.AddTransient<IPlayerRepository>(provider =>
-            {
-                var context = provider.GetService<GameDbContext>();
-                return new DataAccess.EntityFramework.Repositories.PlayerRepository(context);
-            });
-            services.AddTransient<IRoundRepository>(provider =>
-            {
-                var context = provider.GetService<GameDbContext>();
-                return new DataAccess.EntityFramework.Repositories.RoundRepository(context);
-            });
-            services.AddTransient<IGamePlayerRepository>(provider =>
-            {
-                var context = provider.GetService<GameDbContext>();
-                return new DataAccess.EntityFramework.Repositories.GamePlayerRepository(context);
-            });
-            services.AddTransient<IRoundPlayerRepository>(provider =>
-            {
-                var context = provider.GetService<GameDbContext>();
-                return new DataAccess.EntityFramework.Repositories.RoundPlayerRepository(context);
-            });
-            services.AddTransient<IRoundPlayerCardRepository>(provider =>
-            {
-                var context = provider.GetService<GameDbContext>();
-                return new DataAccess.EntityFramework.Repositories.RoundPlayerCardRepository(context);
-            });
-            /*
-            services.AddTransient<ICardRepository, DataAccess.EntityFramework.Repositories.CardRepository>();
-            services.AddTransient<IGameRepository, DataAccess.EntityFramework.Repositories.GameRepository>();
-            services.AddTransient<IPlayerRepository, DataAccess.EntityFramework.Repositories.PlayerRepository>();
-            services.AddTransient<IRoundRepository, DataAccess.EntityFramework.Repositories.RoundRepository>();
-            services.AddTransient<IGamePlayerRepository, DataAccess.EntityFramework.Repositories.GamePlayerRepository>();
-            services.AddTransient<IRoundPlayerRepository, DataAccess.EntityFramework.Repositories.RoundPlayerRepository>();
-            services.AddTransient<IRoundPlayerCardRepository, DataAccess.EntityFramework.Repositories.RoundPlayerCardRepository>();
-            */
+            // EF BEGIN
+            services.AddDbContext<GameDbContext>();
+            // возможно стоит переделать в Scoped
+            services.AddTransient<IBotRepository, DataAccess.Repositories.EntityFrameworkCore.BotRepository>();
+            services.AddTransient<ICardRepository, DataAccess.Repositories.EntityFrameworkCore.CardRepository>();
+            services.AddTransient<IGameRepository, DataAccess.Repositories.EntityFrameworkCore.GameRepository>();
+            services.AddTransient<IRoundRepository, DataAccess.Repositories.EntityFrameworkCore.RoundRepository>();
+            services.AddTransient<IRoundPlayerRepository, DataAccess.Repositories.EntityFrameworkCore.RoundPlayerRepository>();
+            services.AddTransient<IRoundPlayerBotRepository, DataAccess.Repositories.EntityFrameworkCore.RoundPlayerBotRepository>();
+            services.AddTransient<IRoundPlayerUserRepository, DataAccess.Repositories.EntityFrameworkCore.RoundPlayerUserRepository>();
+            services.AddTransient<IRoundPlayerCardRepository, DataAccess.Repositories.EntityFrameworkCore.RoundPlayerCardRepository>();
+            services.AddTransient<IUserRepository, DataAccess.Repositories.EntityFrameworkCore.UserRepository>();
             // EF END
 
-            // TODO: add Dapper support and make it switchable
+            // Dapper BEGIN
+
+            // Dapper END
         }
     }
 }

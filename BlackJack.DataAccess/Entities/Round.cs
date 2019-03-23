@@ -5,12 +5,14 @@ namespace BlackJack.DataAccess.Entities
 {
     public class Round : BaseEntity
     {
-        [Required]
+        public int GameId { get; set; }
         public virtual Game Game { get; set; }
 
         [Required]
         public int Number { get; set; }
 
-        public virtual IEnumerable<RoundPlayer> Players { get; set; }
+        public bool IsFinished { get; set; }
+
+        public virtual ICollection<RoundPlayer> Players { get; set; }
     }
 }

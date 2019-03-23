@@ -4,10 +4,10 @@ namespace BlackJack.DataAccess.Entities
 {
     public class RoundPlayerCard : BaseEntity
     {
-        [Required]
+        public int RoundPlayerId { get; set; }
         public virtual RoundPlayer RoundPlayer { get; set; }
 
-        [Required]
+        public int CardId { get; set; }
         public virtual Card Card { get; set; }
     }
 }
