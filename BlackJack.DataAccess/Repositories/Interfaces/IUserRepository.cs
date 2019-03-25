@@ -1,6 +1,9 @@
-﻿namespace BlackJack.DataAccess.Repositories.Interfaces
+﻿using BlackJack.DataAccess.Entities;
+
+namespace BlackJack.DataAccess.Repositories.Interfaces
 {
-    public interface IUserRepository
+    public interface IUserRepository : IRepository<User>
     {
+        User GetUserByName(string userName);
     }
 }

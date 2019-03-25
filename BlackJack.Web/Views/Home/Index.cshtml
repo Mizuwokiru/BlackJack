@@ -1,5 +1,24 @@
-﻿@{
-    ViewBag.Title = "Home";
+﻿@model UserLoginViewModel
+
+@{
+    ViewBag.Title = "Login";
+    Layout = "_Layout";
 }
 
-<h2>@ViewBag.Title</h2>
+<form asp-action="Menu" class="bj-centered-block">
+    <div class="input-group bj-centered-control">
+        <div class="input-group-prepend">
+            <select asp-items="@(new SelectList(Model.Users, "Id", "Name"))"
+                    class="form-control"></select>
+        </div>
+        <input asp-for="UserName" type="text" class="form-control" id="userTextBox" />
+    </div>
+
+    <input type="submit" class="btn btn-primary bj-centered-control" value="Login" />
+</form>
+
+@*<div class="bj-centered-block">
+         onchange="document.getElementById('userTextBox').value = this.options[this.selectedIndex].nodeValue"
+        <a class="btn btn-primary bj-centered-control" asp-controller="Game" asp-action="">Create game</a>
+        <a class="btn btn-primary bj-centered-control" asp-controller="Home" asp-action="">Game history</a>
+    </div>*@
