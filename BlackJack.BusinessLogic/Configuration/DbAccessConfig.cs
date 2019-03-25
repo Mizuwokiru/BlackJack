@@ -19,7 +19,6 @@ namespace BlackJack.BusinessLogic.Configuration
             services.AddTransient<ICardRepository, DataAccess.Repositories.EntityFrameworkCore.CardRepository>();
             services.AddTransient<IGameRepository, DataAccess.Repositories.EntityFrameworkCore.GameRepository>();
             services.AddTransient<IRoundRepository, DataAccess.Repositories.EntityFrameworkCore.RoundRepository>();
-            services.AddTransient<IRoundPlayerRepository, DataAccess.Repositories.EntityFrameworkCore.RoundPlayerRepository>();
             services.AddTransient<IRoundPlayerBotRepository, DataAccess.Repositories.EntityFrameworkCore.RoundPlayerBotRepository>();
             services.AddTransient<IRoundPlayerUserRepository, DataAccess.Repositories.EntityFrameworkCore.RoundPlayerUserRepository>();
             services.AddTransient<IRoundPlayerCardRepository, DataAccess.Repositories.EntityFrameworkCore.RoundPlayerCardRepository>();

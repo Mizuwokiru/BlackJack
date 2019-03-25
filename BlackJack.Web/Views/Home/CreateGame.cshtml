@@ -1,0 +1,14 @@
+﻿@using BlackJack.Shared
+@using System.Linq
+@model GameCreateViewModel
+@{
+    ViewBag.Title = "CreateGame";
+    Layout = "_Layout";
+}
+
+<form asp-controller="Game" asp-action="" asp-all-route-data="@(new Dictionary<string, string> { { "userId", Model.User.Id.ToString() }, { "botCount", Model.BotCount.ToString() } })" class="bj-centered-block">
+    <select asp-for="BotCount" asp-items="@(new SelectList(Enumerable.Range(0, Constants.MaxBotCount + 1)))"
+            class="form-control bj-centered-control"></select>
+
+    <input type="submit" class="btn btn-primary bj-centered-control" value="Start" />
+</form>

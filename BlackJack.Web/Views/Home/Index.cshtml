@@ -9,16 +9,18 @@
     <div class="input-group bj-centered-control">
         <div class="input-group-prepend">
             <select asp-items="@(new SelectList(Model.Users, "Id", "Name"))"
-                    class="form-control"></select>
+                    id="usersSelectBox" class="form-control"></select>
         </div>
-        <input asp-for="UserName" type="text" class="form-control" id="userTextBox" />
+        <input asp-for="UserName" type="text" class="form-control" id="userInputBox" />
     </div>
 
     <input type="submit" class="btn btn-primary bj-centered-control" value="Login" />
 </form>
 
-@*<div class="bj-centered-block">
-         onchange="document.getElementById('userTextBox').value = this.options[this.selectedIndex].nodeValue"
-        <a class="btn btn-primary bj-centered-control" asp-controller="Game" asp-action="">Create game</a>
-        <a class="btn btn-primary bj-centered-control" asp-controller="Home" asp-action="">Game history</a>
-    </div>*@
+<script>
+    var userInputBox = document.getElementById("userInputBox");
+    var usersSelectBox = document.getElementById("usersSelectBox");
+    usersSelectBox.addEventListener("change", e => userInputBox.value = usersSelectBox.options[usersSelectBox.selectedIndex].innerText);
+    
+    window.addEventListener("load", e => usersSelectBox.dispatchEvent(new Event("change")));
+</script>

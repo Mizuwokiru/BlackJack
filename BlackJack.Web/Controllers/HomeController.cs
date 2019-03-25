@@ -2,6 +2,7 @@
 using BlackJack.BusinessLogic.Services.Interfaces;
 using BlackJack.Web.Models;
 using Microsoft.AspNetCore.Mvc;
+using System.Diagnostics;
 
 namespace BlackJack.Web.Controllers
 {
@@ -29,8 +30,13 @@ namespace BlackJack.Web.Controllers
         public IActionResult Menu(UserLoginViewModel userLogin)
         {
             UserModel user = _userService.GetOrCreateUser(userLogin.UserName);
-            ViewBag.Message = $"User {user.Name}:{user.Id} is logged in.";
-            return View();
+            return View(user);
+        }
+
+        public IActionResult CreateGame(UserModel user)
+        {
+            Debug.WriteLine(user.Name);
+            return View(new GameCreateViewModel { User = user });
         }
     }
 }
