@@ -6,7 +6,8 @@
     Layout = "_Layout";
 }
 
-<form asp-controller="Game" asp-action="" asp-all-route-data="@(new Dictionary<string, string> { { "userId", Model.User.Id.ToString() }, { "botCount", Model.BotCount.ToString() } })" class="bj-centered-block">
+<h2>@Model.UserId</h2>
+<form asp-controller="Game" asp-action="" asp-all-route-data="@(new Dictionary<string, string> { { "userId", Model.UserId.ToString() }, { "botCount", Model.BotCount.ToString() } })" class="bj-centered-block">
     <select asp-for="BotCount" asp-items="@(new SelectList(Enumerable.Range(0, Constants.MaxBotCount + 1)))"
             class="form-control bj-centered-control"></select>
 

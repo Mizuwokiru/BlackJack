@@ -1,11 +1,9 @@
-﻿@model UserModel
+﻿@model int
 
 @{
     ViewBag.Title = "Game menu";
     Layout = "_Layout";
 }
-
-<h2>@Model.Name:@Model.Id</h2>
 
 <div class="bj-centered-block">
     @Html.ActionLink("Create game", "CreateGame", Model, new { @class = "btn btn-primary bj-centered-control" })

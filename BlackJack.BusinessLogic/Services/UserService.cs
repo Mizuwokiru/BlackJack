@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text.RegularExpressions;
 using BlackJack.BusinessLogic.Models;
@@ -43,6 +44,16 @@ namespace BlackJack.BusinessLogic.Services
                 _userRepository.Add(userFromDb);
             }
 
+            return new UserModel { Id = userFromDb.Id, Name = userFromDb.Name };
+        }
+
+        public UserModel GetUser(int userId)
+        {
+            var userFromDb = _userRepository.Get(userId);
+            if (userFromDb == null)
+            {
+                throw new InvalidOperationException($"User with id {userId} is not exists.");
+            }
             return new UserModel { Id = userFromDb.Id, Name = userFromDb.Name };
         }
     }

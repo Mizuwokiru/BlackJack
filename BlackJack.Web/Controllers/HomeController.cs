@@ -30,13 +30,12 @@ namespace BlackJack.Web.Controllers
         public IActionResult Menu(UserLoginViewModel userLogin)
         {
             UserModel user = _userService.GetOrCreateUser(userLogin.UserName);
-            return View(user);
+            return View(user.Id);
         }
 
-        public IActionResult CreateGame(UserModel user)
+        public IActionResult CreateGame(int userId)
         {
-            Debug.WriteLine(user.Name);
-            return View(new GameCreateViewModel { User = user });
+            return View(new GameCreateViewModel { UserId = userId });
         }
     }
 }

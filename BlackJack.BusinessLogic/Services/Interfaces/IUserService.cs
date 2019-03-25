@@ -7,5 +7,6 @@ namespace BlackJack.BusinessLogic.Services.Interfaces
     {
         IEnumerable<UserModel> GetUsers();
         UserModel GetOrCreateUser(string userName);
+        UserModel GetUser(int userId);
     }
 }
