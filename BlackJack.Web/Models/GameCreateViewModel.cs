@@ -1,12 +1,13 @@
-﻿using BlackJack.BusinessLogic.Models;
-using System.Collections.Generic;
+﻿using BlackJack.Shared;
+using System.ComponentModel.DataAnnotations;
 
 namespace BlackJack.Web.Models
 {
     public class GameCreateViewModel
     {
-        public int GameId { get; set; }
+        public int PlayerId { get; set; }
 
-        public List<PlayerModel> Players { get; set; }
+        [Range(0, Constants.MaxBotCount)]
+        public int BotCount { get; set; }
     }
 }
