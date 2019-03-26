@@ -54,17 +54,20 @@
 </div>
 
 <script>
+    var menuBlock = document.getElementById("menuBlock");
     var userInputBox = document.getElementById("userInputBox");
     var usersSelectBox = document.getElementById("usersSelectBox");
+    var botCountSelectBox = document.getElementById("botCountSelectBox");
+
+    menuBlock.style.display = "none";
+
     usersSelectBox.addEventListener("change", e => userInputBox.value = usersSelectBox.options[usersSelectBox.selectedIndex].innerText);
 
     var loginBlock = document.getElementById("loginBlock");
-    var menuBlock = document.getElementById("menuBlock");
     window.addEventListener("load", e => {
         if (usersSelectBox.options.length != 0) {
             usersSelectBox.dispatchEvent(new Event("change"))
         }
-        menuBlock.style.display = "none";
     });
 
     var user;
@@ -76,13 +79,12 @@
             success: function (result) {
                 console.log(result);
                 user = result;
+                loginBlock.style.display = "none";
+                menuBlock.style.display = "";
             }
         });
-        loginBlock.style.display = "none";
-        menuBlock.style.display = "";
     });
 
-    var botCountSelectBox = document.getElementById("botCountSelectBox");
     document.getElementById("startGameButton").addEventListener("click", e => {
         if (user) {
             window.location.assign("/Game/" + user.id + "_" + botCountSelectBox.options[botCountSelectBox.selectedIndex].innerText);

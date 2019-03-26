@@ -4,9 +4,12 @@
     Layout = "_Layout";
 }
 
-<h2>Player: @Model.Players[0].Name:@Model.Players[0].Id</h2>
-
-
+<p>Was created game with ID - @Model.GameId.</p>
+<p>Players:</p>
+@foreach (var player in Model.Players)
+{
+    <p>Id: @player.Id, Name: @player.Name, IsBot: @(player.IsBot ? "yes" : "no")</p>
+}
 
 @*<h2>Bots:</h2>
 

@@ -26,7 +26,9 @@ namespace BlackJack.Web.Controllers
         {
             var players = new List<PlayerModel> { _loginService.GetPlayer(userId) };
             //players.AddRange(_gameService.GetOrCreateBots(botCount));
-            return View(new GameCreateViewModel { Players = players });
+            return View(new GameCreateViewModel { GameId = botCount, Players = players });
         }
+
+        
     }
 }
