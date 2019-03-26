@@ -31,8 +31,9 @@ namespace BlackJack.Web
             }
             
             app.UseStatusCodePages();
+            app.UseDefaultFiles();
             app.UseStaticFiles();
-            app.UseMvcWithDefaultRoute();
+            app.UseMvc();
         }
     }
 }
