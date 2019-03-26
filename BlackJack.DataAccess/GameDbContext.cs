@@ -13,15 +13,13 @@ namespace BlackJack.DataAccess
     {
         private DbConnection dbConnection;
 
-        public DbSet<Bot> Bots { get; set; }
         public DbSet<Card> Cards { get; set; }
+        public DbSet<Player> Players { get; set; }
         public DbSet<Game> Games { get; set; }
+        public DbSet<GamePlayer> GamePlayers { get; set; }
         public DbSet<Round> Rounds { get; set; }
         public DbSet<RoundPlayer> RoundPlayers { get; set; }
-        public DbSet<RoundPlayerBot> RoundPlayerBots { get; set; }
         public DbSet<RoundPlayerCard> RoundPlayerCards { get; set; }
-        public DbSet<RoundPlayerUser> RoundPlayerUsers { get; set; }
-        public DbSet<User> Users { get; set; }
 
         public GameDbContext(DbConnection connection)
         {
@@ -30,7 +28,7 @@ namespace BlackJack.DataAccess
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Bot>()
+            modelBuilder.Entity<Player>()
                 .HasIndex(property => property.Name)
                 .IsUnique();
 
@@ -39,10 +37,6 @@ namespace BlackJack.DataAccess
                 .IsUnique();
             modelBuilder.Entity<Card>()
                 .HasData(GenerateCards());
-
-            modelBuilder.Entity<User>()
-                .HasIndex(property => property.Name)
-                .IsUnique();
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

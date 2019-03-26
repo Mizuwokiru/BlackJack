@@ -1,32 +1,32 @@
-﻿using BlackJack.BusinessLogic.Services.Interfaces;
+﻿using BlackJack.BusinessLogic.Models;
+using BlackJack.BusinessLogic.Services.Interfaces;
 using BlackJack.Web.Models;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 
 namespace BlackJack.Web.Controllers
 {
     public class GameController : Controller
     {
-        private readonly IUserService _userService;
-
+        private readonly ILoginService _loginService;
+        private readonly ICardService _cardService;
         private readonly IGameService _gameService;
 
-        public GameController(IGameService gameService,
-            IUserService userService)
+        public GameController(ILoginService loginService,
+            ICardService cardService,
+            IGameService gameService)
         {
+            _loginService = loginService;
+            _cardService = cardService;
             _gameService = gameService;
-            _userService = userService;
         }
 
-        public IActionResult Index(GameCreateViewModel gameCreate)
+        [Route("[controller]/{userId}_{botCount}")]
+        public IActionResult Index(int userId, int botCount)
         {
-            var userName = _userService.GetUser(gameCreate.UserId);
-            return View("Index", $"User {userName} created game with {gameCreate.BotCount} bots!");
+            var players = new List<PlayerModel> { _loginService.GetPlayer(userId) };
+            //players.AddRange(_gameService.GetOrCreateBots(botCount));
+            return View(new GameCreateViewModel { Players = players });
         }
-
-        /*public IActionResult Index(int userId, int botCount)
-        {
-            
-            return View("Index", $"{userId} {botCount}");
-        }*/
     }
 }

@@ -2,8 +2,7 @@
 
 namespace BlackJack.DataAccess.Repositories.Interfaces
 {
-    public interface IUserRepository : IRepository<User>
+    public interface IRoundPlayerRepository : IRepository<RoundPlayer>
     {
-        User GetUserByName(string userName);
     }
 }

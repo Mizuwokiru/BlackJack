@@ -1,26 +1,91 @@
-﻿@model UserLoginViewModel
-
+﻿@model LoginViewModel
 @{
     ViewBag.Title = "Login";
     Layout = "_Layout";
 }
 
-<form asp-action="Menu" class="bj-centered-block">
+<div class="bj-centered-block" id="loginBlock">
     <div class="input-group bj-centered-control">
         <div class="input-group-prepend">
-            <select asp-items="@(new SelectList(Model.Users, "Id", "Name"))"
+            <select asp-items="@(new SelectList(Model.Players, "Id", "Name"))"
                     id="usersSelectBox" class="form-control"></select>
         </div>
-        <input asp-for="UserName" type="text" class="form-control" id="userInputBox" />
+        <input asp-for="PlayerName" type="text" class="form-control" id="userInputBox" />
     </div>
 
-    <input type="submit" class="btn btn-primary bj-centered-control" value="Login" />
-</form>
+    <button type="button" class="btn btn-primary bj-centered-control" id="loginButton">Login</button>
+</div>
+
+<div class="bj-centered-block" id="menuBlock">
+    <button type="button" class="btn btn-primary bj-centered-control" data-toggle="modal" data-target="#botCountModal">Create game</button>
+
+    @*<a class="btn btn-primary bj-centered-control" asp-controller="Home" asp-action="">Create game</a>
+    <a class="btn btn-primary bj-centered-control" asp-controller="Home" asp-action="">Game history</a>*@
+</div>
+
+<div class="modal fade" id="botCountModal" tabindex="-1" role="dialog" aria-labelledby="botCountModalTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="botCountModalTitle">Game creation</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <h6>Bot count:</h6>
+                <select id="botCountSelectBox" class="form-control">
+                    <option>0</option>
+                    <option>1</option>
+                    <option>2</option>
+                    <option>3</option>
+                    <option>4</option>
+                    <option>5</option>
+                    <option>6</option>
+                    <option>7</option>
+                </select>
+            </div>
+            <div class="modal-footer">
+                <button id="startGameButton" type="button" class="btn btn-primary">Start</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 <script>
     var userInputBox = document.getElementById("userInputBox");
     var usersSelectBox = document.getElementById("usersSelectBox");
     usersSelectBox.addEventListener("change", e => userInputBox.value = usersSelectBox.options[usersSelectBox.selectedIndex].innerText);
-    
-    window.addEventListener("load", e => usersSelectBox.dispatchEvent(new Event("change")));
+
+    var loginBlock = document.getElementById("loginBlock");
+    var menuBlock = document.getElementById("menuBlock");
+    window.addEventListener("load", e => {
+        if (usersSelectBox.options.length != 0) {
+            usersSelectBox.dispatchEvent(new Event("change"))
+        }
+        menuBlock.style.display = "none";
+    });
+
+    var user;
+    document.getElementById("loginButton").addEventListener("click", e => {
+        $.ajax({
+            url: "/Home/PlayerByName/" + userInputBox.value,
+            type: "GET",
+            contentType: "application/json",
+            success: function (result) {
+                console.log(result);
+                user = result;
+            }
+        });
+        loginBlock.style.display = "none";
+        menuBlock.style.display = "";
+    });
+
+    var botCountSelectBox = document.getElementById("botCountSelectBox");
+    document.getElementById("startGameButton").addEventListener("click", e => {
+        if (user) {
+            window.location.assign("/Game/" + user.id + "_" + botCountSelectBox.options[botCountSelectBox.selectedIndex].innerText);
+        }
+    });
 </script>

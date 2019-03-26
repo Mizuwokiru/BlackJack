@@ -2,40 +2,28 @@
 using BlackJack.BusinessLogic.Services.Interfaces;
 using BlackJack.Web.Models;
 using Microsoft.AspNetCore.Mvc;
-using System.Diagnostics;
 
 namespace BlackJack.Web.Controllers
 {
     public class HomeController : Controller
     {
-        private IUserService _userService;
+        private readonly ILoginService _loginService;
 
-        public HomeController(IUserService userService)
+        public HomeController(ILoginService loginService)
         {
-            _userService = userService;
+            _loginService = loginService;
         }
 
-        [HttpGet]
         public IActionResult Index()
         {
-            var userLogin = new UserLoginViewModel
-            {
-                UserName = string.Empty,
-                Users = _userService.GetUsers()
-            };
-            return View(userLogin);
+            return View(new LoginViewModel { Players = _loginService.GetPlayers() });
         }
 
-        [HttpPost]
-        public IActionResult Menu(UserLoginViewModel userLogin)
+        [Route("[controller]/PlayerByName/{name}")]
+        [Produces("application/json")]
+        public PlayerModel GetOrCreatePlayer(string name)
         {
-            UserModel user = _userService.GetOrCreateUser(userLogin.UserName);
-            return View(user.Id);
-        }
-
-        public IActionResult CreateGame(int userId)
-        {
-            return View(new GameCreateViewModel { UserId = userId });
+            return _loginService.GetOrCreatePlayer(name);
         }
     }
 }

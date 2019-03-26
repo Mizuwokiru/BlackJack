@@ -1,14 +1,11 @@
-﻿using BlackJack.BusinessLogic.Models;
-using System.Collections.Generic;
-
-namespace BlackJack.BusinessLogic.Services.Interfaces
+﻿namespace BlackJack.BusinessLogic.Services.Interfaces
 {
     public interface IGameService
     {
-        IEnumerable<BotModel> CreateBots(int botCount);
+        int CreateGame(int userId, int botCount);
 
-        GameModel CreateGame(int userId);
+        int CreateRound(int gameId);
 
-        RoundModel CreateRound(int gameId);
+        void FinishRound(int roundId);
     }
 }

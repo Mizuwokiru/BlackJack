@@ -12,62 +12,92 @@ namespace BlackJack.BusinessLogic.Services
 {
     public class GameService : IGameService
     {
-        private IBotRepository _botRepository;
-        private IGameRepository _gameRepository;
-        private IRoundRepository _roundRepository;
-        private IUserRepository _userRepository;
+        private readonly IGameRepository _gameRepository;
+        private readonly IRoundRepository _roundRepository;
+        private readonly IPlayerRepository _playerRepository;
+        private readonly IGamePlayerRepository _gamePlayerRepository;
+        private readonly IRoundPlayerRepository _roundPlayerRepository;
 
-        public GameService(IBotRepository botRepository,
-            IGameRepository gameRepository,
+        public GameService(IGameRepository gameRepository,
             IRoundRepository roundRepository,
-            IUserRepository userRepository)
+            IPlayerRepository playerRepository,
+            IGamePlayerRepository gamePlayerRepository,
+            IRoundPlayerRepository roundPlayerRepository)
         {
-            _botRepository = botRepository;
             _gameRepository = gameRepository;
             _roundRepository = roundRepository;
-            _userRepository = userRepository;
+            _playerRepository = playerRepository;
+            _gamePlayerRepository = gamePlayerRepository;
+            _roundPlayerRepository = roundPlayerRepository;
         }
 
-        public IEnumerable<BotModel> CreateBots(int botCount)
+        private IEnumerable<Player> GetOrCreateBots(int botCount)
         {
             if (botCount < 0 || botCount > Constants.MaxBotCount)
             {
                 throw new ValidationException("Bot count is invalid!");
             }
-            IEnumerable<Bot> botsFromDb = _botRepository.GetOrCreateBots(botCount);
-            var bots = new List<BotModel>();
-            foreach (var botFromDb in botsFromDb)
-            {
-                bots.Add(new BotModel { Id = botFromDb.Id, Name = botFromDb.Name });
-            }
-            return bots;
+            IEnumerable<Player> botsFromDb = _playerRepository.GetOrCreateBots(botCount);
+            
+            //var bots = new List<PlayerModel>();
+            //foreach (var botFromDb in botsFromDb)
+            //{
+            //    bots.Add(new PlayerModel { Id = botFromDb.Id, Name = botFromDb.Name, IsBot = true });
+            //}
+            return botsFromDb;
         }
 
-        public GameModel CreateGame(int userId)
+        public int CreateGame(int playerId, int botCount)
         {
-            var userFromDb = _userRepository.Get(userId);
-            if (userFromDb == null)
+            Player playerFromDb = _playerRepository.Get(playerId);
+            if (playerFromDb == null)
             {
-                throw new InvalidOperationException($"User with id {userId} is not exists.");
+                throw new InvalidOperationException($"Player with id {playerId} is not exists.");
             }
-            var gameToDb = new Game { User = userFromDb };
+            var bots = GetOrCreateBots(botCount);
+
+            var gameToDb = new Game();
             _gameRepository.Add(gameToDb);
-            return new GameModel { Id = gameToDb.Id, UserId = userId };
+
+            _gamePlayerRepository.Add(new GamePlayer { Game = gameToDb, Player = playerFromDb });
+            foreach (var bot in bots)
+            {
+                _gamePlayerRepository.Add(new GamePlayer { Game = gameToDb, Player = playerFromDb });
+            }
+
+            return gameToDb.Id;
         }
 
-        public RoundModel CreateRound(int gameId)
+        public int CreateRound(int gameId)
         {
-            var gameFromDb = _gameRepository.Get(gameId);
+            Game gameFromDb = _gameRepository.Get(gameId);
             if (gameFromDb == null)
             {
                 throw new InvalidOperationException($"Game with id {gameId} is not exists.");
             }
-            int roundCount = _roundRepository.GetAll().Count();
+            int roundCount = _roundRepository.GetRoundsByGame(gameId).Count();
             var roundToDb = new Round { Game = gameFromDb, Number = roundCount };
             _roundRepository.Add(roundToDb);
-            return new RoundModel { Id = roundToDb.Id, Number = roundToDb.Number };
+
+            IEnumerable<Player> playersOfGame = _gamePlayerRepository.GetPlayersByGame(gameId).Select(gamePlayer => gamePlayer.Player);
+            foreach (var playerOfGame in playersOfGame)
+            {
+                _roundPlayerRepository.Add(new RoundPlayer { Player = playerOfGame, Round = roundToDb });
+            }
+            
+            return roundToDb.Id;
         }
 
+        public void FinishRound(int roundId)
+        {
+            Round roundFromDb = _roundRepository.Get(roundId);
+            if (roundFromDb == null)
+            {
+                throw new InvalidOperationException($"Round with id {roundId} is not exists.");
+            }
 
+            roundFromDb.IsFinished = true;
+            _roundRepository.Update(roundFromDb);
+        }
     }
 }

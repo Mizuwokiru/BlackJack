@@ -15,14 +15,13 @@ namespace BlackJack.BusinessLogic.Configuration
             // EF BEGIN
             services.AddDbContext<GameDbContext>();
             // возможно стоит переделать в Scoped
-            services.AddTransient<IBotRepository, DataAccess.Repositories.EntityFrameworkCore.BotRepository>();
             services.AddTransient<ICardRepository, DataAccess.Repositories.EntityFrameworkCore.CardRepository>();
+            services.AddTransient<IPlayerRepository, DataAccess.Repositories.EntityFrameworkCore.PlayerRepository>();
+            services.AddTransient<IGamePlayerRepository, DataAccess.Repositories.EntityFrameworkCore.GamePlayerRepository>();
             services.AddTransient<IGameRepository, DataAccess.Repositories.EntityFrameworkCore.GameRepository>();
             services.AddTransient<IRoundRepository, DataAccess.Repositories.EntityFrameworkCore.RoundRepository>();
-            services.AddTransient<IRoundPlayerBotRepository, DataAccess.Repositories.EntityFrameworkCore.RoundPlayerBotRepository>();
-            services.AddTransient<IRoundPlayerUserRepository, DataAccess.Repositories.EntityFrameworkCore.RoundPlayerUserRepository>();
+            services.AddTransient<IRoundPlayerRepository, DataAccess.Repositories.EntityFrameworkCore.RoundPlayerRepository>();
             services.AddTransient<IRoundPlayerCardRepository, DataAccess.Repositories.EntityFrameworkCore.RoundPlayerCardRepository>();
-            services.AddTransient<IUserRepository, DataAccess.Repositories.EntityFrameworkCore.UserRepository>();
             // EF END
 
             // Dapper BEGIN

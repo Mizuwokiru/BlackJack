@@ -1,7 +1,9 @@
 ﻿namespace BlackJack.BusinessLogic.Models
 {
-    public class UserModel : BaseModel
+    public class PlayerModel : BaseModel    
     {
         public string Name { get; set; }
+
+        public bool IsBot { get; set; }
     }
 }

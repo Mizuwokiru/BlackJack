@@ -2,6 +2,5 @@
 {
     public class GameModel : BaseModel
     {
-        public int UserId { get; set; }
     }
 }
