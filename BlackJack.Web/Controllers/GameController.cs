@@ -1,34 +1,36 @@
-﻿using BlackJack.BusinessLogic.Models;
-using BlackJack.BusinessLogic.Services.Interfaces;
-using BlackJack.Web.Models;
-using Microsoft.AspNetCore.Mvc;
+﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using System.Threading.Tasks;
+using BlackJack.BusinessLogic.Models;
+using BlackJack.BusinessLogic.Services.Interfaces;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 
 namespace BlackJack.Web.Controllers
 {
-    public class GameController : Controller
+    [Route("api/[controller]/[action]")]
+    [ApiController]
+    public class GameController : ControllerBase
     {
-        private readonly ILoginService _loginService;
-        private readonly ICardService _cardService;
-        private readonly IGameService _gameService;
+        private ICardService _cardService;
 
-        public GameController(ILoginService loginService,
-            ICardService cardService,
-            IGameService gameService)
+        public GameController(ICardService cardService)
         {
-            _loginService = loginService;
             _cardService = cardService;
-            _gameService = gameService;
         }
 
-        [Route("[controller]/{userId}_{botCount}")]
-        public IActionResult Index(int userId, int botCount)
+        [HttpPost("{botCount}")]
+        public ActionResult<string> Create(int botCount, PlayerViewModel player)
         {
-            var players = new List<PlayerModel> { _loginService.GetPlayer(userId) };
-            //players.AddRange(_gameService.GetOrCreateBots(botCount));
-            return View(new GameViewModel { GameId = botCount, Players = players });
+            return $"Bot count is {botCount}. Player - {player.Name}";
         }
 
-        
+        [HttpGet]
+        public ActionResult<IEnumerable<int>> ShuffleCards()
+        {
+            return _cardService.GetShuffledCardIds().ToList();
+        }
     }
 }

@@ -7,6 +7,6 @@ namespace BlackJack.Web.Models
     {
         public string PlayerName { get; set; }
 
-        public IEnumerable<PlayerModel> Players { get; set; }
+        public IEnumerable<PlayerViewModel> Players { get; set; }
     }
 }

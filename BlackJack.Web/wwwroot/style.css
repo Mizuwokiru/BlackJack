@@ -25,3 +25,7 @@ body {
     height: auto;
     margin: 10px;
 }
+
+#login-block, #game-menu-block {
+    display: none;
+}

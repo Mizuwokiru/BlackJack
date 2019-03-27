@@ -5,6 +5,7 @@ namespace BlackJack.BusinessLogic.Services.Interfaces
 {
     public interface ICardService
     {
-        IEnumerable<CardModel> GetShuffledCards();
+        IEnumerable<CardViewModel> GetShuffledCards();
+        IEnumerable<int> GetShuffledCardIds();
     }
 }

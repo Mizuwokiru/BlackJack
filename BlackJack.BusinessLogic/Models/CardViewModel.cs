@@ -2,7 +2,7 @@
 
 namespace BlackJack.BusinessLogic.Models
 {
-    public class CardModel : BaseModel
+    public class CardViewModel : BaseModel
     {
         public Suit Suit { get; set; }
 

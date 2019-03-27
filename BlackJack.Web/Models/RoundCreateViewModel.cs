@@ -9,6 +9,6 @@ namespace BlackJack.Web.Models
 
         // TODO: List of RoundPlayer
 
-        public List<CardModel> Cards { get; set; } // or List of RoundPlayerCard?
+        public List<CardViewModel> Cards { get; set; } // or List of RoundPlayerCard?
     }
 }

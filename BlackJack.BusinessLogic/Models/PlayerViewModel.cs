@@ -1,6 +1,6 @@
 ﻿namespace BlackJack.BusinessLogic.Models
 {
-    public class PlayerModel : BaseModel    
+    public class PlayerViewModel : BaseModel    
     {
         public string Name { get; set; }
 

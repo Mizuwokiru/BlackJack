@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using System.Text.RegularExpressions;
 using BlackJack.BusinessLogic.Models;
 using BlackJack.BusinessLogic.Services.Interfaces;
@@ -18,18 +19,18 @@ namespace BlackJack.BusinessLogic.Services
             _playerRepository = playerRepository;
         }
 
-        public IEnumerable<PlayerModel> GetPlayers()
+        public IEnumerable<PlayerViewModel> GetPlayers()
         {
             IEnumerable<Player> playersFromDb = _playerRepository.GetPlayers();
-            var players = new List<PlayerModel>();
+            var players = new List<PlayerViewModel>();
             foreach (var playerFromDb in playersFromDb)
             {
-                players.Add(new PlayerModel { Id = playerFromDb.Id, Name = playerFromDb.Name });
+                players.Add(new PlayerViewModel { Id = playerFromDb.Id, Name = playerFromDb.Name });
             }
             return players;
         }
 
-        public PlayerModel GetOrCreatePlayer(string playerName)
+        public PlayerViewModel GetOrCreatePlayer(string playerName)
         {
             if (!Regex.IsMatch(playerName, @"^\w+$"))
             {
@@ -44,17 +45,17 @@ namespace BlackJack.BusinessLogic.Services
                 _playerRepository.Add(playerFromDb);
             }
 
-            return new PlayerModel { Id = playerFromDb.Id, Name = playerFromDb.Name };
+            return new PlayerViewModel { Id = playerFromDb.Id, Name = playerFromDb.Name };
         }
 
-        public PlayerModel GetPlayer(int playerId)
+        public PlayerViewModel GetPlayer(int playerId)
         {
             var playerFromDb = _playerRepository.Get(playerId);
             if (playerFromDb == null || playerFromDb.IsBot)
             {
                 throw new InvalidOperationException($"Player with id {playerId} is not exists.");
             }
-            return new PlayerModel { Id = playerFromDb.Id, Name = playerFromDb.Name };
+            return new PlayerViewModel { Id = playerFromDb.Id, Name = playerFromDb.Name };
         }
     }
 }
