@@ -52,7 +52,9 @@ $(document).ready(() => {
         });
     });
 
+    let logString = null;
     $("#start-game-button").click(() => {
+        console.log(logString);
         $.post({
             url: createGameApi + "/" + $("#bot-count-select-box").val(),
             contentType: "application/json",
@@ -64,8 +66,19 @@ $(document).ready(() => {
                     cache: false,
                     success: cards => {
                         console.log(cards);
+                        logString = "";
+                        for (let i = 0; i < 52; i++) {
+                            $.get({
+                                url: gameApi + "/Card/" + cards[i],
+                                cache: false,
+                                success: card => {
+                                    logString += getCardName(card) + "\n";
+                                }
+                            });
+                        }
                     }
                 });
+                $("#bot-count-modal").modal("hide");
             }
         });
         //$("#login-block").css({ display: "none" });
@@ -87,4 +100,15 @@ function getPlayersNames() {
             $("#login-block").css({ display: "block" });
         }
     })
+}
+
+function getEnumName(enumeration, value) {
+    return Object.keys(enumeration).find(index => enumeration[index] === value);
+}
+
+function getCardName(card) {
+    if (card === undefined || card.suit === undefined || card.rank === undefined) {
+        return undefined;
+    }
+    return getEnumName(Rank, card.rank) + " of " + getEnumName(Suit, card.suit);
 }

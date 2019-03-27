@@ -18,39 +18,6 @@ namespace BlackJack.BusinessLogic.Services
             _cardRepository = cardRepository;
         }
 
-        public IEnumerable<CardViewModel> GetShuffledCards()
-        {
-            IEnumerable<Card> cardsFromDb = _cardRepository.GetAll();
-
-            var deck = new List<CardViewModel>();
-            foreach (var cardFromDb in cardsFromDb)
-            {
-                deck.Add(new CardViewModel { Id = cardFromDb.Id, Rank = cardFromDb.Rank, Suit = cardFromDb.Suit });
-            }
-
-            var shuffledCards = new List<CardViewModel>();
-            for (int i = 0; i < Constants.DeckCount; i++)
-            {
-                shuffledCards.AddRange(GetShuffledDeck(deck));
-            }
-
-            return shuffledCards;
-        }
-
-        private static IEnumerable<CardViewModel> GetShuffledDeck(List<CardViewModel> unshuffledDeck)
-        {
-            var shuffledDeck = new List<CardViewModel>();
-            var cardIndexSequence = Enumerable.Range(0, unshuffledDeck.Count).ToList();
-            var random = new Random();
-            for (int i = 0; i < unshuffledDeck.Count; i++)
-            {
-                var randIndex = random.Next(cardIndexSequence.Count);
-                shuffledDeck.Add(unshuffledDeck[cardIndexSequence[randIndex]]);
-                cardIndexSequence.RemoveAt(randIndex);
-            }
-            return shuffledDeck;
-        }
-
         public IEnumerable<int> GetShuffledCardIds()
         {
             var cards = Enumerable.Range(1, Constants.DeckCapacity).ToList();
@@ -73,6 +40,16 @@ namespace BlackJack.BusinessLogic.Services
             }
 
             return shuffledCards;
+        }
+
+        public CardViewModel GetCard(int id)
+        {
+            Card cardFromDb = _cardRepository.Get(id);
+            if (cardFromDb == null)
+            {
+                throw new InvalidOperationException($"Card with id {id} is not exists.");
+            }
+            return new CardViewModel { Id = cardFromDb.Id, Rank = cardFromDb.Rank, Suit = cardFromDb.Suit };
         }
     }
 }

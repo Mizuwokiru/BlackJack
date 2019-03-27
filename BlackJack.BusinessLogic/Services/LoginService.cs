@@ -34,7 +34,7 @@ namespace BlackJack.BusinessLogic.Services
         {
             if (!Regex.IsMatch(playerName, @"^\w+$"))
             {
-                throw new ValidationException($"Player name is not valid ({playerName}");
+                throw new ValidationException($"Player name is not valid ({playerName})");
             }
 
             Player playerFromDb = _playerRepository.GetPlayerByName(playerName);

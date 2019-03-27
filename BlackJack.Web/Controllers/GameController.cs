@@ -32,5 +32,11 @@ namespace BlackJack.Web.Controllers
         {
             return _cardService.GetShuffledCardIds().ToList();
         }
+
+        [HttpGet("{id}")]
+        public ActionResult<CardViewModel> Card(int id)
+        {
+            return _cardService.GetCard(id);
+        }
     }
 }
