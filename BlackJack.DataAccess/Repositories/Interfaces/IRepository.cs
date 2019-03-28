@@ -7,8 +7,10 @@ namespace BlackJack.DataAccess.Repositories.Interfaces
     {
         T Get(int id);
         IEnumerable<T> GetAll();
-        void Add(T item);
-        void Update(T item);
+        void Add(params T[] item);
+        void Add(IEnumerable<T> item);
+        void Update(params T[] item);
+        void Update(IEnumerable<T> item);
         void Delete(int id);
     }
 }

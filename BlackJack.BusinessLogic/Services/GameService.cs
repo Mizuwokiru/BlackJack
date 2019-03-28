@@ -48,25 +48,68 @@ namespace BlackJack.BusinessLogic.Services
             return _playerRepository.GetOrCreateBots(botCount);
         }
 
-        public int CreateGame(int playerId, int botCount)
+        public CreateGameViewModel CreateGame(int playerId, int botCount)
         {
             Player playerFromDb = _playerRepository.Get(playerId);
             if (playerFromDb == null)
             {
                 throw new InvalidOperationException($"Player with id {playerId} is not exists.");
             }
-            var bots = GetOrCreateBots(botCount);
+            IEnumerable<Player> botsFromDb = GetOrCreateBots(botCount);
 
-            var gameToDb = new Game();
+            Game gameToDb = new Game();
             _gameRepository.Add(gameToDb);
 
-            _gamePlayerRepository.Add(new GamePlayer { GameId = gameToDb.Id, PlayerId = playerFromDb.Id });
-            foreach (var bot in bots)
+            var bots = new List<PlayerViewModel>();
+            var gamePlayers = new List<GamePlayer> { new GamePlayer { GameId = gameToDb.Id, PlayerId = playerFromDb.Id } };
+            foreach (var botFromDb in botsFromDb)
             {
-                _gamePlayerRepository.Add(new GamePlayer { GameId = gameToDb.Id, PlayerId = bot.Id });
+                bots.Add(new PlayerViewModel { Id = botFromDb.Id, Name = botFromDb.Name });
+                gamePlayers.Add(new GamePlayer { GameId = gameToDb.Id, PlayerId = botFromDb.Id });
+            }
+            _gamePlayerRepository.Add(gamePlayers);
+
+            CreateGameViewModel createdGame = new CreateGameViewModel
+            {
+                GameId = gameToDb.Id,
+                Bots = bots
+            };
+            return createdGame;
+        }
+
+        private List<int> GetShuffledCardsIds()
+        {
+            var cards = new List<int>();
+            for (int i = 0; i < Constants.DeckCount; i++)
+            {
+                cards.AddRange(Enumerable.Range(1, Constants.DeckCapacity));
             }
 
-            return gameToDb.Id;
+            var random = new Random();
+            for (int i = cards.Count - 1, j; i >= 1; i--)
+            {
+                j = random.Next(i + 1);
+                int tmp = cards[i];
+                cards[i] = cards[j];
+                cards[j] = tmp;
+            }
+
+            return cards;
+        }
+
+        private List<CardViewModel> GetStartCards(List<int> cardIds, int playerCount)
+        {
+            var cards = new List<CardViewModel>();
+            for (int i = 0; i < 2; i++)
+            {
+                for (int j = 0; j < playerCount; j++)
+                {
+                    var foundCard = _cardRepository.Cards.Where(card => cardIds[i * playerCount + j] == card.Id).FirstOrDefault();
+                    cards.Add(new CardViewModel { Suit = foundCard.Suit.ToString(), Rank = foundCard.Rank.ToString() });
+                }
+            }
+            cardIds.RemoveRange(0, playerCount * 2);
+            return cards;
         }
 
         public RoundViewModel CreateRound(int gameId)
@@ -80,26 +123,27 @@ namespace BlackJack.BusinessLogic.Services
             var roundToDb = new Round { GameId = gameId, Number = newRoundNumber };
             _roundRepository.Add(roundToDb);
 
-            var round = new RoundViewModel { Id = roundToDb.Id, Number = newRoundNumber, BotsCards = new List<PlayerCardsViewModel>() };
-
+            var round = new RoundViewModel { Number = newRoundNumber, BotsCards = new List<PlayerCardsViewModel>() };
             IEnumerable<Player> playersOfGame = _playerRepository.GetPlayersByGamePlayers(_gamePlayerRepository.GetPlayersByGame(gameId));
-            //IEnumerable<Player> playersOfGame = _gamePlayerRepository.GetPlayersByGame(gameId).Select(gamePlayer => gamePlayer.Player);
+            var roundPlayers = new List<RoundPlayer>();
             foreach (var playerOfGame in playersOfGame)
             {
-                var roundPlayer = new RoundPlayer { PlayerId = playerOfGame.Id, RoundId = roundToDb.Id };
-                _roundPlayerRepository.Add(roundPlayer);
-                var playerViewModel = new PlayerViewModel { Id = roundPlayer.Id, Name = playerOfGame.Name };
+                roundPlayers.Add(new RoundPlayer { PlayerId = playerOfGame.Id, RoundId = roundToDb.Id });
                 if (playerOfGame.IsBot)
                 {
-                    round.BotsCards.Add(new PlayerCardsViewModel { Player = playerViewModel });
+                    round.BotsCards.Add(new PlayerCardsViewModel { PlayerId = playerOfGame.Id });
                     continue;
                 }
-                round.UserCards = new PlayerCardsViewModel { Player = playerViewModel };
+                round.UserCards = new PlayerCardsViewModel { PlayerId = playerOfGame.Id };
             }
+            _roundPlayerRepository.Add(roundPlayers);
 
-            var cacheModel = new CacheRoundModel { RemainingCards = GetShuffledCards() };
+            List<int> cards = GetShuffledCardsIds();
 
-            round.UserCards.Cards = new List<CardViewModel> { cacheModel.RemainingCards.Dequeue(), cacheModel.RemainingCards.Dequeue() };
+            round.UserCards.Cards = new List<CardViewModel>
+            {
+                new CardViewModel(), cacheModel.RemainingCards.Dequeue()
+            };
             foreach (var playerCardsModel in round.BotsCards)
             {
                 playerCardsModel.Cards = new List<CardViewModel> { cacheModel.RemainingCards.Dequeue(), cacheModel.RemainingCards.Dequeue() };
@@ -115,7 +159,7 @@ namespace BlackJack.BusinessLogic.Services
 
         public void FinishRound(int gameId)
         {
-            var roundId = (_cache.Get(gameId) as CacheRoundModel).Round.Id;
+            var roundId = (_cache.Get(gameId) as CachedRound).Round.Id;
             Round roundFromDb = _roundRepository.Get(roundId);
             if (roundFromDb == null)
             {
@@ -127,44 +171,13 @@ namespace BlackJack.BusinessLogic.Services
             _cache.Remove(gameId);
         }
 
-        private Queue<CardViewModel> GetShuffledCards()
+        private class CachedRound
         {
-            var cardsFromDb = _cardRepository.GetAll().ToList();
-            if (cardsFromDb.Count < Constants.DeckCapacity)
-            {
-                throw new ValidationException("Cards is not enough.");
-            }
+            public int RoundId { get; set; }
 
-            var unshuffledCards = new List<CardViewModel>();
-            foreach (var cardFromDb in cardsFromDb)
-            {
-                var card = new CardViewModel { Rank = cardFromDb.Rank.ToString(), Suit = cardFromDb.Suit.ToString() };
-                for (int i = 0; i < Constants.DeckCount; i++)
-                {
-                    unshuffledCards.Add(card);
-                }
-            }
+            public List<int> RemainingCardsIds { get; set; }
 
-            var cardIndexSequence = Enumerable.Range(0, Constants.GameCardCount).ToList();
-            var random = new Random();
-            var shuffledCards = new Queue<CardViewModel>();
-            for (int i = 0; i < Constants.GameCardCount; i++)
-            {
-                var randIndex = random.Next(cardIndexSequence.Count);
-                shuffledCards.Enqueue(unshuffledCards[cardIndexSequence[randIndex]]);
-                cardIndexSequence.RemoveAt(randIndex);
-            }
-
-            return shuffledCards;
-        }
-
-        private class CacheRoundModel
-        {
-            public RoundViewModel Round { get; set; }
-
-            public Queue<CardViewModel> RemainingCards { get; set; }
-
-            public CardViewModel DealerHiddenCard { get; set; }
+            public int DealerHiddenCard { get; set; }
         }
     }
 }

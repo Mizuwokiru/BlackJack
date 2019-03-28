@@ -2,7 +2,6 @@
 using System.Data.Common;
 using BlackJack.DataAccess.Entities;
 using BlackJack.DataAccess.Repositories.Interfaces;
-using Microsoft.EntityFrameworkCore;
 
 namespace BlackJack.DataAccess.Repositories.EntityFrameworkCore
 {
@@ -19,16 +18,26 @@ namespace BlackJack.DataAccess.Repositories.EntityFrameworkCore
 
         public IEnumerable<T> GetAll() => _dbContext.Set<T>();
 
-        public void Add(T item)
+        public void Add(params T[] item)
         {
-            _dbContext.Set<T>().Add(item);
+            _dbContext.Set<T>().AddRange(item);
             _dbContext.SaveChanges();
         }
 
-        public void Update(T item)
+        public void Add(IEnumerable<T> item)
         {
-            _dbContext.Entry(item).State = EntityState.Modified;
+            Add(item);
+        }
+
+        public void Update(params T[] item)
+        {
+            _dbContext.Set<T>().UpdateRange(item);
             _dbContext.SaveChanges();
+        }
+
+        public void Update(IEnumerable<T> item)
+        {
+            Add(item);
         }
 
         public void Delete(int id)

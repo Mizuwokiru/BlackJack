@@ -20,7 +20,7 @@ namespace BlackJack.Web
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
             services.AddMemoryCache();
-            services.AddDbAcсess(_configuration.GetConnectionString("DefaultConnection"));
+            services.AddDbAcсess(_configuration);
             services.AddBusinessLogic();
         }
 

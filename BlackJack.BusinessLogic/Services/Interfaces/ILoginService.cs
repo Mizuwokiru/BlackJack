@@ -6,7 +6,7 @@ namespace BlackJack.BusinessLogic.Services.Interfaces
     public interface ILoginService
     {
         IEnumerable<PlayerViewModel> GetPlayers();
-        PlayerViewModel GetOrCreatePlayer(string userName);
-        PlayerViewModel GetPlayer(int userId);
+        PlayerViewModel GetOrCreatePlayer(string playerName);
+        PlayerViewModel GetPlayer(int playerId);
     }
 }
