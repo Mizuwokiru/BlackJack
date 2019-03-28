@@ -7,6 +7,7 @@ using BlackJack.BusinessLogic.Models;
 using BlackJack.BusinessLogic.Services.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace BlackJack.Web.Controllers
 {
@@ -14,29 +15,39 @@ namespace BlackJack.Web.Controllers
     [ApiController]
     public class GameController : ControllerBase
     {
-        private ICardService _cardService;
+        private readonly ICardService _cardService;
+        private readonly IGameService _gameService;
 
-        public GameController(ICardService cardService)
+        public GameController(ICardService cardService,
+            IGameService gameService)
         {
             _cardService = cardService;
+            _gameService = gameService;
         }
 
         [HttpPost("{botCount}")]
-        public ActionResult<string> Create(int botCount, PlayerViewModel player)
+        public ActionResult<int> CreateGame(int botCount, PlayerViewModel player)
         {
-            return $"Bot count is {botCount}. Player - {player.Name}";
+            return _gameService.CreateGame(player.Id, botCount);
         }
 
-        [HttpGet]
-        public ActionResult<IEnumerable<int>> ShuffleCards()
+        [HttpPost("{gameId}")]
+        public ActionResult<RoundViewModel> CreateRound(int gameId)
         {
-            return _cardService.GetShuffledCardIds().ToList();
+            return _gameService.CreateRound(gameId);
         }
 
-        [HttpGet("{id}")]
-        public ActionResult<CardViewModel> Card(int id)
+        [HttpPost("{gameId}")]
+        public ActionResult<string> FinishRound(int gameId)
         {
-            return _cardService.GetCard(id);
+            _gameService.FinishRound(gameId);
+            return "Finished!";
         }
+
+        //[HttpGet]
+        //public ActionResult<IEnumerable<int>> ShuffleCards()
+        //{
+        //    return _cardService.GetShuffledCardIds().ToList();
+        //}
     }
 }

@@ -1,11 +1,9 @@
-﻿using BlackJack.Shared.Enums;
-
-namespace BlackJack.BusinessLogic.Models
+﻿namespace BlackJack.BusinessLogic.Models
 {
-    public class CardViewModel : BaseModel
+    public class CardViewModel
     {
-        public Suit Suit { get; set; }
+        public string Suit { get; set; }
 
-        public Rank Rank { get; set; }
+        public string Rank { get; set; }
     }
 }

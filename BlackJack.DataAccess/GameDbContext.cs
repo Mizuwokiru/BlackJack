@@ -41,7 +41,7 @@ namespace BlackJack.DataAccess
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer(dbConnection);
+            optionsBuilder.UseLazyLoadingProxies().UseSqlServer(dbConnection);
         }
 
         public override int SaveChanges()

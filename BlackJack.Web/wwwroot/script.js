@@ -1,7 +1,8 @@
 ﻿const loginApi = "api/Login";
 const gameApi = "api/Game";
-const createGameApi = gameApi + "/Create";
-const shuffleCardsApi = gameApi + "/ShuffleCards"
+const createGameApi = gameApi + "/CreateGame";
+const createRoundApi = gameApi + "/CreateRound";
+const finishRoundApi = gameApi + "/FinishRound";
 let user = null;
 
 // Enums
@@ -59,23 +60,19 @@ $(document).ready(() => {
             url: createGameApi + "/" + $("#bot-count-select-box").val(),
             contentType: "application/json",
             data: JSON.stringify(user),
-            success: result => {
-                console.log(result);
-                $.get({
-                    url: shuffleCardsApi,
-                    cache: false,
-                    success: cards => {
-                        console.log(cards);
-                        logString = "";
-                        for (let i = 0; i < 52; i++) {
-                            $.get({
-                                url: gameApi + "/Card/" + cards[i],
-                                cache: false,
-                                success: card => {
-                                    logString += getCardName(card) + "\n";
-                                }
-                            });
-                        }
+            success: gameId => {
+                console.log(gameId);
+                $.post({
+                    url: createRoundApi + "/" + gameId,
+                    accepts: "application/json",
+                    success: round => {
+                        console.log(round);
+                        $.post({
+                            url: finishRoundApi + "/" + gameId,
+                            success: finishMessage => {
+                                console.log(finishMessage);
+                            }
+                        });
                     }
                 });
                 $("#bot-count-modal").modal("hide");

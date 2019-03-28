@@ -2,8 +2,10 @@
 {
     public class GamePlayer : BaseEntity
     {
-        public Game Game { get; set; }
+        public int GameId { get; set; }
+        public virtual Game Game { get; set; }
 
-        public Player Player { get; set; }
+        public int PlayerId { get; set; }
+        public virtual Player Player { get; set; }
     }
 }

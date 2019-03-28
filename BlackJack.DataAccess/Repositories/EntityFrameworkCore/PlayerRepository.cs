@@ -35,5 +35,15 @@ namespace BlackJack.DataAccess.Repositories.EntityFrameworkCore
             }
             return bots.GetRange(0, botCount);
         }
+
+        public IEnumerable<Player> GetPlayersByGamePlayers(IEnumerable<GamePlayer> gamePlayers)
+        {
+            var playerList = new List<Player>();
+            foreach (var gamePlayer in gamePlayers)
+            {
+                playerList.Add(Get(gamePlayer.PlayerId));
+            }
+            return playerList;
+        }
     }
 }

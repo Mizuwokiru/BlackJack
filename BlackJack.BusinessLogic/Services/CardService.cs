@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using BlackJack.BusinessLogic.Models;
 using BlackJack.BusinessLogic.Services.Interfaces;
@@ -18,38 +19,59 @@ namespace BlackJack.BusinessLogic.Services
             _cardRepository = cardRepository;
         }
 
-        public IEnumerable<int> GetShuffledCardIds()
+        //public IEnumerable<int> GetShuffledCardIds()
+        //{
+        //    var cards = Enumerable.Range(1, Constants.DeckCapacity).ToList();
+        //    var unshuffledCards = new int[Constants.GameCardCount];
+        //    for (int i = 0; i < Constants.DeckCount; i++)
+        //    {
+        //        for (int j = 0; j < Constants.DeckCapacity; j++)
+        //        {
+        //            unshuffledCards[i * Constants.DeckCapacity + j] = cards[j];
+        //        }
+        //    }
+        //    var cardIndexSequence = Enumerable.Range(0, Constants.GameCardCount).ToList();
+        //    var shuffledCards = new List<int>();
+        //    var random = new Random();
+        //    for (int i = 0; i < Constants.GameCardCount; i++)
+        //    {
+        //        var randIndex = random.Next(cardIndexSequence.Count);
+        //        shuffledCards.Add(unshuffledCards[cardIndexSequence[randIndex]]);
+        //        cardIndexSequence.RemoveAt(randIndex);
+        //    }
+
+        //    return shuffledCards;
+        //}
+
+        public Queue<CardViewModel> GetShuffledCards()
         {
-            var cards = Enumerable.Range(1, Constants.DeckCapacity).ToList();
-            var unshuffledCards = new int[Constants.GameCardCount];
-            for (int i = 0; i < Constants.DeckCount; i++)
+            var cardsFromDb = _cardRepository.GetAll().ToList();
+            if (cardsFromDb.Count < Constants.DeckCapacity)
             {
-                for (int j = 0; j < Constants.DeckCapacity; j++)
+                throw new ValidationException("Cards is not enough.");
+            }
+
+            var unshuffledCards = new List<CardViewModel>();
+            foreach (var cardFromDb in cardsFromDb)
+            {
+                var card = new CardViewModel { Rank = cardFromDb.Rank.ToString(), Suit = cardFromDb.Suit.ToString() };
+                for (int i = 0; i < Constants.DeckCount; i++)
                 {
-                    unshuffledCards[i * Constants.DeckCapacity + j] = cards[j];
+                    unshuffledCards.Add(card);
                 }
             }
+
             var cardIndexSequence = Enumerable.Range(0, Constants.GameCardCount).ToList();
-            var shuffledCards = new List<int>();
             var random = new Random();
+            var shuffledCards = new Queue<CardViewModel>();
             for (int i = 0; i < Constants.GameCardCount; i++)
             {
                 var randIndex = random.Next(cardIndexSequence.Count);
-                shuffledCards.Add(unshuffledCards[randIndex]);
+                shuffledCards.Enqueue(unshuffledCards[cardIndexSequence[randIndex]]);
                 cardIndexSequence.RemoveAt(randIndex);
             }
 
             return shuffledCards;
-        }
-
-        public CardViewModel GetCard(int id)
-        {
-            Card cardFromDb = _cardRepository.Get(id);
-            if (cardFromDb == null)
-            {
-                throw new InvalidOperationException($"Card with id {id} is not exists.");
-            }
-            return new CardViewModel { Id = cardFromDb.Id, Rank = cardFromDb.Rank, Suit = cardFromDb.Suit };
         }
     }
 }
