@@ -1,5 +1,4 @@
 ﻿using BlackJack.Shared.Enums;
-using System.Collections.Generic;
 
 namespace BlackJack.DataAccess.Entities
 {
@@ -8,7 +7,5 @@ namespace BlackJack.DataAccess.Entities
         public Suit Suit { get; set; }
 
         public Rank Rank { get; set; }
-
-        //public virtual ICollection<RoundPlayerCard> RoundPlayerCards { get; set; }
     }
 }

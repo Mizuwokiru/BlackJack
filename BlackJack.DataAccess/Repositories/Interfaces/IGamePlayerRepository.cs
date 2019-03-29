@@ -5,6 +5,6 @@ namespace BlackJack.DataAccess.Repositories.Interfaces
 {
     public interface IGamePlayerRepository : IRepository<GamePlayer>
     {
-        IEnumerable<GamePlayer> GetPlayersByGame(int gameId);
+        IEnumerable<GamePlayer> GetGamePlayers(int gameId);
     }
 }

@@ -2,7 +2,6 @@
 using BlackJack.DataAccess.Repositories.Interfaces;
 using System.Collections.Generic;
 using System.Data.Common;
-using System.Linq;
 
 namespace BlackJack.DataAccess.Repositories.EntityFrameworkCore
 {
@@ -12,7 +11,9 @@ namespace BlackJack.DataAccess.Repositories.EntityFrameworkCore
         {
         }
 
-        public IEnumerable<Round> GetRoundsByGame(int gameId) =>
-            _dbContext.Set<Round>().Where(round => round.Game.Id == gameId);
+        public IEnumerable<Round> GetRoundsByGame(int gameId)
+        {
+            return _dbContext.Set<Game>().Find(gameId).Rounds;
+        }
     }
 }

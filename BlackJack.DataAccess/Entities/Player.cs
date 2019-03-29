@@ -10,8 +10,6 @@ namespace BlackJack.DataAccess.Entities
 
         public bool IsBot { get; set; }
 
-        //public virtual ICollection<GamePlayer> GamePlayers { get; set; }
-
-        //public virtual ICollection<RoundPlayer> RoundPlayers { get; set; }
+        public virtual ICollection<GamePlayer> GamePlayers { get; set; }
     }
 }

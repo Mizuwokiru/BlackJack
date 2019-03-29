@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using BlackJack.DataAccess.Entities;
+using BlackJack.DataAccess.Repositories.Interfaces;
+using System.Collections.Generic;
 using System.Data.Common;
 using System.Linq;
-using BlackJack.DataAccess.Entities;
-using BlackJack.DataAccess.Repositories.Interfaces;
 
 namespace BlackJack.DataAccess.Repositories.EntityFrameworkCore
 {
@@ -12,15 +12,21 @@ namespace BlackJack.DataAccess.Repositories.EntityFrameworkCore
         {
         }
 
-        public IEnumerable<Player> GetBots() =>
-            _dbContext.Set<Player>().Where(player => player.IsBot);
+        public IEnumerable<Player> GetBots()
+        {
+            return _dbContext.Set<Player>().Where(player => player.IsBot);
+        }
 
-        public Player GetPlayerByName(string playerName) =>
-            _dbContext.Set<Player>().Where(player => player.Name == playerName).FirstOrDefault();
+        public Player GetPlayerByName(string playerName)
+        {
+            return _dbContext.Set<Player>().Where(player => player.Name == playerName).FirstOrDefault();
+        }
 
-        public IEnumerable<Player> GetPlayers() =>
-            _dbContext.Set<Player>().Where(player => !player.IsBot);
-        
+        public IEnumerable<Player> GetPlayers()
+        {
+            return _dbContext.Set<Player>().Where(player => !player.IsBot);
+        }
+
         public IEnumerable<Player> GetOrCreateBots(int botCount)
         {
             List<Player> bots = GetBots().ToList();
@@ -32,18 +38,14 @@ namespace BlackJack.DataAccess.Repositories.EntityFrameworkCore
                     Add(bot);
                     bots.Add(bot);
                 }
+                return bots;
             }
             return bots.GetRange(0, botCount);
         }
 
-        public IEnumerable<Player> GetPlayersByGamePlayers(IEnumerable<GamePlayer> gamePlayers)
+        public IEnumerable<Player> GetPlayers(IEnumerable<GamePlayer> gamePlayers)
         {
-            var playerList = new List<Player>();
-            foreach (var gamePlayer in gamePlayers)
-            {
-                playerList.Add(Get(gamePlayer.PlayerId));
-            }
-            return playerList;
+            return gamePlayers.Select(gamePlayer => gamePlayer.Player);
         }
     }
 }

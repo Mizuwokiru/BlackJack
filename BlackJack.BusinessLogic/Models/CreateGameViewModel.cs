@@ -6,6 +6,6 @@ namespace BlackJack.BusinessLogic.Models
     {
         public int GameId { get; set; }
 
-        public List<PlayerViewModel> Bots {get; set;}
+        public IEnumerable<PlayerViewModel> Bots { get; set; }
     }
 }

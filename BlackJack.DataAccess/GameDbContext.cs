@@ -11,13 +11,14 @@ namespace BlackJack.DataAccess
 {
     public class GameDbContext : DbContext
     {
-        private DbConnection dbConnection;
+        private readonly DbConnection dbConnection;
 
         public DbSet<Card> Cards { get; set; }
         public DbSet<Player> Players { get; set; }
         public DbSet<Game> Games { get; set; }
         public DbSet<GamePlayer> GamePlayers { get; set; }
         public DbSet<Round> Rounds { get; set; }
+        public DbSet<RoundCard> RoundCards { get; set; }
         public DbSet<RoundPlayer> RoundPlayers { get; set; }
         public DbSet<RoundPlayerCard> RoundPlayerCards { get; set; }
 

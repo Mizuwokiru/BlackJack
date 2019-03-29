@@ -23,16 +23,16 @@ namespace BlackJack.Web.Controllers
 
         // GET: api/Login
         [HttpGet]
-        public ActionResult<IEnumerable<PlayerViewModel>> GetPlayers()
+        public ActionResult<IEnumerable<string>> GetPlayers()
         {
-            return _loginService.GetPlayers().ToList();
+            return _loginService.GetPlayersNames().ToArray();
         }
 
         // POST: api/Login
         [HttpPost]
-        public ActionResult<PlayerViewModel> Post(PlayerViewModel player)
+        public ActionResult<PlayerViewModel> GetOrCreatePlayer(PlayerViewModel player)
         {
-            return _loginService.GetOrCreatePlayer(player.Name);
+            return _loginService.GetOrCreatePlayer(player.PlayerName);
         }
     }
 }

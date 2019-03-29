@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
-using System.Data.Common;
-using BlackJack.DataAccess.Entities;
+﻿using BlackJack.DataAccess.Entities;
 using BlackJack.DataAccess.Repositories.Interfaces;
+using System.Collections.Generic;
+using System.Data.Common;
 
 namespace BlackJack.DataAccess.Repositories.EntityFrameworkCore
 {

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using System.Text.RegularExpressions;
 using BlackJack.BusinessLogic.Models;
 using BlackJack.BusinessLogic.Services.Interfaces;
@@ -18,13 +19,18 @@ namespace BlackJack.BusinessLogic.Services
             _playerRepository = playerRepository;
         }
 
+        public IEnumerable<string> GetPlayersNames()
+        {
+            return _playerRepository.GetPlayers().Select(player => player.Name);
+        }
+
         public IEnumerable<PlayerViewModel> GetPlayers()
         {
             IEnumerable<Player> playersFromDb = _playerRepository.GetPlayers();
             var players = new List<PlayerViewModel>();
             foreach (var playerFromDb in playersFromDb)
             {
-                players.Add(new PlayerViewModel { Id = playerFromDb.Id, Name = playerFromDb.Name });
+                players.Add(new PlayerViewModel { PlayerId = playerFromDb.Id, PlayerName = playerFromDb.Name });
             }
             return players;
         }
@@ -37,14 +43,13 @@ namespace BlackJack.BusinessLogic.Services
             }
 
             Player playerFromDb = _playerRepository.GetPlayerByName(playerName);
-
             if (playerFromDb == null)
             {
                 playerFromDb = new Player { Name = playerName };
                 _playerRepository.Add(playerFromDb);
             }
 
-            return new PlayerViewModel { Id = playerFromDb.Id, Name = playerFromDb.Name };
+            return new PlayerViewModel { PlayerId = playerFromDb.Id, PlayerName = playerFromDb.Name };
         }
 
         public PlayerViewModel GetPlayer(int playerId)
@@ -54,7 +59,7 @@ namespace BlackJack.BusinessLogic.Services
             {
                 throw new InvalidOperationException($"Player with id {playerId} is not exists.");
             }
-            return new PlayerViewModel { Id = playerFromDb.Id, Name = playerFromDb.Name };
+            return new PlayerViewModel { PlayerId = playerFromDb.Id, PlayerName = playerFromDb.Name };
         }
     }
 }

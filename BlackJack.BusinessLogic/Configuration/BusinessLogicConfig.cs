@@ -10,7 +10,6 @@ namespace BlackJack.BusinessLogic.Configuration
         {
             services.AddTransient<ILoginService, LoginService>();
             services.AddTransient<IGameService, GameService>();
-            services.AddTransient<ICardService, CardService>();
         }
     }
 }
