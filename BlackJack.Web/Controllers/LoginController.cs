@@ -23,9 +23,9 @@ namespace BlackJack.Web.Controllers
 
         // GET: api/Login
         [HttpGet]
-        public ActionResult<IEnumerable<string>> GetPlayers()
+        public ActionResult<List<string>> GetPlayers()
         {
-            return _loginService.GetPlayersNames().ToArray();
+            return _loginService.GetPlayersNames();
         }
 
         // POST: api/Login

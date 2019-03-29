@@ -2,7 +2,7 @@
 
 namespace BlackJack.DataAccess.Repositories.Interfaces
 {
-    public interface IGamePlayerRepository : IRepository<GamePlayer>
+    public interface IStepCardRepository : IRepository<StepCard>
     {
     }
 }

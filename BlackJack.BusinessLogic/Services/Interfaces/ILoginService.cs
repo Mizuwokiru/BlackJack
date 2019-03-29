@@ -5,8 +5,7 @@ namespace BlackJack.BusinessLogic.Services.Interfaces
 {
     public interface ILoginService
     {
-        IEnumerable<string> GetPlayersNames();
-        IEnumerable<PlayerViewModel> GetPlayers(); // возможно не нужен
+        List<string> GetPlayersNames();
         PlayerViewModel GetOrCreatePlayer(string playerName);
         PlayerViewModel GetPlayer(int playerId);
     }

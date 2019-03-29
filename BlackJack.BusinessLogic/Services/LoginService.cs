@@ -19,20 +19,9 @@ namespace BlackJack.BusinessLogic.Services
             _playerRepository = playerRepository;
         }
 
-        public IEnumerable<string> GetPlayersNames()
+        public List<string> GetPlayersNames()
         {
-            return _playerRepository.GetPlayers().Select(player => player.Name);
-        }
-
-        public IEnumerable<PlayerViewModel> GetPlayers()
-        {
-            IEnumerable<Player> playersFromDb = _playerRepository.GetPlayers();
-            var players = new List<PlayerViewModel>();
-            foreach (var playerFromDb in playersFromDb)
-            {
-                players.Add(new PlayerViewModel { PlayerId = playerFromDb.Id, PlayerName = playerFromDb.Name });
-            }
-            return players;
+            return _playerRepository.GetPlayers().Select(player => player.Name).ToList();
         }
 
         public PlayerViewModel GetOrCreatePlayer(string playerName)

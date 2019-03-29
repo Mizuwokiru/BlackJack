@@ -14,17 +14,19 @@ namespace BlackJack.DataAccess.Repositories.EntityFrameworkCore
 
         public IEnumerable<Player> GetBots()
         {
-            return _dbContext.Set<Player>().Where(player => player.IsBot);
+            return _dbContext.Players.Where(player => player.IsBot);
         }
 
         public Player GetPlayerByName(string playerName)
         {
-            return _dbContext.Set<Player>().Where(player => player.Name == playerName).FirstOrDefault();
+            return _dbContext.Players
+                .Where(player => player.Name == playerName)
+                .FirstOrDefault();
         }
 
         public IEnumerable<Player> GetPlayers()
         {
-            return _dbContext.Set<Player>().Where(player => !player.IsBot);
+            return _dbContext.Players.Where(player => !player.IsBot);
         }
 
         public IEnumerable<Player> GetOrCreateBots(int botCount)
@@ -41,11 +43,6 @@ namespace BlackJack.DataAccess.Repositories.EntityFrameworkCore
                 return bots;
             }
             return bots.GetRange(0, botCount);
-        }
-
-        public IEnumerable<Player> GetPlayers(IEnumerable<GamePlayer> gamePlayers)
-        {
-            return gamePlayers.Select(gamePlayer => gamePlayer.Player);
         }
     }
 }

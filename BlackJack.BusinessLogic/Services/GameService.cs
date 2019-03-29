@@ -16,6 +16,8 @@ namespace BlackJack.BusinessLogic.Services
         private readonly IGameRepository _gameRepository;
         private readonly IPlayerRepository _playerRepository;
         private readonly IGamePlayerRepository _gamePlayerRepository;
+        private readonly IStepRepository _roundRepository;
+        private readonly IStepCardRepository _roundCardRepository;
 
         public GameService(IGameRepository gameRepository,
             IPlayerRepository playerRepository,
@@ -26,64 +28,103 @@ namespace BlackJack.BusinessLogic.Services
             _gamePlayerRepository = gamePlayerRepository;
         }
 
-        public CreateGameViewModel CreateGame(int playerId, int botCount)
-        {
-            // validation
-            if (botCount < 0 || botCount > Constants.MaxBotCount)
-            {
-                throw new Exception(); // TODO
-            }
-            Player playerFromDb = _playerRepository.Get(playerId);
-            if (playerFromDb == null || playerFromDb.IsBot)
-            {
-                throw new Exception(); // TODO
-            }
+        //public CreateGameViewModel CreateGame(int playerId, int botCount)
+        //{
+        //    if (botCount < 0 || botCount > Constants.MaxBotCount)
+        //    {
+        //        throw new Exception(); // TODO
+        //    }
+        //    Player playerFromDb = _playerRepository.Get(playerId);
+        //    if (playerFromDb == null || playerFromDb.IsBot)
+        //    {
+        //        throw new Exception(); // TODO
+        //    }
 
-            // game creation
-            var gameToDb = new Game();
-            _gameRepository.Add(gameToDb);
+        //    var gameToDb = new Game();
+        //    _gameRepository.Add(gameToDb);
 
-            IEnumerable<Player> botsFromDb = _playerRepository.GetOrCreateBots(botCount);
-            var bots = new List<PlayerViewModel>();
-            var gamePlayers = new List<GamePlayer> { new GamePlayer { GameId = gameToDb.Id, PlayerId = playerId } };
-            foreach (var botFromDb in botsFromDb)
-            {
-                bots.Add(new PlayerViewModel { PlayerId = botFromDb.Id, PlayerName = botFromDb.Name });
-                gamePlayers.Add(new GamePlayer { GameId = gameToDb.Id, PlayerId = botFromDb.Id });
-            }
-            _gamePlayerRepository.Add(gamePlayers);
+        //    IEnumerable<Player> botsFromDb = _playerRepository.GetOrCreateBots(botCount);
+        //    var bots = new List<PlayerViewModel>();
+        //    var gamePlayers = new List<GamePlayer> { new GamePlayer { GameId = gameToDb.Id, PlayerId = playerId } };
+        //    foreach (var botFromDb in botsFromDb)
+        //    {
+        //        bots.Add(new PlayerViewModel { PlayerId = botFromDb.Id, PlayerName = botFromDb.Name });
+        //        gamePlayers.Add(new GamePlayer { GameId = gameToDb.Id, PlayerId = botFromDb.Id });
+        //    }
+        //    _gamePlayerRepository.Add(gamePlayers);
 
-            var createdGame = new CreateGameViewModel
-            {
-                GameId = gameToDb.Id,
-                Bots = bots
-            };
-            return createdGame;
-        }
+        //    var createdGame = new CreateGameViewModel
+        //    {
+        //        GameId = gameToDb.Id,
+        //        Bots = bots
+        //    };
+        //    return createdGame;
+        //}
 
-        #region Private methods
-        private static List<int> GetShuffledCards()
-        {
-            var cards = new List<int>();
-            for (int i = 0; i < Constants.DeckCount; i++)
-            {
-                cards.AddRange(Enumerable.Range(1, Constants.DeckCapacity));
-            }
+        //public List<CardViewModel> CreateRound(int gameId)
+        //{
+        //    Game gameFromDb = _gameRepository.Get(gameId);
+        //    if (gameFromDb == null)
+        //    {
+        //        throw new Exception();
+        //    }
 
-            var random = new Random();
-            for (int i = cards.Count - 1, j; i > 0; i--)
-            {
-                j = random.Next(i + 1);
-                int tmp = cards[i];
-                cards[i] = cards[j];
-                cards[j] = tmp;
-            }
+        //    int roundNumber = _roundRepository.GetRoundCount();
+        //    var round = new Step
+        //    {
+        //        GameId = gameFromDb.Id,
+        //        Number = roundNumber
+        //    };
+        //    _roundRepository.Add(round);
 
-            return cards;
-        }
+        //    List<int> shuffledCards = GetShuffledCards();
 
-        
-        #endregion
+        //    List<Player> playersFromDb = _playerRepository.GetPlayers(gameId).ToList();
+        //    var roundPlayersToDb = new List<RoundPlayer>();
+        //    foreach (var playerFromDb in playersFromDb)
+        //    {
+        //        var roundPlayerToDb = new RoundPlayer { RoundId = round.Id, PlayerId = playerFromDb.Id };
+        //        roundPlayersToDb.Add(roundPlayerToDb);
+        //    }
+        //    _roundPlayerRepository.Add(roundPlayersToDb);
 
+        //    var roundPlayerCardsToDb = new List<RoundPlayerCard>();
+        //    var cardViewModels = new List<CardViewModel>();
+        //    for (int i = 0; i < roundPlayersToDb.Count; i++)
+        //    {
+        //        CardViewModel cardViewModel = 
+        //            AddRoundPlayerCard(roundPlayersToDb[i].Id, shuffledCards[i + roundPlayersToDb.Count + 1], roundPlayerCardsToDb);
+        //    }
+        //}
+
+        //#region Private methods
+        //private static List<int> GetShuffledCards()
+        //{
+        //    var cards = new List<int>();
+        //    for (int i = 0; i < Constants.DeckCount; i++)
+        //    {
+        //        cards.AddRange(Enumerable.Range(1, Constants.DeckCapacity));
+        //    }
+
+        //    var random = new Random();
+        //    for (int i = cards.Count - 1, j; i > 0; i--)
+        //    {
+        //        j = random.Next(i + 1);
+        //        int tmp = cards[i];
+        //        cards[i] = cards[j];
+        //        cards[j] = tmp;
+        //    }
+
+        //    return cards;
+        //}
+
+        //private CardViewModel AddRoundPlayerCard(int roundPlayerId, int cardId, List<RoundPlayerCard> roundPlayerCardsToDb)
+        //{
+        //    var roundPlayerCard = new RoundPlayerCard { RoundPlayerId = roundPlayerId, CardId = cardId };
+        //    roundPlayerCardsToDb.Add(roundPlayerCard);
+        //    Card card = roundPlayerCard.Card;
+        //    return new CardViewModel { Suit = card.Suit.ToString(), Rank = card.Rank.ToString() };
+        //}
+        //#endregion
     }
 }

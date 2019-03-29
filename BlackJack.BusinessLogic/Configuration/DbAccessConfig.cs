@@ -17,15 +17,13 @@ namespace BlackJack.BusinessLogic.Configuration
             if (config["ORM"] == "EntityFrameworkCore")
             {
                 services.AddDbContext<GameDbContext>();
-                // возможно стоит переделать в Scoped
-                services.AddSingleton<ICardRepository, DataAccess.Repositories.EntityFrameworkCore.CardRepository>();
+
+                services.AddTransient<ICardRepository, DataAccess.Repositories.EntityFrameworkCore.CardRepository>();
                 services.AddTransient<IPlayerRepository, DataAccess.Repositories.EntityFrameworkCore.PlayerRepository>();
                 services.AddTransient<IGamePlayerRepository, DataAccess.Repositories.EntityFrameworkCore.GamePlayerRepository>();
                 services.AddTransient<IGameRepository, DataAccess.Repositories.EntityFrameworkCore.GameRepository>();
-                services.AddTransient<IRoundRepository, DataAccess.Repositories.EntityFrameworkCore.RoundRepository>();
-                services.AddTransient<IRoundCardRepository, DataAccess.Repositories.EntityFrameworkCore.RoundCardRepository>();
-                services.AddTransient<IRoundPlayerRepository, DataAccess.Repositories.EntityFrameworkCore.RoundPlayerRepository>();
-                services.AddTransient<IRoundPlayerCardRepository, DataAccess.Repositories.EntityFrameworkCore.RoundPlayerCardRepository>();
+                services.AddTransient<IStepRepository, DataAccess.Repositories.EntityFrameworkCore.StepRepository>();
+                services.AddTransient<IStepCardRepository, DataAccess.Repositories.EntityFrameworkCore.StepCardRepository>();
             }
             // EF END
 

@@ -17,10 +17,8 @@ namespace BlackJack.DataAccess
         public DbSet<Player> Players { get; set; }
         public DbSet<Game> Games { get; set; }
         public DbSet<GamePlayer> GamePlayers { get; set; }
-        public DbSet<Round> Rounds { get; set; }
-        public DbSet<RoundCard> RoundCards { get; set; }
-        public DbSet<RoundPlayer> RoundPlayers { get; set; }
-        public DbSet<RoundPlayerCard> RoundPlayerCards { get; set; }
+        public DbSet<Step> Rounds { get; set; }
+        public DbSet<StepCard> RoundCards { get; set; }
 
         public GameDbContext(DbConnection connection)
         {
@@ -54,9 +52,10 @@ namespace BlackJack.DataAccess
         private void AddCreationTime()
         {
             IEnumerable<EntityEntry<BaseEntity>> entries = ChangeTracker.Entries<BaseEntity>().Where(entity => entity.State == EntityState.Added);
+            var dateTimeNow = DateTime.Now;
             foreach (var entry in entries)
             {
-                entry.Entity.CreationTime = DateTime.Now;
+                entry.Entity.CreationTime = dateTimeNow;
             }
         }
 
