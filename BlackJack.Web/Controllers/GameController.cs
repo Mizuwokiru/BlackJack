@@ -21,7 +21,5 @@ namespace BlackJack.Web.Controllers
         {
             _gameService = gameService;
         }
-
-        public 
     }
 }

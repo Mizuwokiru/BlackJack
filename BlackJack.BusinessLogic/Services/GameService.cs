@@ -3,6 +3,7 @@ using BlackJack.BusinessLogic.Services.Interfaces;
 using BlackJack.DataAccess.Entities;
 using BlackJack.DataAccess.Repositories.Interfaces;
 using BlackJack.Shared;
+using BlackJack.Shared.Enums;
 using Microsoft.Extensions.Caching.Memory;
 using System;
 using System.Collections.Generic;
@@ -13,6 +14,8 @@ namespace BlackJack.BusinessLogic.Services
 {
     public class GameService : IGameService
     {
+        private const int DealerId = 1;
+
         private readonly IGameRepository _gameRepository;
         private readonly IPlayerRepository _playerRepository;
         private readonly IGamePlayerRepository _gamePlayerRepository;
@@ -28,38 +31,32 @@ namespace BlackJack.BusinessLogic.Services
             _gamePlayerRepository = gamePlayerRepository;
         }
 
-        //public CreateGameViewModel CreateGame(int playerId, int botCount)
-        //{
-        //    if (botCount < 0 || botCount > Constants.MaxBotCount)
-        //    {
-        //        throw new Exception(); // TODO
-        //    }
-        //    Player playerFromDb = _playerRepository.Get(playerId);
-        //    if (playerFromDb == null || playerFromDb.IsBot)
-        //    {
-        //        throw new Exception(); // TODO
-        //    }
+        public int CreateGame(int playerId, int botCount)
+        {
+            if (botCount < 0 || botCount > Constants.MaxBotCount)
+            {
+                throw new Exception(); // TODO
+            }
+            Player playerFromDb = _playerRepository.Get(playerId);
+            if (playerFromDb == null || playerFromDb.IsBot) // remove it after identity support added
+            {
+                throw new Exception(); // TODO
+            }
 
-        //    var gameToDb = new Game();
-        //    _gameRepository.Add(gameToDb);
+            var gameToDb = new Game { State = GameState.OnlyCreated };
+            _gameRepository.Add(gameToDb);
 
-        //    IEnumerable<Player> botsFromDb = _playerRepository.GetOrCreateBots(botCount);
-        //    var bots = new List<PlayerViewModel>();
-        //    var gamePlayers = new List<GamePlayer> { new GamePlayer { GameId = gameToDb.Id, PlayerId = playerId } };
-        //    foreach (var botFromDb in botsFromDb)
-        //    {
-        //        bots.Add(new PlayerViewModel { PlayerId = botFromDb.Id, PlayerName = botFromDb.Name });
-        //        gamePlayers.Add(new GamePlayer { GameId = gameToDb.Id, PlayerId = botFromDb.Id });
-        //    }
-        //    _gamePlayerRepository.Add(gamePlayers);
+            IEnumerable<Player> botsFromDb = _playerRepository.GetOrCreateBots(botCount);
+            var gamePlayers = new List<GamePlayer> { new GamePlayer { GameId = gameToDb.Id, PlayerId = playerId } };
+            foreach (var botFromDb in botsFromDb)
+            {
+                gamePlayers.Add(new GamePlayer { GameId = gameToDb.Id, PlayerId = botFromDb.Id });
+            }
+            gamePlayers.Add(new GamePlayer { GameId = gameToDb.Id, PlayerId = DealerId });
+            _gamePlayerRepository.Add(gamePlayers);
 
-        //    var createdGame = new CreateGameViewModel
-        //    {
-        //        GameId = gameToDb.Id,
-        //        Bots = bots
-        //    };
-        //    return createdGame;
-        //}
+            return gameToDb.Id;
+        }
 
         //public List<CardViewModel> CreateRound(int gameId)
         //{

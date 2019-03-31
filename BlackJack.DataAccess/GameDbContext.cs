@@ -65,8 +65,8 @@ namespace BlackJack.DataAccess
         private Card[] GenerateCards()
         {
             var cards = new List<Card>();
-            var suits = (IEnumerable<Suit>)Enum.GetValues(typeof(Suit));
-            var ranks = (IEnumerable<Rank>)Enum.GetValues(typeof(Rank));
+            IEnumerable<Suit> suits = Enum.GetValues(typeof(Suit)).OfType<Suit>();
+            IEnumerable<Rank> ranks = Enum.GetValues(typeof(Rank)).OfType<Rank>();
             int i = 1;
             foreach (var suit in suits)
             {
