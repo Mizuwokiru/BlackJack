@@ -1,9 +1,11 @@
-﻿namespace BlackJack.BusinessLogic.Models
+﻿using BlackJack.Shared.Enums;
+
+namespace BlackJack.BusinessLogic.Models
 {
     public class CardViewModel
     {
-        public string Suit { get; set; }
+        public Suit Suit { get; set; }
 
-        public string Rank { get; set; }
+        public Rank Rank { get; set; }
     }
 }

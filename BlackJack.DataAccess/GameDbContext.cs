@@ -34,8 +34,11 @@ namespace BlackJack.DataAccess
             modelBuilder.Entity<Card>()
                 .HasIndex(card => new { card.Suit, card.Rank })
                 .IsUnique();
+
             modelBuilder.Entity<Card>()
                 .HasData(GenerateCards());
+            modelBuilder.Entity<Player>()
+                .HasData(new Player { Id = 1, CreationTime = DateTime.Now, Name = "Dealer", IsBot = true });
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

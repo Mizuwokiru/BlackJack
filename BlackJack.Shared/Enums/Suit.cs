@@ -2,9 +2,9 @@
 {
     public enum Suit
     {
-        Hearts = 1,
-        Tiles = 2,
-        Clovers = 3,
-        Pikes = 4
+        Spades = 0x1F0A0, // trying to use unicode characters
+        Hearts = 0x1F0B0,
+        Diamonds = 0x1F0C0,
+        Clubs = 0x1F0D0
     }
 }

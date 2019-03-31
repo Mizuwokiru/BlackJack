@@ -19,7 +19,6 @@ namespace BlackJack.Web
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
-            services.AddMemoryCache();
             services.AddDbAcсess(_configuration);
             services.AddBusinessLogic();
         }
