@@ -8,7 +8,7 @@ namespace BlackJack.DataAccess.Entities
         [Required, MaxLength(32)]
         public string Name { get; set; }
 
-        public bool IsBot { get; set; }
+        public bool IsPlayable { get; set; }
 
         public virtual ICollection<GamePlayer> GamePlayers { get; set; }
     }

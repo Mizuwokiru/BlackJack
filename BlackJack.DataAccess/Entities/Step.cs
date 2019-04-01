@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using BlackJack.Shared.Enums;
+using System.Collections.Generic;
 
 namespace BlackJack.DataAccess.Entities
 {
@@ -10,7 +11,7 @@ namespace BlackJack.DataAccess.Entities
         public int PlayerId { get; set; }
         public virtual Player Player { get; set; }
 
-        public bool? IsWon { get; set; }
+        public StepState State { get; set; }
 
         public virtual ICollection<StepCard> Cards { get; set; }
     }

@@ -19,8 +19,6 @@ namespace BlackJack.BusinessLogic.Services
         private readonly IGameRepository _gameRepository;
         private readonly IPlayerRepository _playerRepository;
         private readonly IGamePlayerRepository _gamePlayerRepository;
-        private readonly IStepRepository _roundRepository;
-        private readonly IStepCardRepository _roundCardRepository;
 
         public GameService(IGameRepository gameRepository,
             IPlayerRepository playerRepository,
@@ -38,7 +36,7 @@ namespace BlackJack.BusinessLogic.Services
                 throw new Exception(); // TODO
             }
             Player playerFromDb = _playerRepository.Get(playerId);
-            if (playerFromDb == null || playerFromDb.IsBot) // remove it after identity support added
+            if (playerFromDb == null || !playerFromDb.IsPlayable) // remove it after identity support added
             {
                 throw new Exception(); // TODO
             }
@@ -57,6 +55,8 @@ namespace BlackJack.BusinessLogic.Services
 
             return gameToDb.Id;
         }
+
+
 
         //public List<CardViewModel> CreateRound(int gameId)
         //{

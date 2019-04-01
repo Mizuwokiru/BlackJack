@@ -13,7 +13,7 @@
         Nine = 0x9,
         Ten = 0xA,
         Jack = 0xB,
-        Queen = 0xD, // 0xC are skipping (unnecessary card - Knight)
+        Queen = 0xD,
         King = 0xE
     }
 }

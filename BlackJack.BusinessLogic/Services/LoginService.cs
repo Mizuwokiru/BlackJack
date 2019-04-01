@@ -31,12 +31,7 @@ namespace BlackJack.BusinessLogic.Services
                 throw new ValidationException($"Player name is not valid ({playerName})");
             }
 
-            Player playerFromDb = _playerRepository.GetPlayerByName(playerName);
-            if (playerFromDb == null)
-            {
-                playerFromDb = new Player { Name = playerName };
-                _playerRepository.Add(playerFromDb);
-            }
+            Player playerFromDb = _playerRepository.GetOrCreatePlayer(playerName);
 
             return new PlayerViewModel { PlayerId = playerFromDb.Id, PlayerName = playerFromDb.Name };
         }
@@ -44,7 +39,7 @@ namespace BlackJack.BusinessLogic.Services
         public PlayerViewModel GetPlayer(int playerId)
         {
             var playerFromDb = _playerRepository.Get(playerId);
-            if (playerFromDb == null || playerFromDb.IsBot)
+            if (playerFromDb == null || !playerFromDb.IsPlayable)
             {
                 throw new InvalidOperationException($"Player with id {playerId} is not exists.");
             }
