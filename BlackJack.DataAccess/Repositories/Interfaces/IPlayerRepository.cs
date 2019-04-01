@@ -10,5 +10,6 @@ namespace BlackJack.DataAccess.Repositories.Interfaces
         IEnumerable<Player> GetBots();
         IEnumerable<Player> GetOrCreateBots(int botCount);
         Player GetOrCreatePlayer(string name);
+        IEnumerable<Player> GetPlayersByGame(int gameId);
     }
 }

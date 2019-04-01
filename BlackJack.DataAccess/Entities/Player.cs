@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace BlackJack.DataAccess.Entities
 {
@@ -9,7 +8,5 @@ namespace BlackJack.DataAccess.Entities
         public string Name { get; set; }
 
         public bool IsPlayable { get; set; }
-
-        public virtual ICollection<GamePlayer> GamePlayers { get; set; }
     }
 }

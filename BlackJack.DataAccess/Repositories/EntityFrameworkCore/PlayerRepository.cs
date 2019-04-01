@@ -55,5 +55,11 @@ namespace BlackJack.DataAccess.Repositories.EntityFrameworkCore
             }
             return player;
         }
+
+        public IEnumerable<Player> GetPlayersByGame(int gameId)
+        {
+            return _dbContext.Rounds
+                .Sele
+        }
     }
 }

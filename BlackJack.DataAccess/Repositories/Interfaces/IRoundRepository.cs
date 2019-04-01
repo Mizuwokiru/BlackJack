@@ -3,8 +3,8 @@ using System.Collections.Generic;
 
 namespace BlackJack.DataAccess.Repositories.Interfaces
 {
-    public interface ICardRepository : IRepository<Card>
+    public interface IRoundRepository : IRepository<Round>
     {
-        IEnumerable<Card> GetCardsByRound(int roundId);
+        IEnumerable<Round> GetLastRoundsByGame(int gameId);
     }
 }

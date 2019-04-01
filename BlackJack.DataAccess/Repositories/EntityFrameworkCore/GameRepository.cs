@@ -14,9 +14,9 @@ namespace BlackJack.DataAccess.Repositories.EntityFrameworkCore
 
         public IEnumerable<Game> GetGames(int playerId)
         {
-            return _dbContext.Players
-                .Find(playerId).GamePlayers
-                .Select(gamePlayer => gamePlayer.Game);
+            return _dbContext.Rounds
+                .Where(round => round.PlayerId == playerId)
+                .Select(round => round.Game);
         }
     }
 }

@@ -2,9 +2,7 @@
 {
     public enum GameState
     {
-        OnlyCreated = 1,
-        CanToContinueRound = 2,
-        CanToContinue = 3,
-        Finished = 4
+        CanToContinue = 1,
+        Finished = 2
     }
 }

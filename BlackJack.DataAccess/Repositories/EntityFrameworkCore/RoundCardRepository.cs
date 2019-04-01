@@ -4,9 +4,9 @@ using System.Data.Common;
 
 namespace BlackJack.DataAccess.Repositories.EntityFrameworkCore
 {
-    public class StepRepository : BaseRepository<Step>, IStepRepository
+    public class RoundCardRepository : BaseRepository<RoundCard>, IRoundCardRepository
     {
-        public StepRepository(DbConnection dbConnection) : base(dbConnection)
+        public RoundCardRepository(DbConnection dbConnection) : base(dbConnection)
         {
         }
     }

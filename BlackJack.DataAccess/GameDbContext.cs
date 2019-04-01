@@ -16,9 +16,8 @@ namespace BlackJack.DataAccess
         public DbSet<Card> Cards { get; set; }
         public DbSet<Player> Players { get; set; }
         public DbSet<Game> Games { get; set; }
-        public DbSet<GamePlayer> GamePlayers { get; set; }
-        public DbSet<Step> Rounds { get; set; }
-        public DbSet<StepCard> RoundCards { get; set; }
+        public DbSet<Round> Rounds { get; set; }
+        public DbSet<RoundCard> RoundCards { get; set; }
 
         public GameDbContext(DbConnection connection)
         {
