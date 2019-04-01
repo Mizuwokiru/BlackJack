@@ -90,7 +90,7 @@ namespace BlackJack.BusinessLogic.Services
 
             List<int> shuffledCards = GetShuffledCards();
             List<RoundCard> roundCards = null;
-            if (roundsFromDb[0].Cards == null || roundsFromDb[0].Cards.Count == 0)
+            if (roundsFromDb[0].Cards.Count == 0)
             {
                 roundCards = InitCards(roundsFromDb, shuffledCards);
             }
