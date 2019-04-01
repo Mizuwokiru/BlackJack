@@ -83,14 +83,13 @@ namespace BlackJack.BusinessLogic.Services
             return null; // TODO
         }
 
-        // REWRITE IT!
         public List<PlayerCardsViewModel> GetRound(int gameId)
         {
             List<Round> roundsFromDb = _roundRepository.GetLastRoundsByGame(gameId).ToList();
 
             List<int> shuffledCards = GetShuffledCards();
             List<RoundCard> roundCards = null;
-            if (roundsFromDb[0].Cards.Count == 0)
+            if (!_roundCardRepository.IsCardsHandedOut(roundsFromDb[0].Id))
             {
                 roundCards = InitCards(roundsFromDb, shuffledCards);
             }

@@ -17,5 +17,12 @@ namespace BlackJack.DataAccess.Repositories.EntityFrameworkCore
             return _dbContext.RoundCards
                 .Where(roundCard => roundCard.RoundId == roundId);
         }
+
+        public bool IsCardsHandedOut(int roundId)
+        {
+            return _dbContext.Rounds
+                .Find(roundId)
+                .Cards.Count != 0;
+        }
     }
 }
