@@ -1,39 +1,16 @@
 ﻿const loginApi = "api/Login";
 const gameApi = "api/Game";
-const createGameApi = gameApi + "/CreateGame";
-const createRoundApi = gameApi + "/CreateRound";
-const finishRoundApi = gameApi + "/FinishRound";
+const gameCreateApi = gameApi + "/Create";
+const gameGetRoundApi = gameApi + "/GetRound";
 let user = null;
-
-// Enums
-// Maybe need to read it from server?...
-const Suit = Object.freeze({
-    "Hearts": 1,
-    "Tiles": 2,
-    "Clovers": 3,
-    "Pikes": 4
-});
-const Rank = Object.freeze({
-    "Two": 1,
-    "Three": 2,
-    "Four": 3,
-    "Five": 4,
-    "Six": 5,
-    "Seven": 6,
-    "Eight": 7,
-    "Nine": 8,
-    "Ten": 9,
-    "Jack": 10,
-    "Queen": 11,
-    "King": 12,
-    "Ace": 13
-});
 
 $(document).ready(() => {
     getPlayersNames();
 
     $("#player-select-box").change(event => {
-        $("#player-input-box").val(event.target.options[event.target.selectedIndex].innerText);
+        if ($.trim($("#player-select-box").html()) != "") {
+            $("#player-input-box").val(event.target.options[event.target.selectedIndex].innerText);
+        }
     });
 
     $("#login-button").click(() => {
@@ -42,7 +19,7 @@ $(document).ready(() => {
             accepts: "application/json",
             contentType: "application/json",
             data: JSON.stringify({
-                name: $("#player-input-box").val()
+                playerName: $("#player-input-box").val()
             }),
             success: acceptedUser => {
                 console.log(acceptedUser);
@@ -57,22 +34,21 @@ $(document).ready(() => {
     $("#start-game-button").click(() => {
         console.log(logString);
         $.post({
-            url: createGameApi + "/" + $("#bot-count-select-box").val(),
+            url: gameCreateApi + "/" + $("#bot-count-select-box").val(),
             contentType: "application/json",
             data: JSON.stringify(user),
-            success: gameId => {
-                console.log(gameId);
-                $.post({
-                    url: createRoundApi + "/" + gameId,
-                    accepts: "application/json",
-                    success: round => {
-                        console.log(round);
-                        $.post({
-                            url: finishRoundApi + "/" + gameId,
-                            success: finishMessage => {
-                                console.log(finishMessage);
+            success: game => {
+                console.log(game);
+                $.get({
+                    url: gameGetRoundApi + "/" + game.gameId,
+                    cache: false,
+                    success: roundData => {
+                        console.log(roundData);
+                        for (let i = 0; i < roundData.length; i++) {
+                            for (let j = 0; j < roundData[i].playerCards.length; j++) {
+                                $("#game-menu-block").append(getUnicodeCard(roundData[i].playerCards[j]));
                             }
-                        });
+                        }
                     }
                 });
                 $("#bot-count-modal").modal("hide");
@@ -91,7 +67,7 @@ function getPlayersNames() {
             console.log(result);
             $("#player-select-box").empty();
             result.forEach(element => {
-                $("#player-select-box").append("<option value=\"" + element.id + "\">" + element.name + "</option>");
+                $("#player-select-box").append("<option>" + element + "</option>");
             });
             $("#player-select-box").trigger("change");
             $("#login-block").css({ display: "block" });
@@ -103,9 +79,17 @@ function getEnumName(enumeration, value) {
     return Object.keys(enumeration).find(index => enumeration[index] === value);
 }
 
-function getCardName(card) {
-    if (card === undefined || card.suit === undefined || card.rank === undefined) {
-        return undefined;
+function getUnicodeCard(card, tag) {
+    if (card == undefined) {
+        return null;
     }
-    return getEnumName(Rank, card.rank) + " of " + getEnumName(Suit, card.suit);
+    if (tag == undefined) {
+        tag = "span";
+    }
+    let cardValue = card.suit + card.rank;
+    let color = "black";
+    if (cardValue > 0x1F0B0 && cardValue < 0x1F0D0) {
+        color = "darkred";
+    }
+    return "<" + tag + " style=\"color: " + color + "\">&#" + cardValue + ";</" + tag + ">";
 }

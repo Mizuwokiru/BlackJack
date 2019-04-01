@@ -5,8 +5,8 @@ namespace BlackJack.BusinessLogic.Services.Interfaces
 {
     public interface IGameService
     {
-        CreateGameViewModel CreateGame(int playerId, int botCount);
-
+        GameViewModel CreateGame(int playerId, int botCount);
+        GameViewModel ContinueGame(int playerId);
         List<PlayerCardsViewModel> GetRound(int gameId);
     }
 }

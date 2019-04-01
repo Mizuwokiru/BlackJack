@@ -18,5 +18,10 @@ namespace BlackJack.DataAccess.Repositories.EntityFrameworkCore
                 .Where(round => round.PlayerId == playerId)
                 .Select(round => round.Game);
         }
+
+        public Game GetUnfinishedGame(int playerId)
+        {
+            return GetGames(playerId).Where(game => !game.IsFinished).FirstOrDefault();
+        }
     }
 }

@@ -2,6 +2,7 @@
 using BlackJack.DataAccess.Repositories.Interfaces;
 using System.Collections.Generic;
 using System.Data.Common;
+using System.Linq;
 
 namespace BlackJack.DataAccess.Repositories.EntityFrameworkCore
 {
@@ -26,7 +27,7 @@ namespace BlackJack.DataAccess.Repositories.EntityFrameworkCore
 
         public void Add(IEnumerable<T> item)
         {
-            Add(item);
+            Add(item.ToArray());
         }
 
         public void Update(params T[] item)
@@ -37,7 +38,7 @@ namespace BlackJack.DataAccess.Repositories.EntityFrameworkCore
 
         public void Update(IEnumerable<T> item)
         {
-            Add(item);
+            Add(item.ToArray());
         }
 
         public void Delete(int id)

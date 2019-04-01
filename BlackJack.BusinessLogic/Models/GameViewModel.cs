@@ -2,7 +2,7 @@
 
 namespace BlackJack.BusinessLogic.Models
 {
-    public class CreateGameViewModel
+    public class GameViewModel
     {
         public int GameId { get; set; }
 

@@ -21,5 +21,19 @@ namespace BlackJack.Web.Controllers
         {
             _gameService = gameService;
         }
+
+        [HttpPost("{botCount}")]
+        public ActionResult<GameViewModel> Create(int botCount, PlayerViewModel player)
+        {
+            Debug.WriteLine("GameController.Create");
+            return _gameService.CreateGame(player.PlayerId, botCount);
+        }
+
+        [HttpGet("{gameId}")]
+        public ActionResult<List<PlayerCardsViewModel>> GetRound(int gameId)
+        {
+            Debug.WriteLine("GameController.GetRound");
+            return _gameService.GetRound(gameId);
+        }
     }
 }

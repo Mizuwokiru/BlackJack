@@ -7,6 +7,5 @@ namespace BlackJack.BusinessLogic.Services.Interfaces
     {
         List<string> GetPlayersNames();
         PlayerViewModel GetOrCreatePlayer(string playerName);
-        PlayerViewModel GetPlayer(int playerId);
     }
 }

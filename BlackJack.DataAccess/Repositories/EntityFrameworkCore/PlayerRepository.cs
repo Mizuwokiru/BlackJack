@@ -14,7 +14,7 @@ namespace BlackJack.DataAccess.Repositories.EntityFrameworkCore
 
         public IEnumerable<Player> GetBots()
         {
-            return _dbContext.Players.Where(player => !player.IsPlayable);
+            return _dbContext.Players.Where(player => !player.IsPlayable && player.Id != 1);
         }
 
         public Player GetPlayerByName(string playerName)
@@ -59,7 +59,9 @@ namespace BlackJack.DataAccess.Repositories.EntityFrameworkCore
         public IEnumerable<Player> GetPlayersByGame(int gameId)
         {
             return _dbContext.Rounds
-                .Sele
+                .Where(round => round.GameId == gameId)
+                .Select(round => round.Player)
+                .Distinct();
         }
     }
 }
