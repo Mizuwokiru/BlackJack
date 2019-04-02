@@ -20,7 +20,8 @@ namespace BlackJack.Web.Controllers
         [HttpGet]
         public ActionResult<IEnumerable<string>> GetPlayers()
         {
-            return _loginService.GetPlayerNames().ToList();
+            IEnumerable<string> playerNames = _loginService.GetPlayerNames();
+            return Ok(playerNames.ToList());
         }
 
         [HttpPost]
