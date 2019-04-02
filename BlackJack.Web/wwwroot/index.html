@@ -1,0 +1,68 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title></title>
+    <link rel="stylesheet" href="/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+    <!--login-block-->
+    <div id="login-block">
+        <!--choose-player-block-->
+        <div class="bj-centered-block" id="choose-player-block">
+            <div class="input-group bj-centered-control">
+                <div class="input-group-prepend">
+                    <!--player-select-box-->
+                    <select id="player-select-box" class="form-control"></select>
+                </div>
+                <!--player-input-box-->
+                <input type="text" class="form-control" id="player-input-box" />
+            </div>
+            <!--login-button-->
+            <button type="button" class="btn btn-primary bj-centered-control" id="login-button">Login</button>
+        </div>
+
+        <div class="bj-centered-block" id="game-menu-block">
+            <button id="continue-button" type="button" class="btn btn-primary bj-centered-control" data-toggle="modal" data-target="#bot-count-modal">Continue</button>
+            <button type="button" class="btn btn-primary bj-centered-control" data-toggle="modal" data-target="#bot-count-modal">New game</button>
+        </div>
+
+        <div class="modal fade" id="bot-count-modal" tabindex="-1" role="dialog" aria-labelledby="bot-count-modal-title" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="bot-count-modal-title">Game creation</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <h6>Bot count:</h6>
+                        <select id="bot-count-select-box" class="form-control">
+                            <option>0</option>
+                            <option>1</option>
+                            <option>2</option>
+                            <option>3</option>
+                            <option>4</option>
+                            <option>5</option>
+                            <option>6</option>
+                            <option>7</option>
+                        </select>
+                    </div>
+                    <div class="modal-footer">
+                        <button id="start-game-button" type="button" class="btn btn-primary">Start</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/lib/jquery/dist/jquery.min.js"></script>
+    <script src="/lib/popper.js/dist/umd/popper.min.js"></script>
+    <script src="/lib/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="/script.js"></script>
+</body>
+</html>
