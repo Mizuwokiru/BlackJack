@@ -1,6 +1,6 @@
 ﻿using BlackJack.Shared.Enums;
 
-namespace BlackJack.BusinessLogic.Models
+namespace BlackJack.Shared.Models
 {
     public class CardViewModel
     {

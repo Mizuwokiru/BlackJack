@@ -5,6 +5,8 @@ namespace BlackJack.DataAccess.Repositories.Interfaces
 {
     public interface IRoundRepository : IRepository<Round>
     {
-        IEnumerable<Round> GetLastRoundsByGame(int gameId);
+        IEnumerable<Round> GetLastRounds(long gameId);
+
+        IEnumerable<Round> GetRounds(long gameId);
     }
 }

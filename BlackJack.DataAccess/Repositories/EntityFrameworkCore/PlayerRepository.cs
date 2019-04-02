@@ -1,5 +1,6 @@
 ﻿using BlackJack.DataAccess.Entities;
 using BlackJack.DataAccess.Repositories.Interfaces;
+using BlackJack.Shared.Enums;
 using System.Collections.Generic;
 using System.Data.Common;
 using System.Linq;
@@ -12,56 +13,49 @@ namespace BlackJack.DataAccess.Repositories.EntityFrameworkCore
         {
         }
 
-        public IEnumerable<Player> GetBots()
+        public IEnumerable<Player> GetBots(int botCount)
         {
-            return _dbContext.Players.Where(player => !player.IsPlayable && player.Id != 1);
+            IEnumerable<Player> bots = _dbContext.Players
+                .Where(player => player.Type == PlayerType.Bot)
+                .Take(botCount);
+            return bots;
         }
 
-        public Player GetPlayerByName(string playerName)
+        public Player GetDealer()
         {
-            return _dbContext.Players
-                .Where(player => player.Name == playerName)
+            Player dealer = Get(1);
+            return dealer;
+        }
+
+        public Player GetPlayer(string name)
+        {
+            Player player = _dbContext.Players
+                .Where(tmpPlayer => tmpPlayer.Name == name)
                 .FirstOrDefault();
-        }
-
-        public IEnumerable<Player> GetPlayers()
-        {
-            return _dbContext.Players.Where(player => player.IsPlayable);
-        }
-
-        public IEnumerable<Player> GetOrCreateBots(int botCount)
-        {
-            List<Player> bots = GetBots().ToList();
-            if (bots.Count < botCount)
-            {
-                for (int i = bots.Count; i < botCount; i++)
-                {
-                    var bot = new Player { Name = $"Bot #{i + 1}" };
-                    Add(bot);
-                    bots.Add(bot);
-                }
-                return bots;
-            }
-            return bots.GetRange(0, botCount);
-        }
-
-        public Player GetOrCreatePlayer(string name)
-        {
-            Player player = GetPlayerByName(name);
-            if (player == null)
-            {
-                player = new Player { Name = name, IsPlayable = true };
-                Add(player);
-            }
             return player;
         }
 
-        public IEnumerable<Player> GetPlayersByGame(int gameId)
+        public Player GetPlayer(long roundId)
         {
-            return _dbContext.Rounds
+            Player player = _dbContext.Rounds
+                .Find(roundId).Player;
+            return player;
+        }
+
+        public IEnumerable<string> GetPlayerNames()
+        {
+            IEnumerable<string> playerNames = _dbContext.Players
+                .Where(player => player.Type == PlayerType.User)
+                .Select(player => player.Name);
+            return playerNames;
+        }
+
+        public IEnumerable<Player> GetPlayersForGame(long gameId)
+        {
+            IEnumerable<Player> players = _dbContext.Rounds
                 .Where(round => round.GameId == gameId)
-                .Select(round => round.Player)
-                .Distinct();
+                .Select(round => round.Player);
+            return players;
         }
     }
 }

@@ -5,11 +5,11 @@ namespace BlackJack.DataAccess.Repositories.Interfaces
 {
     public interface IPlayerRepository : IRepository<Player>
     {
-        Player GetPlayerByName(string userName);
-        IEnumerable<Player> GetPlayers();
-        IEnumerable<Player> GetBots();
-        IEnumerable<Player> GetOrCreateBots(int botCount);
-        Player GetOrCreatePlayer(string name);
-        IEnumerable<Player> GetPlayersByGame(int gameId);
+        IEnumerable<Player> GetBots(int botCount);
+        Player GetDealer();
+        Player GetPlayer(string name);
+        Player GetPlayer(long roundId);
+        IEnumerable<string> GetPlayerNames();
+        IEnumerable<Player> GetPlayersForGame(long gameId);
     }
 }

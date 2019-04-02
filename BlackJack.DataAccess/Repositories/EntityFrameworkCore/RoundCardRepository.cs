@@ -12,17 +12,17 @@ namespace BlackJack.DataAccess.Repositories.EntityFrameworkCore
         {
         }
 
-        public IEnumerable<RoundCard> GetCardsByRound(int roundId)
+        public IEnumerable<RoundCard> GetCards(long roundId)
         {
-            return _dbContext.RoundCards
-                .Where(roundCard => roundCard.RoundId == roundId);
+            throw new System.NotImplementedException();
         }
 
-        public bool IsCardsHandedOut(int roundId)
+        public bool HasAnyCard(long gameId)
         {
-            return _dbContext.Rounds
-                .Find(roundId)
-                .Cards.Count != 0;
+            IEnumerable<RoundCard> round = _dbContext.Rounds
+                .Where(tmpRound => tmpRound.GameId == gameId)
+                .First().Cards;
+            return round.Count() != 0;
         }
     }
 }

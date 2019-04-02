@@ -2,10 +2,10 @@
 {
     public class RoundCard : BaseEntity
     {
-        public int RoundId { get; set; }
+        public long RoundId { get; set; }
         public virtual Round Round { get; set; }
 
-        public int CardId { get; set; }
+        public long CardId { get; set; }
         public virtual Card Card { get; set; }
     }
 }

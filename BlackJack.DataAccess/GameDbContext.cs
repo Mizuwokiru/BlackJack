@@ -37,7 +37,7 @@ namespace BlackJack.DataAccess
             modelBuilder.Entity<Card>()
                 .HasData(GenerateCards());
             modelBuilder.Entity<Player>()
-                .HasData(new Player { Id = 1, CreationTime = DateTime.Now, Name = "Dealer", IsPlayable = false });
+                .HasData(new Player { Id = 1, CreationTime = DateTime.Now, Name = "Dealer", Type = PlayerType.Dealer });
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

@@ -5,8 +5,7 @@ namespace BlackJack.DataAccess.Repositories.Interfaces
 {
     public interface IRoundCardRepository : IRepository<RoundCard>
     {
-        IEnumerable<RoundCard> GetCardsByRound(int roundId);
-
-        bool IsCardsHandedOut(int roundId);
+        IEnumerable<RoundCard> GetCards(long roundId);
+        bool HasAnyCard(long gameId);
     }
 }

@@ -1,5 +1,6 @@
 ﻿using BlackJack.DataAccess.Entities;
 using BlackJack.DataAccess.Repositories.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Data.Common;
 using System.Linq;
@@ -12,12 +13,19 @@ namespace BlackJack.DataAccess.Repositories.EntityFrameworkCore
         {
         }
 
-        public IEnumerable<Round> GetLastRoundsByGame(int gameId)
+        public IEnumerable<Round> GetLastRounds(long gameId)
         {
-            var roundsByGame = _dbContext.Rounds
+            IEnumerable<Round> rounds = GetRounds(gameId);
+            DateTime lastTime = rounds.Select(round => round.CreationTime).Max();
+            IEnumerable<Round> lastRounds = rounds.Where(round => round.CreationTime == lastTime);
+            return lastRounds;
+        }
+
+        public IEnumerable<Round> GetRounds(long gameId)
+        {
+            IEnumerable<Round> rounds = _dbContext.Rounds
                 .Where(round => round.GameId == gameId);
-            return roundsByGame
-                .Where(round => round.CreationTime == roundsByGame.Select(r => r.CreationTime).Max());
+            return rounds;
         }
     }
 }

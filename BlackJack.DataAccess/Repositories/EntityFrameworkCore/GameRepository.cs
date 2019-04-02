@@ -12,16 +12,35 @@ namespace BlackJack.DataAccess.Repositories.EntityFrameworkCore
         {
         }
 
-        public IEnumerable<Game> GetGames(int playerId)
+        public void FinishAllGames(long userId)
         {
-            return _dbContext.Rounds
-                .Where(round => round.PlayerId == playerId)
-                .Select(round => round.Game);
+            IEnumerable<Game> unfinishedGames = GetUnfinishedGames(userId);
+            foreach (var unfinishedGame in unfinishedGames)
+            {
+                unfinishedGame.IsFinished = true;
+            }
+            Update(unfinishedGames);
         }
 
-        public Game GetUnfinishedGame(int playerId)
+        public Game GetUnfinishedGame(long userId)
         {
-            return GetGames(playerId).Where(game => !game.IsFinished).FirstOrDefault();
+            Game unfinishedGame = GetUnfinishedGames(userId).FirstOrDefault();
+            return unfinishedGame;
+        }
+
+        public bool HasUnfinishedGames(long userId)
+        {
+            int unfinishedGamesCount = GetUnfinishedGames(userId).Count();
+            return unfinishedGamesCount > 0;
+        }
+
+        private IEnumerable<Game> GetUnfinishedGames(long userId)
+        {
+            IEnumerable<Game> unfinishedGames = _dbContext.Rounds
+                .Where(round => round.PlayerId == userId)
+                .Select(round => round.Game)
+                .Where(game => !game.IsFinished);
+            return unfinishedGames;
         }
     }
 }
