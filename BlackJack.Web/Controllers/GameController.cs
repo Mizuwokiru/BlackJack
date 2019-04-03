@@ -26,7 +26,7 @@ namespace BlackJack.Web.Controllers
         }
 
         [HttpGet]
-        public ActionResult<GameViewModel> NewGame(long playerId, int botCount)
+        public ActionResult<GameViewModel> New(long playerId, int botCount)
         {
             try
             {
@@ -53,7 +53,7 @@ namespace BlackJack.Web.Controllers
             }
         }
 
-        [HttpGet]
+        [HttpGet("{gameId}")]
         public ActionResult<IEnumerable<PlayerCardsViewModel>> GetRound(long gameId)
         {
             IEnumerable<PlayerCardsViewModel> playerCardsViewModels =

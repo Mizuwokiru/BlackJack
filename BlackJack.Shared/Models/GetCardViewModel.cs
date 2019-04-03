@@ -4,6 +4,6 @@
     {
         public CardViewModel Card { get; set; }
 
-        public bool HasToTakeMore { get; set; }
+        public bool CanToTakeMore { get; set; }
     }
 }

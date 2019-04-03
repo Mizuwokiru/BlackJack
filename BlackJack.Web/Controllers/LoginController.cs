@@ -32,7 +32,7 @@ namespace BlackJack.Web.Controllers
                 player = _loginService.GetPlayer(player.PlayerName);
                 return Ok(player);
             }
-            return BadRequest();
+            return BadRequest(ModelState);
         }
     }
 }

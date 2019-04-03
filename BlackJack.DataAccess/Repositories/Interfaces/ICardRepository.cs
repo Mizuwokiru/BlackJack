@@ -5,6 +5,6 @@ namespace BlackJack.DataAccess.Repositories.Interfaces
 {
     public interface ICardRepository : IRepository<Card>
     {
-        IEnumerable<Card> GetCards(IEnumerable<RoundCard> roundCards);
+        IEnumerable<Card> GetCards(long roundId);
     }
 }

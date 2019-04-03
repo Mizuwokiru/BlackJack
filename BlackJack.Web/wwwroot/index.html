@@ -1,39 +1,39 @@
 ﻿<!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width" />
-    <title></title>
+    <title>Black Jack</title>
     <link rel="stylesheet" href="/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="/style.css" />
 </head>
+
 <body>
-    <!--login-block-->
-    <div id="login-block">
-        <!--choose-player-block-->
-        <div class="bj-centered-block" id="choose-player-block">
-            <div class="input-group bj-centered-control">
+    <div id="login-block" class="text-center h-100 justify-content-center align-items-center">
+        <div id="choose-player-block">
+            <div class="input-group">
                 <div class="input-group-prepend">
-                    <!--player-select-box-->
                     <select id="player-select-box" class="form-control"></select>
                 </div>
-                <!--player-input-box-->
-                <input type="text" class="form-control" id="player-input-box" />
+                <input id="player-input-box" type="text" class="form-control" />
             </div>
-            <!--login-button-->
-            <button type="button" class="btn btn-primary bj-centered-control" id="login-button">Login</button>
+            <button id="login-button" type="button" class="btn btn-primary w-100">Login</button>
         </div>
 
-        <div class="bj-centered-block" id="game-menu-block">
-            <button id="continue-button" type="button" class="btn btn-primary bj-centered-control" data-toggle="modal" data-target="#bot-count-modal">Continue</button>
-            <button type="button" class="btn btn-primary bj-centered-control" data-toggle="modal" data-target="#bot-count-modal">New game</button>
+        <div id="game-menu-block">
+            <button id="continue-game-button" type="button" class="btn btn-primary">Continue</button>
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#bot-count-modal">
+                New game
+            </button>
         </div>
 
-        <div class="modal fade" id="bot-count-modal" tabindex="-1" role="dialog" aria-labelledby="bot-count-modal-title" aria-hidden="true">
+        <div id="bot-count-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="bot-count-modal-title"
+             aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="bot-count-modal-title">Game creation</h5>
+                        <h5 id="bot-count-modal-title" class="modal-title">Game creation</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -60,9 +60,35 @@
         </div>
     </div>
 
+    <div id="game-block">
+        <nav class="sticky-top">
+            <div class="d-flex flex-column flex-md-row justify-content-between">
+                <button id="take-card-button" type="button" class="nav-item nav-link btn btn-primary text-white">
+                    Take a card
+                </button>
+                <button id="skip-button" type="button" class="nav-item nav-link btn btn-primary text-white">
+                    Skip
+                </button>
+                <button id="next-round-button" type="button" class="nav-item nav-link btn btn-primary text-white" disabled>
+                    Next round
+                </button>
+                <button id="end-game-button" type="button" class="nav-item nav-link btn btn-primary text-white" disabled>
+                    End the game
+                </button>
+                <button id="quit-button" type="button" class="nav-item nav-link btn btn-primary text-white">
+                    Quit
+                </button>
+            </div>
+        </nav>
+        <div id="game-cards-block" class="row">
+
+        </div>
+    </div>
+
     <script src="/lib/jquery/dist/jquery.min.js"></script>
     <script src="/lib/popper.js/dist/umd/popper.min.js"></script>
     <script src="/lib/bootstrap/dist/js/bootstrap.min.js"></script>
     <script src="/script.js"></script>
 </body>
+
 </html>

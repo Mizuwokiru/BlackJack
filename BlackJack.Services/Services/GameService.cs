@@ -104,6 +104,7 @@ namespace BlackJack.Services.Services
 
         public GetCardViewModel GetCard(long gameId)
         {
+            // TODO: find round/round cards by gameId and player.Type == PlayerType.User condition.
             throw new System.NotImplementedException();
         }
 
@@ -123,21 +124,26 @@ namespace BlackJack.Services.Services
                 roundCards = GetAvailableCards(rounds);
             }
 
-            IEnumerable<IGrouping<Round, RoundCard>> cardsByRounds = roundCards
-                .GroupBy(roundCard => roundCard.Round);
+            IEnumerable<IGrouping<long, RoundCard>> cardsByRounds = roundCards
+                .GroupBy(roundCard => roundCard.RoundId);
 
             var playerCardsViewModels = new List<PlayerCardsViewModel>();
             foreach (var cardsByRound in cardsByRounds)
             {
-                List<CardViewModel> cardViewModels = _cardRepository.GetCards(cardsByRound)
+                List<CardViewModel> cardViewModels = _cardRepository.GetCards(cardsByRound.Key)
                     .Select(card =>
                     {
                         shuffledCards.Remove(card.Id);
                         var cardViewModel = new CardViewModel { Suit = card.Suit, Rank = card.Rank };
                         return cardViewModel;
                     }).ToList();
+                Player player = _playerRepository.GetPlayer(cardsByRound.Key);
+                if (player.Type == PlayerType.Dealer)
+                {
+                    cardViewModels.RemoveAt(cardViewModels.Count - 1);
+                }
                 var playerCardsViewModel =
-                    new PlayerCardsViewModel { PlayerId = cardsByRound.Key.PlayerId, Cards = cardViewModels };
+                    new PlayerCardsViewModel { PlayerId = player.Id, Cards = cardViewModels };
                 playerCardsViewModels.Add(playerCardsViewModel);
             }
             _cache.Set(gameId, shuffledCards);
@@ -166,11 +172,9 @@ namespace BlackJack.Services.Services
 
         private static List<long> GetShuffledCards()
         {
-            var cards = new List<long>();
-            for (int i = 0; i < BlackJackConstants.DeckCount; i++)
-            {
-                cards.AddRange(Enumerable.Range(1, BlackJackConstants.DeckCapacity).OfType<long>());
-            }
+            var cards = Enumerable.Range(1, BlackJackConstants.DeckCapacity)
+                .Select(value => (long)value)
+                .ToList();
 
             var random = new Random();
             for (int i = cards.Count - 1, j; i > 0; i--)
