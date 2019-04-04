@@ -54,11 +54,25 @@ namespace BlackJack.Web.Controllers
         }
 
         [HttpGet("{gameId}")]
-        public ActionResult<IEnumerable<PlayerCardsViewModel>> GetRound(long gameId)
+        public ActionResult<PlayersCardsViewModel> GetRound(long gameId)
         {
-            IEnumerable<PlayerCardsViewModel> playerCardsViewModels =
+            PlayersCardsViewModel playersCardsViewModel =
                 _gameService.GetRound(gameId);
-            return Ok(playerCardsViewModels.ToList());
+            return Ok(playersCardsViewModel);
+        }
+
+        [HttpGet("{gameId}")]
+        public ActionResult<GetCardViewModel> GetCard(long gameId)
+        {
+            try
+            {
+                GetCardViewModel getCardViewModel = _gameService.GetCard(gameId);
+                return Ok(getCardViewModel);
+            }
+            catch (InvalidOperationException)
+            {
+                return BadRequest();
+            }
         }
     }
 }

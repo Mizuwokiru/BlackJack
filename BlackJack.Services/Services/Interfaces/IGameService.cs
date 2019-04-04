@@ -1,5 +1,4 @@
 ﻿using BlackJack.Shared.Models;
-using System.Collections.Generic;
 
 namespace BlackJack.Services.Services.Interfaces
 {
@@ -7,10 +6,10 @@ namespace BlackJack.Services.Services.Interfaces
     {
         GameViewModel ContinueGame(long userId);
         GameViewModel CreateGame(long userId, int botCount);
-        FinishRoundViewModel FinishGame(long gameId);
+        void FinishGame(long gameId);
         FinishRoundViewModel FinishRound(long gameId);
         GetCardViewModel GetCard(long gameId);
-        IEnumerable<PlayerCardsViewModel> GetRound(long gameId);
+        PlayersCardsViewModel GetRound(long gameId);
         bool HasUnfinishedGames(long userId);
     }
 }

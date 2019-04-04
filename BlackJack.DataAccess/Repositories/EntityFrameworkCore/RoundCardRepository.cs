@@ -14,7 +14,10 @@ namespace BlackJack.DataAccess.Repositories.EntityFrameworkCore
 
         public IEnumerable<RoundCard> GetCards(long roundId)
         {
-            throw new System.NotImplementedException();
+            IEnumerable<RoundCard> roundCards = _dbContext.Rounds
+                .Find(roundId)
+                .Cards;
+            return roundCards;
         }
 
         public bool HasAnyCard(long gameId)

@@ -3,6 +3,7 @@ const canContinueApi = "api/Game/CanContinue";
 const newGameApi = "api/Game/New";
 const continueGameApi = "api/Game/Continue";
 const getRoundApi = "api/Game/GetRound";
+const getCardApi = "api/Game/GetCard";
 
 const cardBack = "<span style=\"color: darkred\">&#x1F0A0;</span>";
 
@@ -49,29 +50,10 @@ $(document).ready(() => {
     });
 
     $("#start-game-button").click(() => {
-        console.log("val of bot-count-select-box = ", $("#bot-count-select-box").val());
         $.get({
             url: newGameApi + "?playerId=" + user.playerId + "&botCount=" + $("#bot-count-select-box").val(),
             success: responseGame => {
-                console.log(responseGame);
-                $("#login-block").css({ display: "none" });
-                gameId = responseGame.gameId;
-                $("#game-cards-block").empty();
-                responseGame.players.forEach(player => {
-                    addPlayer(player);
-                });
-                $.get({
-                    url: getRoundApi + "/" + gameId,
-                    cache: false,
-                    success: rounds => {
-                        console.log(rounds);
-                        rounds.forEach(round => {
-                            addCards(round.playerId, round.cards);
-                        });
-                        $("#player-1-cards").append(cardBack);
-                        $("#game-block").css({ display: "block" });
-                    }
-                });
+                initGame(responseGame);
             },
             error: xhr => {
                 if (xhr.status == 400) {
@@ -80,6 +62,39 @@ $(document).ready(() => {
             },
             complete: () => {
                 $("#bot-count-modal").modal("hide");
+            }
+        });
+    });
+
+    $("#continue-game-button").click(() => {
+        $.get({
+            url: continueGameApi + "?playerId=" + user.playerId,
+            cache: false,
+            success: responseGame => {
+                initGame(responseGame);
+            },
+            error: xhr => {
+                if (xhr.status == 404) {
+                    console.log("Continuable games was not found.");
+                }
+            }
+        });
+    });
+
+    $("#get-card-button").click(event => {
+        $.get({
+            url: getCardApi + "/" + gameId,
+            success: responseCard => {
+                console.log(responseCard);
+                addCard(user.playerId, responseCard.card);
+                if (!responseCard.canToTakeMore) {
+                    $("#get-card-button").prop("disabled", true);
+                }
+            },
+            error: xhr => {
+                if (xhr.status == 400) {
+                    $("#get-card-button").prop("disabled", true);
+                }
             }
         });
     });
@@ -96,6 +111,31 @@ $(document).ready(() => {
         $("#login-block").css({ display: "flex" });
     });
 });
+
+function initGame(responseGame) {
+    console.log(responseGame);
+    $("#login-block").css({ display: "none" });
+    gameId = responseGame.gameId;
+    $("#game-cards-block").empty();
+    responseGame.players.forEach(player => {
+        addPlayer(player);
+    });
+    $.get({
+        url: getRoundApi + "/" + gameId,
+        cache: false,
+        success: responsePlayersCards => {
+            console.log(responsePlayersCards);
+            responsePlayersCards.playersCards.forEach(playerCards => {
+                addCards(playerCards.playerId, playerCards.cards);
+            });
+            if (!responsePlayersCards.canToTakeMore) {
+                $("#get-card-button").prop("disabled", true);
+            }
+            $("#player-1-cards").append(cardBack);
+            $("#game-block").css({ display: "block" });
+        }
+    });
+}
 
 function addCards(playerId, cards) {
     let cardsHtml = cards.map(card => getUnicodeCard(card)).join("");

@@ -92,23 +92,48 @@ namespace BlackJack.Services.Services
             return createdGame;
         }
 
-        public FinishRoundViewModel FinishGame(long gameId)
+        public void FinishGame(long gameId)
         {
             throw new System.NotImplementedException();
         }
 
         public FinishRoundViewModel FinishRound(long gameId)
         {
+            List<Round> rounds = _roundRepository.GetLastRounds(gameId).ToList();
+
+
+
             throw new System.NotImplementedException();
         }
 
         public GetCardViewModel GetCard(long gameId)
         {
-            // TODO: find round/round cards by gameId and player.Type == PlayerType.User condition.
-            throw new System.NotImplementedException();
+            Round round = _roundRepository.GetLastRound(gameId);
+
+            List<Card> cards = _cardRepository.GetCards(round.Id).ToList();
+
+            int score = CalculateCardScore(cards);
+            if (score > 21)
+            {
+                throw new InvalidOperationException("User already lose.");
+            }
+
+            var shuffledCards = (List<long>)_cache.Get(gameId);
+            Card takenCard = _cardRepository.Get(shuffledCards[0]);
+            var roundCard = new RoundCard { RoundId = round.Id, CardId = takenCard.Id };
+            _roundCardRepository.Add(roundCard);
+            shuffledCards.RemoveAt(0);
+
+            score += GetCardScore(takenCard);
+
+            var cardViewModel = new CardViewModel { Suit = takenCard.Suit, Rank = takenCard.Rank };
+
+            var getCardViewModel = new GetCardViewModel { CanToTakeMore = score < 21, Card = cardViewModel };
+
+            return getCardViewModel;
         }
 
-        public IEnumerable<PlayerCardsViewModel> GetRound(long gameId)
+        public PlayersCardsViewModel GetRound(long gameId)
         {
             List<Round> rounds = _roundRepository.GetLastRounds(gameId).ToList();
 
@@ -127,10 +152,12 @@ namespace BlackJack.Services.Services
             IEnumerable<IGrouping<long, RoundCard>> cardsByRounds = roundCards
                 .GroupBy(roundCard => roundCard.RoundId);
 
+            int userCardsScore = 0;
             var playerCardsViewModels = new List<PlayerCardsViewModel>();
             foreach (var cardsByRound in cardsByRounds)
             {
-                List<CardViewModel> cardViewModels = _cardRepository.GetCards(cardsByRound.Key)
+                List<Card> cards = _cardRepository.GetCards(cardsByRound.Key).ToList();
+                List<CardViewModel> cardViewModels = cards
                     .Select(card =>
                     {
                         shuffledCards.Remove(card.Id);
@@ -142,13 +169,20 @@ namespace BlackJack.Services.Services
                 {
                     cardViewModels.RemoveAt(cardViewModels.Count - 1);
                 }
+                if (player.Type == PlayerType.User)
+                {
+                    userCardsScore = CalculateCardScore(cards);
+                }
                 var playerCardsViewModel =
                     new PlayerCardsViewModel { PlayerId = player.Id, Cards = cardViewModels };
                 playerCardsViewModels.Add(playerCardsViewModel);
             }
             _cache.Set(gameId, shuffledCards);
 
-            return playerCardsViewModels;
+            var playersCardsViewModel =
+                new PlayersCardsViewModel { CanToTakeMore = userCardsScore < 21, PlayersCards = playerCardsViewModels };
+
+            return playersCardsViewModel;
         }
 
         public bool HasUnfinishedGames(long userId)
@@ -168,24 +202,6 @@ namespace BlackJack.Services.Services
             }
             _playerRepository.Add(bots);
             return bots;
-        }
-
-        private static List<long> GetShuffledCards()
-        {
-            var cards = Enumerable.Range(1, BlackJackConstants.DeckCapacity)
-                .Select(value => (long)value)
-                .ToList();
-
-            var random = new Random();
-            for (int i = cards.Count - 1, j; i > 0; i--)
-            {
-                j = random.Next(i + 1);
-                long tmp = cards[i];
-                cards[i] = cards[j];
-                cards[j] = tmp;
-            }
-
-            return cards;
         }
 
         private List<RoundCard> GetInitialCards(List<Round> rounds, List<long> shuffledCards)
@@ -212,6 +228,57 @@ namespace BlackJack.Services.Services
                 availableCards.AddRange(cards);
             }
             return availableCards;
+        }
+
+        private static int CalculateCardScore(List<Card> cards)
+        {
+            int score = 0;
+            foreach (var card in cards)
+            {
+                score += GetCardScore(card);
+            }
+            while (score > 21)
+            {
+                var ace = cards.Where(card => card.Rank == Rank.Ace).FirstOrDefault();
+                if (ace == null)
+                {
+                    break;
+                }
+                cards.Remove(ace);
+                score -= 10;
+            }
+            return score;
+        }
+
+        private static int GetCardScore(Card card)
+        {
+            if (card.Rank >= Rank.Ten && card.Rank <= Rank.King)
+            {
+                return 10;
+            }
+            if (card.Rank == Rank.Ace)
+            {
+                return 11;
+            }
+            return (int)card.Rank;
+        }
+
+        private static List<long> GetShuffledCards()
+        {
+            var cards = Enumerable.Range(1, BlackJackConstants.DeckCapacity)
+                .Select(value => (long)value)
+                .ToList();
+
+            var random = new Random();
+            for (int i = cards.Count - 1, j; i > 0; i--)
+            {
+                j = random.Next(i + 1);
+                long tmp = cards[i];
+                cards[i] = cards[j];
+                cards[j] = tmp;
+            }
+
+            return cards;
         }
         #endregion
     }

@@ -13,6 +13,12 @@ namespace BlackJack.DataAccess.Repositories.EntityFrameworkCore
         {
         }
 
+        public Round GetLastRound(long gameId)
+        {
+            Round lastRound = GetLastRounds(gameId).FirstOrDefault();
+            return lastRound;
+        }
+
         public IEnumerable<Round> GetLastRounds(long gameId)
         {
             IEnumerable<Round> rounds = GetRounds(gameId);
