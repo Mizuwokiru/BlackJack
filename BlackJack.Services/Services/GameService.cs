@@ -54,10 +54,14 @@ namespace BlackJack.Services.Services
 
         public GameViewModel CreateGame(long userId, int botCount)
         {
-            _gameRepository.FinishAllGames(userId);
             if (botCount < 0 || botCount > BlackJackConstants.MaxBotCount)
             {
                 throw new ArgumentOutOfRangeException($"Bot count {botCount} is too much");
+            }
+            Game unfinishedGame = _gameRepository.GetUnfinishedGame(userId);
+            if (unfinishedGame != null)
+            {
+                FinishGame(unfinishedGame);
             }
 
             var game = new Game();
@@ -92,18 +96,17 @@ namespace BlackJack.Services.Services
             return createdGame;
         }
 
-        public void FinishGame(long gameId)
+        public void EndGame(long gameId)
         {
-            throw new System.NotImplementedException();
+            Game game = _gameRepository.Get(gameId);
+            FinishGame(game);
         }
 
-        public FinishRoundViewModel FinishRound(long gameId)
+        public GetResultsViewModel GetResults(long gameId)
         {
-            List<Round> rounds = _roundRepository.GetLastRounds(gameId).ToList();
+            GetResultsViewModel getResultsViewModel = FinishRound(gameId);
 
-
-
-            throw new System.NotImplementedException();
+            return getResultsViewModel;
         }
 
         public GetCardViewModel GetCard(long gameId)
@@ -228,6 +231,64 @@ namespace BlackJack.Services.Services
                 availableCards.AddRange(cards);
             }
             return availableCards;
+        }
+
+        private void FinishGame(Game game)
+        {
+            FinishRound(game.Id);
+            game.IsFinished = true;
+            _gameRepository.Update(game);
+        }
+
+        private GetResultsViewModel FinishRound(long gameId)
+        {
+            List<Round> rounds = _roundRepository.GetLastRounds(gameId).ToList();
+
+            Player dealer = _playerRepository.GetDealer();
+            Round dealerRound = rounds.Where(round => round.PlayerId == dealer.Id).FirstOrDefault();
+            List<Card> dealerCards = _cardRepository.GetCards(dealerRound.Id).ToList();
+            rounds.Remove(dealerRound);
+            int dealerScore = CalculateCardScore(dealerCards);
+
+            var getResultViewModel = new GetResultsViewModel
+            {
+                DealerCards = dealerCards.Select(card => new CardViewModel { Suit = card.Suit, Rank = card.Rank }),
+                Bots = new List<GetBotResultsViewModel>()
+            };
+
+            foreach (var round in rounds)
+            {
+                Player player = _playerRepository.GetPlayer(round.Id);
+                List<Card> cards = _cardRepository.GetCards(round.Id).ToList();
+
+                int score = CalculateCardScore(cards);
+                if (score > dealerScore)
+                {
+                    round.State = RoundState.Won;
+                }
+                if (score == dealerScore)
+                {
+                    round.State = RoundState.Push;
+                }
+                if (score < dealerScore)
+                {
+                    round.State = RoundState.Lose;
+                }
+                if (player.Type == PlayerType.User)
+                {
+                    getResultViewModel.PlayerState = round.State;
+                    continue;
+                }
+                getResultViewModel.Bots.Add(new GetBotResultsViewModel
+                {
+                    Id = player.Id,
+                    State = round.State,
+                    Cards = cards.Select(card => new CardViewModel { Suit = card.Suit, Rank = card.Rank })
+                });
+            }
+            _roundRepository.Update(rounds);
+
+            return getResultViewModel;
         }
 
         private static int CalculateCardScore(List<Card> cards)

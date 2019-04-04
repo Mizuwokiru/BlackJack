@@ -74,5 +74,12 @@ namespace BlackJack.Web.Controllers
                 return BadRequest();
             }
         }
+
+        [HttpGet("{gameId}")]
+        public ActionResult<GetResultsViewModel> GetResults(long gameId)
+        {
+            GetResultsViewModel getResultsViewModel = _gameService.GetResults(gameId);
+            return Ok(getResultsViewModel);
+        }
     }
 }

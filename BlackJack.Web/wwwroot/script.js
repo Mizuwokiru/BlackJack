@@ -4,11 +4,19 @@ const newGameApi = "api/Game/New";
 const continueGameApi = "api/Game/Continue";
 const getRoundApi = "api/Game/GetRound";
 const getCardApi = "api/Game/GetCard";
+const getResultsApi = "api/Game/GetResults";
 
 const cardBack = "<span style=\"color: darkred\">&#x1F0A0;</span>";
 
 let user = null;
 let gameId = null;
+
+const RoundState = Object.freeze({
+    None: 0,
+    Won: 1,
+    Lose: 2,
+    Push: 3
+});
 
 $(document).ready(() => {
     $("#player-select-box").change(event => {
@@ -88,12 +96,12 @@ $(document).ready(() => {
                 console.log(responseCard);
                 addCard(user.playerId, responseCard.card);
                 if (!responseCard.canToTakeMore) {
-                    $("#get-card-button").prop("disabled", true);
+                    getResults();
                 }
             },
             error: xhr => {
                 if (xhr.status == 400) {
-                    $("#get-card-button").prop("disabled", true);
+                    getResults();
                 }
             }
         });
@@ -128,17 +136,59 @@ function initGame(responseGame) {
             responsePlayersCards.playersCards.forEach(playerCards => {
                 addCards(playerCards.playerId, playerCards.cards);
             });
-            if (!responsePlayersCards.canToTakeMore) {
-                $("#get-card-button").prop("disabled", true);
+            if (responsePlayersCards.canToTakeMore) {
+                $("#get-card-button").prop("disabled", false);
             }
+            $("#skip-button").prop("disabled", false);
             $("#player-1-cards").append(cardBack);
             $("#game-block").css({ display: "block" });
         }
     });
 }
 
+function getResults() {
+    $("#get-card-button").prop("disabled", true);
+    $("#skip-button").prop("disabled", true);
+    $("#next-round-button").prop("disabled", false);
+    $("end-game-button").prop("disabled", false);
+
+    $.get({
+        url: getResultsApi + "/" + gameId,
+        cache: false,
+        success: results => {
+            console.log(results);
+            drawPlayerState(user.playerId, results.playerState);
+            console.log(results.bots.length);
+            console.log(results.bots);
+            for (let i = 0; i < results.bots.length; i++) {
+                drawPlayerState(results.bots[i].id, results.bots[i].state);
+                addCards(results.bots[i].id, results.bots[i].cards);
+            }
+            addCards(1, results.dealerCards);
+        }
+    });
+}
+
+function drawPlayerState(playerId, state) {
+    let stateColor;
+    if (state == RoundState.Won) {
+        stateColor = "success";
+    }
+    if (state == RoundState.Lose) {
+        stateColor == "danger";
+    }
+    if (state == RoundState.Push) {
+        stateColor == "primary";
+    }
+    $("#player-" + playerId).addClass("border-" + stateColor);
+    $("#player-" + playerId + "-header").addClass("text-" + stateColor);
+}
+
 function addCards(playerId, cards) {
+    console.log(playerId);
+    console.log(cards);
     let cardsHtml = cards.map(card => getUnicodeCard(card)).join("");
+    $("#player-" + playerId + "-cards").empty();
     $("#player-" + playerId + "-cards").append(cardsHtml);
 }
 

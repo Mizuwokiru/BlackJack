@@ -1,5 +1,6 @@
 ﻿using BlackJack.DataAccess.Entities;
 using BlackJack.DataAccess.Repositories.Interfaces;
+using BlackJack.Shared;
 using BlackJack.Shared.Enums;
 using System.Collections.Generic;
 using System.Data.Common;
@@ -23,7 +24,7 @@ namespace BlackJack.DataAccess.Repositories.EntityFrameworkCore
 
         public Player GetDealer()
         {
-            Player dealer = Get(1);
+            Player dealer = Get(BlackJackConstants.DealerId);
             return dealer;
         }
 

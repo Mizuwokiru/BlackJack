@@ -3,13 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28307.539
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlackJack.Web", "BlackJack.Web\BlackJack.Web.csproj", "{CFBC866A-E3AB-4928-B894-93B1814D0E3B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlackJack.Web", "BlackJack.Web\BlackJack.Web.csproj", "{CFBC866A-E3AB-4928-B894-93B1814D0E3B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlackJack.DataAccess", "BlackJack.DataAccess\BlackJack.DataAccess.csproj", "{ACD5DA60-F1BA-4A69-B800-15B9814BFEAF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlackJack.DataAccess", "BlackJack.DataAccess\BlackJack.DataAccess.csproj", "{ACD5DA60-F1BA-4A69-B800-15B9814BFEAF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlackJack.Shared", "BlackJack.Shared\BlackJack.Shared.csproj", "{A3A9D5BC-D10C-458C-B75F-7A39E191F736}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlackJack.Shared", "BlackJack.Shared\BlackJack.Shared.csproj", "{A3A9D5BC-D10C-458C-B75F-7A39E191F736}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlackJack.Services", "BlackJack.Services\BlackJack.Services.csproj", "{D7FAAB2B-6E42-444B-9DBC-522DE6660134}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlackJack.Services", "BlackJack.Services\BlackJack.Services.csproj", "{D7FAAB2B-6E42-444B-9DBC-522DE6660134}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlackJack.WebMVC", "BlackJack.WebMVC\BlackJack.WebMVC.csproj", "{A6BF6D33-CFF2-4CC9-A1C2-C01864C503C5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{D7FAAB2B-6E42-444B-9DBC-522DE6660134}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D7FAAB2B-6E42-444B-9DBC-522DE6660134}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D7FAAB2B-6E42-444B-9DBC-522DE6660134}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A6BF6D33-CFF2-4CC9-A1C2-C01864C503C5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A6BF6D33-CFF2-4CC9-A1C2-C01864C503C5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A6BF6D33-CFF2-4CC9-A1C2-C01864C503C5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A6BF6D33-CFF2-4CC9-A1C2-C01864C503C5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

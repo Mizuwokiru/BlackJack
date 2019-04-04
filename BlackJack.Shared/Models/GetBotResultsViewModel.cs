@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace BlackJack.Shared.Models
 {
-    public class FinishRoundBotViewModel
+    public class GetBotResultsViewModel
     {
         public long Id { get; set; }
 

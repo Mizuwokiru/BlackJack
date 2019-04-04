@@ -12,12 +12,14 @@ namespace BlackJack.DataAccess.Repositories.EntityFrameworkCore
         {
         }
 
+        // TODO: move to service
         public void FinishAllGames(long userId)
         {
             IEnumerable<Game> unfinishedGames = GetUnfinishedGames(userId);
             foreach (var unfinishedGame in unfinishedGames)
             {
                 unfinishedGame.IsFinished = true;
+
             }
             Update(unfinishedGames);
         }

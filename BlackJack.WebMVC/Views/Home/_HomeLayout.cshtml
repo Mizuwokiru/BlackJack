@@ -1,0 +1,15 @@
+﻿@{
+    Layout = "_Layout";
+}
+
+<div class="d-flex text-center h-100 justify-content-center align-items-center">
+    @RenderBody()
+    
+    @section Styles {
+        @RenderSection("Styles", false)
+    }
+
+    @section Scripts {
+        @RenderSection("Scripts", false)
+    }
+</div>
