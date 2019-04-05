@@ -29,9 +29,45 @@ namespace BlackJack.Web.Controllers
             return View(menuViewModel);
         }
 
-        public async Task<ActionResult> New()
+        public async Task<IActionResult> Game()
         {
+            return View();
+        }
 
+        public async Task<IActionResult> NewGame()
+        {
+            // TODO: create game and redirect to Game
+            return Content(string.Empty);
+        }
+
+        public async Task<IActionResult> ContinueGame()
+        {
+            // TODO: continue game and redirect to Game
+            return Content(string.Empty);
+        }
+
+        public async Task<IActionResult> Step()
+        {
+            // TODO: get card and redirect to Game
+            return Content(string.Empty);
+        }
+
+        public async Task<IActionResult> Skip()
+        {
+            // TODO: finish round and redirect to Game
+            return Content(string.Empty);
+        }
+
+        public async Task<IActionResult> NextRound()
+        {
+            // TODO: create round and redirect to Game
+            return Content(string.Empty);
+        }
+
+        public async Task<IActionResult> FinishGame()
+        {
+            // TODO: finish game and redirect to Index
+            return Content(string.Empty);
         }
     }
 }
