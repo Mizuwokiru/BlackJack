@@ -1,7 +1,9 @@
 ﻿using BlackJack.DataAccess.Entities;
 using BlackJack.DataAccess.Repositories.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Data.Common;
+using System.Threading.Tasks;
 
 namespace BlackJack.DataAccess.Repositories.EntityFrameworkCore
 {
@@ -23,7 +25,6 @@ namespace BlackJack.DataAccess.Repositories.EntityFrameworkCore
         public void Add(IEnumerable<T> item)
         {
             _dbContext.Set<T>().AddRange(item);
-            _dbContext.SaveChanges();
         }
 
         public void Delete(long id)
@@ -33,29 +34,26 @@ namespace BlackJack.DataAccess.Repositories.EntityFrameworkCore
             {
                 _dbContext.Set<T>().Remove(obj);
             }
-            _dbContext.SaveChanges();
         }
 
-        public T Get(long id)
+        public async Task<T> Get(long id)
         {
-            return _dbContext.Set<T>().Find(id);
+            return await _dbContext.Set<T>().FindAsync(id);
         }
 
-        public IEnumerable<T> GetAll()
+        public async Task<IEnumerable<T>> GetAll()
         {
-            return _dbContext.Set<T>();
+            return await _dbContext.Set<T>().ToListAsync();
         }
 
         public void Update(params T[] item)
         {
             _dbContext.Set<T>().UpdateRange(item);
-            _dbContext.SaveChanges();
         }
 
         public void Update(IEnumerable<T> item)
         {
             _dbContext.Set<T>().UpdateRange(item);
-            _dbContext.SaveChanges();
         }
     }
 }

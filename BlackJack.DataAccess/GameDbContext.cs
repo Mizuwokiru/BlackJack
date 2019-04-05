@@ -7,6 +7,8 @@ using System;
 using System.Collections.Generic;
 using System.Data.Common;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace BlackJack.DataAccess
 {
@@ -38,7 +40,13 @@ namespace BlackJack.DataAccess
             modelBuilder.Entity<Card>()
                 .HasData(GenerateCards());
             modelBuilder.Entity<Player>()
-                .HasData(new Player { Id = BlackJackConstants.DealerId, CreationTime = DateTime.Now, Name = "Dealer", Type = PlayerType.Dealer });
+                .HasData(new Player
+                {
+                    Id = BlackJackConstants.DealerId,
+                    CreationTime = DateTime.Now,
+                    Name = "Dealer",
+                    Type = PlayerType.Dealer
+                });
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -50,6 +58,12 @@ namespace BlackJack.DataAccess
         {
             AddCreationTime();
             return base.SaveChanges();
+        }
+
+        public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default(CancellationToken))
+        {
+            AddCreationTime();
+            return await base.SaveChangesAsync(cancellationToken);
         }
 
         private void AddCreationTime()

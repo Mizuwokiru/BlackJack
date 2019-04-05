@@ -1,8 +1,9 @@
 ﻿using BlackJack.DataAccess.Entities;
 using BlackJack.DataAccess.Repositories.Interfaces;
-using System.Collections.Generic;
+using Microsoft.EntityFrameworkCore;
 using System.Data.Common;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace BlackJack.DataAccess.Repositories.EntityFrameworkCore
 {
@@ -12,37 +13,20 @@ namespace BlackJack.DataAccess.Repositories.EntityFrameworkCore
         {
         }
 
-        // TODO: move to service
-        public void FinishAllGames(long userId)
+        public async Task<bool> CanToContinueGame(long userId)
         {
-            IEnumerable<Game> unfinishedGames = GetUnfinishedGames(userId);
-            foreach (var unfinishedGame in unfinishedGames)
-            {
-                unfinishedGame.IsFinished = true;
-
-            }
-            Update(unfinishedGames);
+            Game game = await GetUnfinishedGame(userId);
+            return game != null;
         }
 
-        public Game GetUnfinishedGame(long userId)
+        public async Task<Game> GetUnfinishedGame(long userId)
         {
-            Game unfinishedGame = GetUnfinishedGames(userId).FirstOrDefault();
-            return unfinishedGame;
-        }
-
-        public bool HasUnfinishedGames(long userId)
-        {
-            int unfinishedGamesCount = GetUnfinishedGames(userId).Count();
-            return unfinishedGamesCount > 0;
-        }
-
-        private IEnumerable<Game> GetUnfinishedGames(long userId)
-        {
-            IEnumerable<Game> unfinishedGames = _dbContext.Rounds
+            Task<Game> unfinishedGame = _dbContext.Rounds
                 .Where(round => round.PlayerId == userId)
                 .Select(round => round.Game)
-                .Where(game => !game.IsFinished);
-            return unfinishedGames;
+                .Where(game => !game.IsFinished)
+                .FirstOrDefaultAsync();
+            return await unfinishedGame;
         }
     }
 }

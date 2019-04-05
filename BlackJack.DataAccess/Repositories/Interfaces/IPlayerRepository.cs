@@ -1,15 +1,15 @@
 ﻿using BlackJack.DataAccess.Entities;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace BlackJack.DataAccess.Repositories.Interfaces
 {
     public interface IPlayerRepository : IRepository<Player>
     {
-        IEnumerable<Player> GetBots(int botCount);
-        Player GetDealer();
-        Player GetPlayer(string name);
-        Player GetPlayer(long roundId);
-        IEnumerable<string> GetPlayerNames();
-        IEnumerable<Player> GetPlayersForGame(long gameId);
+        Task<List<Player>> GetBots(int botCount);
+        Task<Player> GetDealer();
+        Task<Player> GetPlayer(string userName);
+        Task<Player> GetPlayer(long roundId);
+        Task<IEnumerable<string>> GetUserNames();
     }
 }

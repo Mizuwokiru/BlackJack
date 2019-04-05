@@ -2,9 +2,11 @@
 using BlackJack.DataAccess.Repositories.Interfaces;
 using BlackJack.Shared;
 using BlackJack.Shared.Enums;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Data.Common;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace BlackJack.DataAccess.Repositories.EntityFrameworkCore
 {
@@ -14,49 +16,42 @@ namespace BlackJack.DataAccess.Repositories.EntityFrameworkCore
         {
         }
 
-        public IEnumerable<Player> GetBots(int botCount)
+        public async Task<List<Player>> GetBots(int botCount)
         {
-            IEnumerable<Player> bots = _dbContext.Players
+            Task<List<Player>> bots = _dbContext.Players
                 .Where(player => player.Type == PlayerType.Bot)
-                .Take(botCount);
-            return bots;
+                .Take(botCount)
+                .ToListAsync();
+            return await bots;
         }
 
-        public Player GetDealer()
+        public async Task<Player> GetDealer()
         {
-            Player dealer = Get(BlackJackConstants.DealerId);
-            return dealer;
+            Task<Player> dealer = Get(BlackJackConstants.DealerId);
+            return await dealer;
         }
 
-        public Player GetPlayer(string name)
+        public async Task<Player> GetPlayer(string playerName)
         {
-            Player player = _dbContext.Players
-                .Where(tmpPlayer => tmpPlayer.Name == name)
-                .FirstOrDefault();
-            return player;
+            Task<Player> player = _dbContext.Players
+                .FirstOrDefaultAsync(tmpPlayer => tmpPlayer.Name.Equals(playerName, System.StringComparison.CurrentCultureIgnoreCase));
+            return await player;
         }
 
-        public Player GetPlayer(long roundId)
+        public async Task<Player> GetPlayer(long roundId)
         {
-            Player player = _dbContext.Rounds
-                .Find(roundId).Player;
-            return player;
+            Round round = await _dbContext.Rounds
+                .FindAsync(roundId);
+            return round.Player;
         }
 
-        public IEnumerable<string> GetPlayerNames()
+        public async Task<IEnumerable<string>> GetUserNames()
         {
-            IEnumerable<string> playerNames = _dbContext.Players
+            Task<List<string>> userNames = _dbContext.Players
                 .Where(player => player.Type == PlayerType.User)
-                .Select(player => player.Name);
-            return playerNames;
-        }
-
-        public IEnumerable<Player> GetPlayersForGame(long gameId)
-        {
-            IEnumerable<Player> players = _dbContext.Rounds
-                .Where(round => round.GameId == gameId)
-                .Select(round => round.Player);
-            return players;
+                .Select(user => user.Name)
+                .ToListAsync();
+            return await userNames;
         }
     }
 }

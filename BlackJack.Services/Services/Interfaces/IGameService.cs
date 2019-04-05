@@ -1,15 +1,14 @@
 ﻿using BlackJack.Shared.Models;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace BlackJack.Services.Services.Interfaces
 {
     public interface IGameService
     {
-        GameViewModel ContinueGame(long userId);
-        GameViewModel CreateGame(long userId, int botCount);
-        void EndGame(long gameId);
-        GetResultsViewModel GetResults(long gameId);
-        GetCardViewModel GetCard(long gameId);
-        PlayersCardsViewModel GetRound(long gameId);
-        bool HasUnfinishedGames(long userId);
+        Task<bool> CanToContinueGame();
+        Task ContinueGame();
+        Task<List<GamePlayerInfoViewModel>> GetGameInfo();
+        Task NewGame(int botCount);
     }
 }

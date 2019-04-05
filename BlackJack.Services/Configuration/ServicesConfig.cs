@@ -8,7 +8,7 @@ namespace BlackJack.Services.Configuration
     {
         public static void AddBlackJackServices(this IServiceCollection services)
         {
-            services.AddTransient<ILoginService, LoginService>();
+            services.AddTransient<IUserService, UserService>();
             services.AddTransient<IGameService, GameService>();
             services.AddTransient<IGameHistoryService, GameHistoryService>();
         }

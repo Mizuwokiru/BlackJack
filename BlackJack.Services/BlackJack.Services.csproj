@@ -5,11 +5,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\BlackJack.DataAccess\BlackJack.DataAccess.csproj" />
+    <Folder Include="Configuration\" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Exceptions\" />
+    <ProjectReference Include="..\BlackJack.DataAccess\BlackJack.DataAccess.csproj" />
   </ItemGroup>
 
 </Project>

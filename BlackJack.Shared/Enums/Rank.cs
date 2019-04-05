@@ -2,18 +2,18 @@
 {
     public enum Rank
     {
-        Ace = 0x1,
-        Two = 0x2,
-        Three = 0x3,
-        Four = 0x4,
-        Five = 0x5,
-        Six = 0x6,
-        Seven = 0x7,
-        Eight = 0x8,
-        Nine = 0x9,
-        Ten = 0xA,
-        Jack = 0xB,
-        Queen = 0xD,
-        King = 0xE
+        Ace = 1,
+        Two = 2,
+        Three = 3,
+        Four = 4,
+        Five = 5,
+        Six = 6,
+        Seven = 7,
+        Eight = 8,
+        Nine = 9,
+        Ten = 10,
+        Jack = 11,
+        Queen = 12,
+        King = 13
     }
 }

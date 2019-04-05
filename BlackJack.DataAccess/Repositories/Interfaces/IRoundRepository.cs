@@ -1,14 +1,17 @@
 ﻿using BlackJack.DataAccess.Entities;
+using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace BlackJack.DataAccess.Repositories.Interfaces
 {
     public interface IRoundRepository : IRepository<Round>
     {
-        Round GetLastRound(long gameId);
+        Task<List<Round>> GetLastRounds(long gameId);
 
-        IEnumerable<Round> GetLastRounds(long gameId);
+        Task<Round> GetLastRound(long gameId, long playerId);
 
-        IEnumerable<Round> GetRounds(long gameId);
+        Task<IEnumerable<IGrouping<DateTime, Round>>> GetRounds(long gameId);
     }
 }
