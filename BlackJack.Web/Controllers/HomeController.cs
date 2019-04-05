@@ -26,12 +26,12 @@ namespace BlackJack.Web.Controllers
         {
             bool canToContinueGame = await _gameService.CanToContinueGame();
             var menuViewModel = new MenuViewModel { CanToContinueGame = canToContinueGame };
-            return View(canToContinueGame);
+            return View(menuViewModel);
         }
 
         public async Task<ActionResult> New()
         {
-            
+
         }
     }
 }

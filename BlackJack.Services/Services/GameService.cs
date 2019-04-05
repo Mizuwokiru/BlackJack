@@ -59,9 +59,51 @@ namespace BlackJack.Services.Services
             _session.Set(_userName, gameSession);
         }
 
-        public Task<List<GamePlayerInfoViewModel>> GetGameInfo()
+        public async Task<List<GamePlayerInfoViewModel>> GetGameInfo()
         {
-            throw new NotImplementedException();
+            var gameSession = _session.Get<GameSession>(_userName);
+
+            List<Round> lastRounds = await _roundRepository.GetLastRounds(gameSession.GameId);
+            bool hasCardAny = await _roundCardRepository.HasCards(lastRounds.First().Id);
+            List<RoundCard> roundCards = null;
+            List<long> shuffledCards = CardHelper.GetShuffledCards();
+            if (hasCardAny)
+            {
+                roundCards = await GetAvailableCards(lastRounds, shuffledCards);
+            }
+            if (roundCards == null)
+            {
+                roundCards = GetInitialCards(lastRounds, shuffledCards);
+            }
+
+            IEnumerable<IGrouping<Round, RoundCard>> cardsByRound =
+                roundCards.GroupBy(roundCard => roundCard.Round);
+
+            var gamePlayerInfoViewModels = new List<GamePlayerInfoViewModel>();
+            foreach (var groupedCards in cardsByRound)
+            {
+                List<Card> cards = await _cardRepository.GetCards(groupedCards.Key.Id);
+                List<string> stringifiedCards = cards
+                    .Select(card => CardHelper.StringifyCard(card.Suit, card.Rank)).ToList();
+
+                Player player = await _playerRepository.Get(groupedCards.Key.PlayerId);
+                if (player.Type == PlayerType.Dealer && cards.Count == 2)
+                {
+                    stringifiedCards[1] = CardHelper.StringifiedBlankCard;
+                }
+                var gamePlayerInfoViewModel = new GamePlayerInfoViewModel
+                {
+                    Name = player.Name,
+                    Cards = stringifiedCards,
+                    State = groupedCards.Key.State
+                };
+                gamePlayerInfoViewModels.Add(gamePlayerInfoViewModel);
+            }
+
+            gameSession = new GameSession { GameId = gameSession.GameId, ShuffledCards = shuffledCards };
+            _session.Set(_userName, gameSession);
+
+            return gamePlayerInfoViewModels;
         }
 
         public async Task NewGame(int botCount)
@@ -81,6 +123,9 @@ namespace BlackJack.Services.Services
 
             var game = new Game();
             _gameRepository.Add(game);
+
+            var gameSession = new GameSession { GameId = game.Id };
+            _session.Set(_userName, gameSession);
 
             await CreateNextRound(game.Id, botCount);
         }
@@ -125,6 +170,11 @@ namespace BlackJack.Services.Services
                 List<Card> cards = await _cardRepository.GetCards(round.Id);
 
                 int score = CalculateCardScore(cards);
+                if (score > 21)
+                {
+                    round.State = RoundState.Lose;
+                    continue;
+                }
                 if (score > dealerScore)
                 {
                     round.State = RoundState.Won;
@@ -161,25 +211,39 @@ namespace BlackJack.Services.Services
             Player dealer = await _playerRepository.GetDealer();
             rounds.Add(new Round { GameId = gameId, PlayerId = dealer.Id });
             _roundRepository.Add(rounds);
-
-            List<long> shuffledCards = CardHelper.GetShuffledCards();
-
-            var roundCards = new List<RoundCard>();
-            for (int i = 0; i < rounds.Count; i++)
-            {
-                roundCards.Add(
-                    new RoundCard { RoundId = rounds[i].Id, CardId = shuffledCards[i] });
-                roundCards.Add(
-                    new RoundCard { RoundId = rounds[i].Id, CardId = shuffledCards[i + rounds.Count] });
-            }
-            _roundCardRepository.Add(roundCards);
-            shuffledCards.RemoveRange(0, rounds.Count * 2);
-
-            var gameSession = new GameSession { GameId = gameId, ShuffledCards = shuffledCards };
-            _session.Set(_userName, gameSession);
         }
 
+        private async Task<List<RoundCard>> GetAvailableCards(List<Round> rounds, List<long> shuffledCards)
+        {
+            var availableCards = new List<RoundCard>();
+            foreach (var round in rounds)
+            {
+                IEnumerable<RoundCard> cards = await _roundCardRepository.GetCards(round.Id);
+                availableCards.AddRange(cards);
+            }
+            foreach (var card in availableCards)
+            {
+                shuffledCards.Remove(card.CardId);
+            }
+            return availableCards;
+        }
 
+        private List<RoundCard> GetInitialCards(List<Round> rounds, List<long> shuffledCards)
+        {
+            var initialCards = new List<RoundCard>();
+            for (int i = 0; i < rounds.Count; i++)
+            {
+                RoundCard[] roundCards =
+                {
+                    new RoundCard { RoundId = rounds[i].Id, CardId = shuffledCards[i] },
+                    new RoundCard { RoundId = rounds[i].Id, CardId = shuffledCards[i + rounds.Count] }
+                };
+                initialCards.AddRange(roundCards);
+            }
+            _roundCardRepository.Add(initialCards);
+            shuffledCards.RemoveRange(0, initialCards.Count);
+            return initialCards;
+        }
 
         private static int CalculateCardScore(List<Card> cards)
         {

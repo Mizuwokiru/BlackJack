@@ -7,10 +7,7 @@ namespace BlackJack.Shared.Helpers
 {
     public static class CardHelper
     {
-        public static string StringifyBlankCard()
-        {
-            return char.ConvertFromUtf32(BlackJackConstants.BlankCardUtf32);
-        }
+        public static readonly string StringifiedBlankCard = char.ConvertFromUtf32(BlackJackConstants.BlankCardUtf32);
 
         public static string StringifyCard(Suit suit, Rank rank)
         {

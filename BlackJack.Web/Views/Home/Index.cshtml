@@ -6,8 +6,8 @@
     Layout = "_CenterLayout";
 }
 
-<div>
-    @if (Model.ShowContinueButton)
+<div id="game-menu-block">
+    @if (Model.CanToContinueGame)
     {
         <button type="button" class="btn btn-primary">Continue</button>
     }
