@@ -26,12 +26,6 @@ namespace BlackJack.Web
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-            services.AddDistributedMemoryCache();
-            services.AddSession(options =>
-            {
-                options.Cookie.Name = ".BlackJack.Session";
-                options.IdleTimeout = TimeSpan.FromMinutes(10);
-            });
             services.AddBlackJackDbAccess(Configuration);
             services.AddBlackJackServices();
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
@@ -58,8 +52,7 @@ namespace BlackJack.Web
             app.UseStaticFiles();
 
             app.UseAuthentication();
-
-            app.UseSession();
+            
             app.UseMvc(routes =>
             {
                 routes.MapRoute(

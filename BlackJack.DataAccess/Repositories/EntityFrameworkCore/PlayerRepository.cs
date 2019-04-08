@@ -2,11 +2,9 @@
 using BlackJack.DataAccess.Repositories.Interfaces;
 using BlackJack.Shared;
 using BlackJack.Shared.Enums;
-using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Data.Common;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace BlackJack.DataAccess.Repositories.EntityFrameworkCore
 {
@@ -16,42 +14,24 @@ namespace BlackJack.DataAccess.Repositories.EntityFrameworkCore
         {
         }
 
-        public async Task<List<Player>> GetBots(int botCount)
+        public IEnumerable<Player> GetBots()
         {
-            Task<List<Player>> bots = _dbContext.Players
-                .Where(player => player.Type == PlayerType.Bot)
-                .Take(botCount)
-                .ToListAsync();
-            return await bots;
+            IEnumerable<Player> bots = _dbContext.Players
+                .Where(player => player.Type == PlayerType.Bot);
+            return bots;
         }
 
-        public async Task<Player> GetDealer()
+        public Player GetDealer()
         {
-            Task<Player> dealer = Get(BlackJackConstants.DealerId);
-            return await dealer;
+            Player dealer = Get(BlackJackConstants.DealerId);
+            return dealer;
         }
 
-        public async Task<Player> GetPlayer(string playerName)
+        public Player GetUser(string userName)
         {
-            Task<Player> player = _dbContext.Players
-                .FirstOrDefaultAsync(tmpPlayer => tmpPlayer.Name.Equals(playerName, System.StringComparison.CurrentCultureIgnoreCase));
-            return await player;
-        }
-
-        public async Task<Player> GetPlayer(long roundId)
-        {
-            Round round = await _dbContext.Rounds
-                .FindAsync(roundId);
-            return round.Player;
-        }
-
-        public async Task<IEnumerable<string>> GetUserNames()
-        {
-            Task<List<string>> userNames = _dbContext.Players
-                .Where(player => player.Type == PlayerType.User)
-                .Select(user => user.Name)
-                .ToListAsync();
-            return await userNames;
+            Player user = _dbContext.Players
+                .FirstOrDefault(player => player.Name.Equals(userName, System.StringComparison.CurrentCultureIgnoreCase));
+            return user;
         }
     }
 }

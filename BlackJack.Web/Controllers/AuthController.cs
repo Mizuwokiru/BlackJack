@@ -20,9 +20,9 @@ namespace BlackJack.Web.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Login()
+        public IActionResult Login()
         {
-            ViewBag.UserNames = await _loginService.GetUsers();
+            ViewBag.UserNames = _loginService.GetUsers();
             return View();
         }
 
@@ -31,12 +31,12 @@ namespace BlackJack.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                user = await _loginService.LoginUser(user.Name);
+                user = _loginService.LoginUser(user.Name);
                 await Authenticate(user.Name);
 
                 return RedirectToAction("Index", "Home");
             }
-            ViewBag.UserNames = await _loginService.GetUsers();
+            ViewBag.UserNames = _loginService.GetUsers();
             return View(user);
         }
 

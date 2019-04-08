@@ -7,7 +7,7 @@ namespace BlackJack.Shared.Models
     {
         public string Name { get; set; }
 
-        public List<string> Cards { get; set; }
+        public List<int> Cards { get; set; }
 
         public RoundState State { get; set; }
     }

@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using BlackJack.Web.Models;
-using Microsoft.AspNetCore.Authorization;
-using BlackJack.Services.Services.Interfaces;
+﻿using BlackJack.Services.Services.Interfaces;
 using BlackJack.Shared.Models;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 
 namespace BlackJack.Web.Controllers
 {
@@ -22,52 +17,71 @@ namespace BlackJack.Web.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
-            bool canToContinueGame = await _gameService.CanToContinueGame();
+            bool canToContinueGame = _gameService.CanToContinueGame();
             var menuViewModel = new MenuViewModel { CanToContinueGame = canToContinueGame };
             return View(menuViewModel);
         }
 
-        public async Task<IActionResult> Game()
+        [HttpGet]
+        public IActionResult Game()
         {
-            return View();
+            List<GamePlayerInfoViewModel> gamePlayerInfoViewModels =
+                _gameService.GetGameInfo();
+            return View(gamePlayerInfoViewModels);
         }
 
-        public async Task<IActionResult> NewGame()
+        [HttpPost]
+        public IActionResult NewGame(MenuViewModel menuViewModel)
         {
-            // TODO: create game and redirect to Game
-            return Content(string.Empty);
+            if (ModelState.IsValid)
+            {
+                _gameService.NewGame(menuViewModel.BotCount);
+                return RedirectToAction(nameof(Game));
+            }
+            return View(nameof(Index), menuViewModel);
         }
 
-        public async Task<IActionResult> ContinueGame()
+        [HttpPost]
+        public IActionResult ContinueGame()
         {
-            // TODO: continue game and redirect to Game
-            return Content(string.Empty);
+            _gameService.ContinueGame();
+            return RedirectToAction(nameof(Game));
         }
 
-        public async Task<IActionResult> Step()
+        [HttpPost]
+        public IActionResult Step()
         {
-            // TODO: get card and redirect to Game
-            return Content(string.Empty);
+            _gameService.Step();
+            return RedirectToAction(nameof(Game));
         }
 
-        public async Task<IActionResult> Skip()
+        [HttpPost]
+        public IActionResult Skip()
         {
-            // TODO: finish round and redirect to Game
-            return Content(string.Empty);
+            _gameService.Skip();
+            return RedirectToAction(nameof(Game));
         }
 
-        public async Task<IActionResult> NextRound()
+        [HttpPost]
+        public IActionResult NextRound()
         {
-            // TODO: create round and redirect to Game
-            return Content(string.Empty);
+            _gameService.NextRound();
+            return RedirectToAction(nameof(Game));
         }
 
-        public async Task<IActionResult> FinishGame()
+        [HttpPost]
+        public IActionResult FinishGame()
         {
-            // TODO: finish game and redirect to Index
-            return Content(string.Empty);
+            _gameService.FinishGame();
+            return RedirectToAction(nameof(Index));
+        }
+
+        [HttpPost]
+        public IActionResult Quit()
+        {
+            return RedirectToAction(nameof(Index));
         }
     }
 }

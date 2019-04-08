@@ -7,16 +7,16 @@ namespace BlackJack.Shared.Helpers
 {
     public static class CardHelper
     {
-        public static readonly string StringifiedBlankCard = char.ConvertFromUtf32(BlackJackConstants.BlankCardUtf32);
+        public const int BlankCardUtf32 = 0x1F0A0;
 
-        public static string StringifyCard(Suit suit, Rank rank)
+        public static int GetCardUtf32(Suit suit, Rank rank)
         {
-            int utf32 = BlackJackConstants.BlankCardUtf32 + ((int)suit - 1) * 0x10 + (int)rank;
+            int utf32 = BlankCardUtf32 + ((int)suit - 1) * 0x10 + (int)rank;
             if (rank >= Rank.Queen)
             {
                 utf32++;
             }
-            return char.ConvertFromUtf32(utf32);
+            return utf32;
         }
 
         public static int GetCardScore(Rank rank)

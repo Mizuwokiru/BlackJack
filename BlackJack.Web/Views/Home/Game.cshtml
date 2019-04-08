@@ -1,0 +1,52 @@
+﻿@using BlackJack.Shared.Enums
+@model List<GamePlayerInfoViewModel>
+
+@{
+    ViewBag.Title = "Game";
+    Layout = "_Layout";
+}
+
+<div id="game-block">
+    <nav class="sticky-top bg-white">
+        <div class="d-flex flex-column flex-md-row justify-content-between">
+            @if (Model[0].State == RoundState.None)
+            {
+                <button asp-action="Step" type="button" class="nav-item nav-link btn btn-primary text-white" disabled>
+                    Get a card
+                </button>
+                <button asp-action="Skip" type="button" class="nav-item nav-link btn btn-primary text-white" disabled>
+                    Skip
+                </button>
+                <button asp-action="Quit" type="button" class="nav-item nav-link btn btn-primary text-white">
+                    Quit
+                </button>
+            }
+            @if (Model[0].State != RoundState.None) {
+                <button asp-action="NextRound" type="button" class="nav-item nav-link btn btn-primary text-white" disabled>
+                    Next round
+                </button>
+                <button asp-action="FinishGame" type="button" class="nav-item nav-link btn btn-primary text-white" disabled>
+                    Finish game
+                </button>
+                <button asp-action="Quit" type="button" class="nav-item nav-link btn btn-primary text-white">
+                    Quit
+                </button>
+            }
+        </div>
+    </nav>
+
+    <div id="game-cards-block" class="row">
+        @foreach (var gamePlayerInfo in Model)
+        {
+            <partial name="_Card" model="gamePlayerInfo" />
+        }
+    </div>
+</div>
+
+@section Styles {
+    <link href="~/css/Home/Game.css" rel="stylesheet" />
+}
+
+@section Scripts {
+    <script src="~/js/Home/Game.js"></script>
+}

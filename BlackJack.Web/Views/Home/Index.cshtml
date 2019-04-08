@@ -9,7 +9,7 @@
 <div id="game-menu-block">
     @if (Model.CanToContinueGame)
     {
-        <button type="button" class="btn btn-primary">Continue</button>
+        <button asp-action="ContinueGame" type="button" class="btn btn-primary">Continue</button>
     }
     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#bot-count-modal">
         New game
@@ -20,7 +20,7 @@
 <div id="bot-count-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="bot-count-modal-title"
      aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
+        <form asp-action="NewGame" class="modal-content">
             <div class="modal-header">
                 <h5 id="bot-count-modal-title" class="modal-title">Game creation</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -29,7 +29,7 @@
             </div>
             <div class="modal-body">
                 <h6>Bot count:</h6>
-                <select id="bot-count-select-box" class="form-control">
+                <select asp-for="BotCount" id="bot-count-select-box" class="form-control">
                     @for (int i = 0; i <= BlackJackConstants.MaxBotCount; i++)
                     {
                         <option>@i</option>
@@ -37,10 +37,10 @@
                 </select>
             </div>
             <div class="modal-footer">
-                <button id="start-game-button" type="button" class="btn btn-primary">Start</button>
+                <button type="submit" class="btn btn-primary">Start</button>
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
             </div>
-        </div>
+        </form>
     </div>
 </div>
 
@@ -50,15 +50,4 @@
 
 @section Scripts {
     <script src="~/js/Home/Index.js"></script>
-    @if (!ViewData.ModelState.IsValid)
-    {
-        <script>
-            let errorMessages = "";
-            @foreach (var error in ViewData.ModelState["Name"].Errors)
-            {
-                @:errorMessages += "@error.ErrorMessage";
-            }
-            alert(errorMessages);
-        </script>
-    }
 }

@@ -60,12 +60,6 @@ namespace BlackJack.DataAccess
             return base.SaveChanges();
         }
 
-        public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default(CancellationToken))
-        {
-            AddCreationTime();
-            return await base.SaveChangesAsync(cancellationToken);
-        }
-
         private void AddCreationTime()
         {
             IEnumerable<EntityEntry<BaseEntity>> entries = ChangeTracker.Entries<BaseEntity>().Where(entity => entity.State == EntityState.Added);

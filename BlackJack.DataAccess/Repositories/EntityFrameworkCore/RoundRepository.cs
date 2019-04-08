@@ -15,30 +15,33 @@ namespace BlackJack.DataAccess.Repositories.EntityFrameworkCore
         {
         }
 
-        public async Task<List<Round>> GetLastRounds(long gameId)
+        public List<Round> GetLastRounds(long gameId)
         {
+            if (_dbContext.Rounds.Count() == 0)
+            {
+                return new List<Round>();
+            }
             DateTime lastRoundTime = _dbContext.Rounds
                 .Select(round => round.CreationTime)
                 .Max();
-            Task<List<Round>> lastRounds = _dbContext.Rounds
+            List<Round> lastRounds = _dbContext.Rounds
                 .Where(lastRound => lastRound.CreationTime == lastRoundTime)
-                .ToListAsync();
-            return await lastRounds;
+                .ToList();
+            return lastRounds;
         }
 
-        public async Task<Round> GetLastRound(long gameId, long playerId)
+        public Round GetLastRound(long gameId, long playerId)
         {
-            List<Round> lastRounds = await GetLastRounds(gameId);
+            List<Round> lastRounds = GetLastRounds(gameId);
             Round lastRound = lastRounds.FirstOrDefault(round => round.PlayerId == playerId);
             return lastRound;
         }
 
-        public async Task<IEnumerable<IGrouping<DateTime, Round>>> GetRounds(long gameId)
+        public IEnumerable<IGrouping<DateTime, Round>> GetRounds(long gameId)
         {
-            Task<List<IGrouping<DateTime, Round>>> rounds = _dbContext.Rounds
-                .GroupBy(round => round.CreationTime)
-                .ToListAsync();
-            return await rounds;
+            IEnumerable<IGrouping<DateTime, Round>> rounds = _dbContext.Rounds
+                .GroupBy(round => round.CreationTime);
+            return rounds;
         }
     }
 }
