@@ -10,6 +10,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\BlackJack.DataAccess\BlackJack.DataAccess.csproj" />
+    <ProjectReference Include="..\BlackJack.ViewModels\BlackJack.ViewModels.csproj" />
   </ItemGroup>
 
 </Project>

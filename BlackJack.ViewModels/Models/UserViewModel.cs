@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace BlackJack.Shared.Models
+namespace BlackJack.ViewModels.Models
 {
     public class UserViewModel
     {

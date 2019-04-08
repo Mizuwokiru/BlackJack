@@ -2,7 +2,7 @@
 using BlackJack.DataAccess.Repositories.Interfaces;
 using BlackJack.Services.Services.Interfaces;
 using BlackJack.Shared.Enums;
-using BlackJack.Shared.Models;
+using BlackJack.ViewModels.Models;
 using System.Collections.Generic;
 
 namespace BlackJack.Services.Services
@@ -24,7 +24,7 @@ namespace BlackJack.Services.Services
 
         public UserViewModel LoginUser(string name)
         {
-            Player user = _playerRepository.GetPlayer(name);
+            Player user = _playerRepository.GetUser(name);
             if (user == null)
             {
                 user = new Player { Name = name, Type = PlayerType.User };

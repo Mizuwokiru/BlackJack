@@ -15,33 +15,21 @@ namespace BlackJack.DataAccess.Repositories.EntityFrameworkCore
         {
         }
 
-        public List<Round> GetLastRounds(long gameId)
+        public Round GetLastRound(long gameId, long userId)
         {
-            if (_dbContext.Rounds.Count() == 0)
-            {
-                return new List<Round>();
-            }
-            DateTime lastRoundTime = _dbContext.Rounds
-                .Select(round => round.CreationTime)
-                .Max();
-            List<Round> lastRounds = _dbContext.Rounds
-                .Where(lastRound => lastRound.CreationTime == lastRoundTime)
-                .ToList();
-            return lastRounds;
-        }
-
-        public Round GetLastRound(long gameId, long playerId)
-        {
-            List<Round> lastRounds = GetLastRounds(gameId);
-            Round lastRound = lastRounds.FirstOrDefault(round => round.PlayerId == playerId);
+            Round lastRound = _dbContext.Rounds
+                .Where(round => round.GameId == gameId && round.PlayerId == userId)
+                .FirstOrDefault();
             return lastRound;
         }
 
-        public IEnumerable<IGrouping<DateTime, Round>> GetRounds(long gameId)
+        public List<Round> GetLastRounds(long gameId)
         {
-            IEnumerable<IGrouping<DateTime, Round>> rounds = _dbContext.Rounds
-                .GroupBy(round => round.CreationTime);
-            return rounds;
+            DateTime? lastCreationTime = _dbContext.Rounds.Max(round => round.CreationTime);
+            List<Round> lastRounds = _dbContext.Rounds
+                .Where(round => round.GameId == gameId && round.CreationTime == lastCreationTime)
+                .ToList();
+            return lastRounds;
         }
     }
 }

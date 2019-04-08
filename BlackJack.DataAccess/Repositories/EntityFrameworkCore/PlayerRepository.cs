@@ -14,10 +14,11 @@ namespace BlackJack.DataAccess.Repositories.EntityFrameworkCore
         {
         }
 
-        public IEnumerable<Player> GetBots()
+        public List<Player> GetBots()
         {
-            IEnumerable<Player> bots = _dbContext.Players
-                .Where(player => player.Type == PlayerType.Bot);
+            List<Player> bots = _dbContext.Players
+                .Where(player => player.Type == PlayerType.Bot)
+                .ToList();
             return bots;
         }
 
@@ -32,6 +33,15 @@ namespace BlackJack.DataAccess.Repositories.EntityFrameworkCore
             Player user = _dbContext.Players
                 .FirstOrDefault(player => player.Name.Equals(userName, System.StringComparison.CurrentCultureIgnoreCase));
             return user;
+        }
+
+        public List<string> GetUserNames()
+        {
+            List<string> userNames = _dbContext.Players
+                .Where(player => player.Type == PlayerType.User)
+                .Select(player => player.Name)
+                .ToList();
+            return userNames;
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using BlackJack.DataAccess.Entities;
 using BlackJack.DataAccess.Repositories.Interfaces;
 using BlackJack.Services.Services.Interfaces;
+using BlackJack.Shared.Enums;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
@@ -39,14 +40,6 @@ namespace BlackJack.Services.Services
 
             var game = new Game();
             _gameRepository.Add(game);
-
-            var playerList = new List<Player> { user };
-            var bots = _playerRepository.GetBots();
-            int availableBotCount = bots.Count();
-            if (availableBotCount < botCount)
-            {
-
-            }
         }
 
         public void ContinueGame()
@@ -66,7 +59,7 @@ namespace BlackJack.Services.Services
 
         public void Skip()
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         public void Step()
@@ -90,9 +83,25 @@ namespace BlackJack.Services.Services
 
         }
 
-        private IEnumerable<Player> CreateBots(int availableBotCount, int neededBotCount)
+        private List<Player> CreateBots(int availableBotCount, int neededBotCount)
         {
+            var bots = new List<Player>();
+            for (int i = availableBotCount; i < neededBotCount; i++)
+            {
+                var bot = new Player { Name = $"Bot №{i + 1}", Type = PlayerType.Bot };
+                bots.Add(bot);
+            }
+            _playerRepository.Add(bots);
+            return bots;
+        }
 
+        private void CreateRound(long gameId)
+        {
+            List<Round> lastRounds = _roundRepository.GetLastRounds(gameId);
+            if (lastRounds == null || lastRounds.Count == 0)
+            {
+
+            }
         }
         #endregion
     }

@@ -8,6 +8,6 @@ namespace BlackJack.DataAccess.Entities
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public long Id { get; set; }
 
-        public DateTime CreationTime { get; set; }
+        public DateTime? CreationTime { get; set; }
     }
 }
