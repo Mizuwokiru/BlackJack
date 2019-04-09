@@ -88,13 +88,17 @@ namespace BlackJack.Services.Services
             int score = CalculateCardScore(cards);
             if (score >= 21)
             {
-                EndRound();
+                CreateNonPlayableCards(rounds);
+                UpdateRounds(rounds);
             }
         }
 
         public void EndRound()
         {
-
+            Game game = _gameRepository.GetUnfinishedGame(_user.Id);
+            List<Round> rounds = _roundRepository.GetLastRounds(game.Id);
+            CreateNonPlayableCards(rounds);
+            UpdateRounds(rounds);
         }
 
         public void NextRound()
@@ -229,6 +233,53 @@ namespace BlackJack.Services.Services
                 score -= 10;
             }
             return score;
+        }
+
+        private void CreateNonPlayableCards(List<Round> rounds)
+        {
+            // TODO: some AI for bots and dealer
+        }
+
+        private void UpdateRounds(List<Round> rounds)
+        {
+            Round dealerRound = rounds
+                .Where(round => round.PlayerId == BlackJackConstants.DealerId)
+                .First();
+            rounds.Remove(dealerRound);
+
+            List<Card> dealerCards = _cardRepository.GetCards(dealerRound.Id);
+            int dealerScore = CalculateCardScore(dealerCards);
+            if (dealerScore > 21)
+            {
+                // TODO
+                return;
+            }
+
+            foreach (var round in rounds)
+            {
+                List<Card> cards = _cardRepository.GetCards(round.Id);
+                int score = CalculateCardScore(cards);
+                if (score > 21)
+                {
+                    round.State = RoundState.Lose;
+                    continue;
+                }
+                if (score > dealerScore)
+                {
+                    round.State = RoundState.Won;
+                }
+                if (score == dealerScore)
+                {
+                    round.State = RoundState.Push;
+                }
+                if (score < dealerScore)
+                {
+                    round.State = RoundState.Lose;
+                }
+            }
+            rounds.Add(dealerRound);
+
+            _roundRepository.Update(rounds);
         }
         #endregion
     }
