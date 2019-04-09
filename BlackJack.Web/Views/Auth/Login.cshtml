@@ -26,15 +26,4 @@
 
 @section Scripts {
     <script src="~/js/Auth/Login.js"></script>
-    @if (!ViewData.ModelState.IsValid)
-    {
-        <script>
-            let errorMessages = "";
-            @foreach (var error in ViewData.ModelState["Name"].Errors)
-            {
-                @:errorMessages += "@error.ErrorMessage";
-            }
-            alert(errorMessages);
-        </script>
-    }
 }

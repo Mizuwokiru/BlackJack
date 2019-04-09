@@ -118,6 +118,7 @@ namespace BlackJack.Services.Services
             _playerRepository.Add(bots);
         }
 
+        // TODO: Remove it and use Join
         private RoundViewModel GetRoundInfo(Round round)
         {
             Player player = _playerRepository.GetPlayer(round.Id);
@@ -127,12 +128,9 @@ namespace BlackJack.Services.Services
             List<CardViewModel> cardViewModels = new List<CardViewModel>();
             foreach (var card in cards)
             {
-                var cardViewModel = new CardViewModel { Card = CardHelper.GetCard(card.Suit, card.Rank) };
+                // TODO: Hide last card, if its dealer and he's 2 cards.
+                var cardViewModel = new CardViewModel { Suit = card.Suit, Rank = card.Rank };
                 cardViewModels.Add(cardViewModel);
-            }
-            if (round.PlayerId == BlackJackConstants.DealerId && cards.Count == 2)
-            {
-                cardViewModels[1].Card = CardHelper.BlankCard;
             }
 
             int score = CalculateCardScore(cards);
