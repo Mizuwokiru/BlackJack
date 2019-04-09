@@ -1,9 +1,7 @@
 ﻿using BlackJack.DataAccess.Entities;
 using BlackJack.DataAccess.Repositories.Interfaces;
-using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Data.Common;
-using System.Threading.Tasks;
 
 namespace BlackJack.DataAccess.Repositories.EntityFrameworkCore
 {

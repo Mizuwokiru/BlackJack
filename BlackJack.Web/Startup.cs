@@ -57,7 +57,7 @@ namespace BlackJack.Web
             {
                 routes.MapRoute(
                     name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
+                    template: "{controller=Game}/{action=Menu}/{id?}");
             });
         }
     }

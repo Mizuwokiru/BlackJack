@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace BlackJack.ViewModels.Models
 {
-    public class GameMenuVIewModel
+    public class GameMenuViewModel
     {
         public bool HasUnfinishedGame { get; set; }
 

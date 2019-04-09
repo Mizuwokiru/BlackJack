@@ -34,7 +34,7 @@ namespace BlackJack.Web.Controllers
                 user = _loginService.LoginUser(user.Name);
                 await Authenticate(user.Name);
 
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Menu", "Game");
             }
             ViewBag.UserNames = _loginService.GetUsers();
             return View(user);

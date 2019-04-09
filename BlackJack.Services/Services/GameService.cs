@@ -93,7 +93,8 @@ namespace BlackJack.Services.Services
 
         public void NextRound()
         {
-
+            List<Round> lastRounds = _roundRepository.GetLastRounds(_game.Id);
+            CreateRound(lastRounds.Count);
         }
 
         public void EndGame()
@@ -210,7 +211,7 @@ namespace BlackJack.Services.Services
             }
             while (score > 21)
             {
-                var ace = cards.FirstOrDefault(card => card.Rank == Rank.Ace);
+                Card ace = cards.FirstOrDefault(card => card.Rank == Rank.Ace);
                 if (ace == null)
                 {
                     break;

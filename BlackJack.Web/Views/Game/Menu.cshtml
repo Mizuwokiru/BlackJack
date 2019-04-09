@@ -1,5 +1,5 @@
 ﻿@using BlackJack.Shared
-@model MenuViewModel
+@model GameMenuViewModel
 
 @{
     ViewBag.Title = "Menu";
@@ -7,7 +7,7 @@
 }
 
 <div id="game-menu-block">
-    @if (Model.CanToContinueGame)
+    @if (Model.HasUnfinishedGame)
     {
         <button asp-action="ContinueGame" type="button" class="btn btn-primary">Continue</button>
     }
