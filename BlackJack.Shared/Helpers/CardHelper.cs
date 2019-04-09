@@ -7,16 +7,16 @@ namespace BlackJack.Shared.Helpers
 {
     public static class CardHelper
     {
-        public const int BlankCardUtf32 = 0x1F0A0;
+        public const int BlankCard = 0x1F0A0;
 
-        public static int GetCardUtf32(Suit suit, Rank rank)
+        public static int GetCard(Suit suit, Rank rank)
         {
-            int utf32 = BlankCardUtf32 + ((int)suit - 1) * 0x10 + (int)rank;
+            int card = BlankCard + ((int)suit - 1) * 0x10 + (int)rank;
             if (rank >= Rank.Queen)
             {
-                utf32++;
+                card++;
             }
-            return utf32;
+            return card;
         }
 
         public static int GetCardScore(Rank rank)
@@ -30,33 +30,6 @@ namespace BlackJack.Shared.Helpers
                 return 11;
             }
             return (int)rank;
-        }
-
-        public static List<long> GetShuffledCards()
-        {
-            var cards = new List<long>();
-            for (int i = 0; i < BlackJackConstants.DeckCount; i++)
-            {
-                IEnumerable<long> deck = Enumerable.Range(1, BlackJackConstants.DeckCapacity)
-                    .Select(cardId => (long) cardId);
-                cards.AddRange(deck);
-            }
-
-            if (cards.Count == 0)
-            {
-                throw new InvalidOperationException("WTF?");
-            }
-
-            var random = new Random();
-            for (int i = cards.Count - 1, j; i > 0; i--)
-            {
-                j = random.Next(i + 1);
-                long tmp = cards[i];
-                cards[i] = cards[j];
-                cards[j] = tmp;
-            }
-
-            return cards;
         }
     }
 }

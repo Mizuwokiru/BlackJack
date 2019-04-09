@@ -14,10 +14,17 @@ namespace BlackJack.DataAccess.Repositories.EntityFrameworkCore
         {
         }
 
-        public List<Player> GetBots()
+        public int GetBotCount()
+        {
+            int botCount = _dbContext.Players.Count();
+            return botCount;
+        }
+
+        public List<Player> GetBots(int botCount)
         {
             List<Player> bots = _dbContext.Players
                 .Where(player => player.Type == PlayerType.Bot)
+                .Take(botCount)
                 .ToList();
             return bots;
         }
@@ -26,6 +33,14 @@ namespace BlackJack.DataAccess.Repositories.EntityFrameworkCore
         {
             Player dealer = Get(BlackJackConstants.DealerId);
             return dealer;
+        }
+
+        public Player GetPlayer(long roundId)
+        {
+            Player player = _dbContext.Rounds
+                .Find(roundId)
+                .Player;
+            return player;
         }
 
         public Player GetUser(string userName)

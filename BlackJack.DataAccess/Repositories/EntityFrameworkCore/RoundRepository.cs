@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.Data.Common;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace BlackJack.DataAccess.Repositories.EntityFrameworkCore
 {
@@ -15,10 +14,11 @@ namespace BlackJack.DataAccess.Repositories.EntityFrameworkCore
         {
         }
 
-        public Round GetLastRound(long gameId, long userId)
+        public Round GetLastRound(long userId)
         {
             Round lastRound = _dbContext.Rounds
-                .Where(round => round.GameId == gameId && round.PlayerId == userId)
+                .Where(round => round.PlayerId == userId)
+                .OrderByDescending(round => round.CreationTime)
                 .FirstOrDefault();
             return lastRound;
         }

@@ -3,14 +3,12 @@ using System.Collections.Generic;
 
 namespace BlackJack.Services.Services.Interfaces
 {
-    public interface IGameService
+    public interface IRoundService
     {
-        bool HasUnfinishedGame();
-        void NewGame(int botCount);
         List<RoundViewModel> GetRoundsInfo();
+        void CreateRound();
         void Step();
-        void EndRound();
+        void Skip();
         void NextRound();
-        void EndGame();
     }
 }

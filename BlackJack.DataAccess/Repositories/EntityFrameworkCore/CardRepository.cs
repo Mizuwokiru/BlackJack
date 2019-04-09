@@ -12,10 +12,19 @@ namespace BlackJack.DataAccess.Repositories.EntityFrameworkCore
         {
         }
 
-        public List<Card> GetCards(long roundId)
+        public List<Card> GetCards(IEnumerable<Round> rounds)
         {
             List<Card> cards = _dbContext.RoundCards
-                .Where(roundCard => roundCard.RoundId == roundId)
+                .Where(roundCard => rounds.Contains(roundCard.Round))
+                .Select(roundCard => roundCard.Card)
+                .ToList();
+            return cards;
+        }
+
+        public List<Card> GetCards(long roundId)
+        {
+            List<Card> cards = _dbContext.Rounds
+                .Find(roundId).Cards
                 .Select(roundCard => roundCard.Card)
                 .ToList();
             return cards;
