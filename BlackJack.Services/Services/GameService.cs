@@ -20,6 +20,7 @@ namespace BlackJack.Services.Services
         private readonly ICardRepository _cardRepository;
         private readonly IRoundCardRepository _roundCardRepository;
         private readonly Player _user;
+        private Game _game;
 
         public GameService(IGameRepository gameRepository,
             IPlayerRepository playerRepository,
@@ -34,34 +35,33 @@ namespace BlackJack.Services.Services
             _cardRepository = cardRepository;
             _roundCardRepository = roundCardRepository;
             _user = _playerRepository.GetUser(httpContextAccessor.HttpContext.User.Identity.Name);
+            _game = _gameRepository.GetUnfinishedGame(_user.Id);
         }
 
         public bool HasUnfinishedGame()
         {
-            Game unfinishedGame = _gameRepository.GetUnfinishedGame(_user.Id);
-            return unfinishedGame != null;
+            return _game != null;
         }
 
-        public void NewGame(int botCount)
+        public void NewGame(int neededBotCount)
         {
             EndGame();
 
-            var game = new Game();
-            _gameRepository.Add(game);
+            _game = new Game();
+            _gameRepository.Add(_game);
 
             int availableBotCount = _playerRepository.GetBotCount();
-            if (availableBotCount < botCount)
+            if (availableBotCount < neededBotCount)
             {
-                CreateBots(availableBotCount, botCount);
+                CreateBots(availableBotCount, neededBotCount);
             }
 
-            CreateRound(game.Id, botCount);
+            CreateRound(neededBotCount);
         }
 
         public List<RoundViewModel> GetRoundsInfo()
         {
-            Game game = _gameRepository.GetUnfinishedGame(_user.Id);
-            List<Round> lastRounds = _roundRepository.GetLastRounds(game.Id);
+            List<Round> lastRounds = _roundRepository.GetLastRounds(_game.Id);
 
             var roundViewModels = new List<RoundViewModel>();
             foreach (var round in lastRounds)
@@ -75,28 +75,18 @@ namespace BlackJack.Services.Services
 
         public void Step()
         {
-            Game game = _gameRepository.GetUnfinishedGame(_user.Id);
-            List<Round> rounds = _roundRepository.GetLastRounds(game.Id);
+            List<Round> rounds = _roundRepository.GetLastRounds(_game.Id);
             List<long> shuffledCards = GetShuffledCards(rounds);
 
             Round round = _roundRepository.GetLastRound(_user.Id);
 
             var roundCard = new RoundCard { RoundId = round.Id, CardId = shuffledCards[0] };
             _roundCardRepository.Add(roundCard);
-
-            List<Card> cards = _cardRepository.GetCards(round.Id);
-            int score = CalculateCardScore(cards);
-            if (score >= 21)
-            {
-                CreateNonPlayableCards(rounds);
-                UpdateRounds(rounds);
-            }
         }
 
         public void EndRound()
         {
-            Game game = _gameRepository.GetUnfinishedGame(_user.Id);
-            List<Round> rounds = _roundRepository.GetLastRounds(game.Id);
+            List<Round> rounds = _roundRepository.GetLastRounds(_game.Id);
             CreateNonPlayableCards(rounds);
             UpdateRounds(rounds);
         }
@@ -108,18 +98,23 @@ namespace BlackJack.Services.Services
 
         public void EndGame()
         {
-            Game unfinishedGame = _gameRepository.GetUnfinishedGame(_user.Id);
-            FinishGame(unfinishedGame);
+            if (_game != null)
+            {
+                _game.IsFinished = true;
+                _gameRepository.Update(_game);
+            }
         }
 
         #region Private methods
-        private void FinishGame(Game game)
+        private void CreateBots(int availableBotCount, int neededBotCount)
         {
-            if (game != null)
+            var bots = new List<Player>();
+            for (int i = availableBotCount; i < neededBotCount; i++)
             {
-                game.IsFinished = true;
-                _gameRepository.Update(game);
+                var bot = new Player { Name = $"Bot №{i + 1}", Type = PlayerType.Bot };
+                bots.Add(bot);
             }
+            _playerRepository.Add(bots);
         }
 
         private RoundViewModel GetRoundInfo(Round round)
@@ -139,31 +134,22 @@ namespace BlackJack.Services.Services
                 cardViewModels[1].Card = CardHelper.BlankCard;
             }
 
-            var roundViewModel = new RoundViewModel { Player = playerViewModel, Cards = cardViewModels, State = round.State };
+            int score = CalculateCardScore(cards);
+
+            var roundViewModel = new RoundViewModel { Player = playerViewModel, Cards = cardViewModels, State = round.State, Score = score };
             return roundViewModel;
         }
 
-        private void CreateBots(int availableBotCount, int neededBotCount)
-        {
-            var bots = new List<Player>();
-            for (int i = availableBotCount; i < neededBotCount; i++)
-            {
-                var bot = new Player { Name = $"Bot №{i + 1}", Type = PlayerType.Bot };
-                bots.Add(bot);
-            }
-            _playerRepository.Add(bots);
-        }
-
-        private void CreateRound(long gameId, int neededBotCount)
+        private void CreateRound(int neededBotCount)
         {
             List<Player> bots = _playerRepository.GetBots(neededBotCount);
 
-            Round userRound = new Round { GameId = gameId, PlayerId = _user.Id };
-            Round dealerRound = new Round { GameId = gameId, PlayerId = BlackJackConstants.DealerId };
+            Round userRound = new Round { GameId = _game.Id, PlayerId = _user.Id };
+            Round dealerRound = new Round { GameId = _game.Id, PlayerId = BlackJackConstants.DealerId };
             var rounds = new List<Round> { userRound, dealerRound };
             foreach (var bot in bots)
             {
-                Round botRound = new Round { GameId = gameId, PlayerId = bot.Id };
+                Round botRound = new Round { GameId = _game.Id, PlayerId = bot.Id };
                 rounds.Add(botRound);
             }
             _roundRepository.Add(rounds);
@@ -247,14 +233,23 @@ namespace BlackJack.Services.Services
                 .First();
             rounds.Remove(dealerRound);
 
+            CheckOverkills(rounds);
+
             List<Card> dealerCards = _cardRepository.GetCards(dealerRound.Id);
             int dealerScore = CalculateCardScore(dealerCards);
             if (dealerScore > 21)
             {
-                // TODO
-                return;
+                SetWinners(rounds);
             }
+            if (dealerScore <= 21)
+            {
+                CheckStates(rounds, dealerScore);
+            }
+            _roundRepository.Update(rounds);
+        }
 
+        private void CheckOverkills(List<Round> rounds)
+        {
             foreach (var round in rounds)
             {
                 List<Card> cards = _cardRepository.GetCards(round.Id);
@@ -262,8 +257,32 @@ namespace BlackJack.Services.Services
                 if (score > 21)
                 {
                     round.State = RoundState.Lose;
+                }
+            }
+        }
+
+        private void SetWinners(List<Round> rounds)
+        {
+            foreach (var round in rounds)
+            {
+                if (round.State != RoundState.None)
+                {
                     continue;
                 }
+                round.State = RoundState.Won;
+            }
+        }
+
+        private void CheckStates(List<Round> rounds, int dealerScore)
+        {
+            foreach (var round in rounds)
+            {
+                if (round.State != RoundState.None)
+                {
+                    continue;
+                }
+                List<Card> cards = _cardRepository.GetCards(round.Id);
+                int score = CalculateCardScore(cards);
                 if (score > dealerScore)
                 {
                     round.State = RoundState.Won;
@@ -277,9 +296,6 @@ namespace BlackJack.Services.Services
                     round.State = RoundState.Lose;
                 }
             }
-            rounds.Add(dealerRound);
-
-            _roundRepository.Update(rounds);
         }
         #endregion
     }
