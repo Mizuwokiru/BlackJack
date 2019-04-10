@@ -62,13 +62,13 @@ namespace BlackJack.Services.Services
 
         public IEnumerable<RoundViewModel> GetRoundsInfo()
         {
-            IEnumerable<RoundInfoModel> roundInfoModels = _roundRepository.GetLastRoundInfo(_game.Id);
+            IEnumerable<RoundInfoModel> roundInfoModels = _roundRepository.GetLastRoundsInfo(_game.Id);
 
             IEnumerable<RoundViewModel> roundViewModels = roundInfoModels.Select(roundInfoModel => new RoundViewModel
             {
-                Player = new PlayerViewModel { Name = roundInfoModel.Player.Name, Type = roundInfoModel.Player.Type },
+                Player = new PlayerViewModel { Name = roundInfoModel.PlayerName, Type = roundInfoModel.PlayerType },
                 Cards = roundInfoModel.Cards.Select(cardModel => new CardViewModel { Suit = cardModel.Suit, Rank = cardModel.Rank }).ToList(),
-                State = roundInfoModel.State,
+                State = roundInfoModel.RoundState,
                 Score = CalculateCardScore(roundInfoModel.Cards)
             });
 
@@ -77,12 +77,10 @@ namespace BlackJack.Services.Services
 
         public void Step()
         {
-            List<Card> cards = _cardRepository.GetCardsByGame(_game.Id);
-            List<long> shuffledCards = GetShuffledCards(cards);
+            StepInfoModel stepInfoModel = _roundRepository.GetStepInfo(_user.Id, _game.Id);
+            List<long> shuffledCards = GetShuffledCards(stepInfoModel.RoundsCards);
 
-            Round round = _roundRepository.GetLastRound(_user.Id);
-
-            var roundCard = new RoundCard { RoundId = round.Id, CardId = shuffledCards[0] };
+            var roundCard = new RoundCard { RoundId = stepInfoModel.UserRoundId, CardId = shuffledCards[0] };
             _roundCardRepository.Add(roundCard);
         }
 
@@ -90,15 +88,14 @@ namespace BlackJack.Services.Services
         {
             //CreateNonPlayableCards(rounds);
 
-            List<RoundInfoModel> roundInfoModels = _roundRepository.GetLastRoundInfo(_game.Id).ToList();
-
+            List<RoundInfoModel> roundInfoModels = _roundRepository.GetLastRoundsInfo(_game.Id).ToList();
             UpdateRounds(roundInfoModels);
         }
 
         public void NextRound()
         {
-            List<Round> lastRounds = _roundRepository.GetLastRounds(_game.Id);
-            CreateRound(lastRounds.Count);
+            int lastRounds = _gameRepository.GetPlayerCount(_game.Id);
+            CreateRound(lastRounds);
         }
 
         public void EndGame()
@@ -182,7 +179,7 @@ namespace BlackJack.Services.Services
             return cardIds;
         }
 
-        private static int CalculateCardScore(List<CardModel> cards)
+        private static int CalculateCardScore(List<Card> cards)
         {
             int score = 0;
             foreach (var card in cards)
@@ -191,7 +188,7 @@ namespace BlackJack.Services.Services
             }
             while (score > 21)
             {
-                CardModel ace = cards.FirstOrDefault(card => card.Rank == Rank.Ace);
+                Card ace = cards.FirstOrDefault(card => card.Rank == Rank.Ace);
                 if (ace == null)
                 {
                     break;
@@ -210,7 +207,7 @@ namespace BlackJack.Services.Services
         private void UpdateRounds(List<RoundInfoModel> roundInfoModels)
         {
             RoundInfoModel dealerRoundInfo = roundInfoModels
-                .Where(roundInfo => roundInfo.Player.Type == PlayerType.Dealer)
+                .Where(roundInfo => roundInfo.PlayerType == PlayerType.Dealer)
                 .First();
             roundInfoModels.Remove(dealerRoundInfo);
 
@@ -219,7 +216,7 @@ namespace BlackJack.Services.Services
                 int score = CalculateCardScore(roundInfo.Cards);
                 if (score > 21)
                 {
-                    roundInfo.State = RoundState.Lose;
+                    roundInfo.RoundState = RoundState.Lose;
                 }
             }
 
@@ -239,11 +236,11 @@ namespace BlackJack.Services.Services
         {
             foreach (var roundInfo in roundInfoModels)
             {
-                if (roundInfo.State != RoundState.None)
+                if (roundInfo.RoundState != RoundState.None)
                 {
                     continue;
                 }
-                roundInfo.State = RoundState.Won;
+                roundInfo.RoundState = RoundState.Won;
             }
         }
 
@@ -251,22 +248,22 @@ namespace BlackJack.Services.Services
         {
             foreach (var roundInfo in roundInfoModels)
             {
-                if (roundInfo.State != RoundState.None)
+                if (roundInfo.RoundState != RoundState.None)
                 {
                     continue;
                 }
                 int score = CalculateCardScore(roundInfo.Cards);
                 if (score > dealerScore)
                 {
-                    roundInfo.State = RoundState.Won;
+                    roundInfo.RoundState = RoundState.Won;
                 }
                 if (score == dealerScore)
                 {
-                    roundInfo.State = RoundState.Push;
+                    roundInfo.RoundState = RoundState.Push;
                 }
                 if (score < dealerScore)
                 {
-                    roundInfo.State = RoundState.Lose;
+                    roundInfo.RoundState = RoundState.Lose;
                 }
             }
         }

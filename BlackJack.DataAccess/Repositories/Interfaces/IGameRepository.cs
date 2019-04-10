@@ -5,5 +5,6 @@ namespace BlackJack.DataAccess.Repositories.Interfaces
     public interface IGameRepository : IRepository<Game>
     {
         Game GetUnfinishedGame(long userId);
+        int GetPlayerCount(long gameId);
     }
 }

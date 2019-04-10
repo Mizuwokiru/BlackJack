@@ -1,6 +1,5 @@
 ﻿using BlackJack.DataAccess.Entities;
 using BlackJack.DataAccess.Repositories.Interfaces;
-using BlackJack.Shared;
 using BlackJack.Shared.Enums;
 using System.Collections.Generic;
 using System.Data.Common;
@@ -14,49 +13,37 @@ namespace BlackJack.DataAccess.Repositories.EntityFrameworkCore
         {
         }
 
-        public int GetBotCount()
+        public IEnumerable<string> GetUsers()
         {
-            int botCount = _dbContext.Players.Count();
-            return botCount;
+            IEnumerable<string> userNames = _dbContext.Players
+                .Where(player => player.Type == PlayerType.User)
+                .Select(player => player.Name);
+            return userNames;
         }
 
-        public List<Player> GetBots(int botCount)
-        {
-            List<Player> bots = _dbContext.Players
-                .Where(player => player.Type == PlayerType.Bot)
-                .Take(botCount)
-                .ToList();
-            return bots;
-        }
-
-        public Player GetDealer()
-        {
-            Player dealer = Get(BlackJackConstants.DealerId);
-            return dealer;
-        }
-
-        public Player GetPlayer(long roundId)
-        {
-            Player player = _dbContext.Rounds
-                .Find(roundId)
-                .Player;
-            return player;
-        }
-
-        public Player GetUser(string userName)
+        public Player GetUser(string name)
         {
             Player user = _dbContext.Players
-                .FirstOrDefault(player => player.Name.Equals(userName, System.StringComparison.CurrentCultureIgnoreCase));
+                .Where(player => player.Name == name && player.Type == PlayerType.User)
+                .FirstOrDefault();
             return user;
         }
 
-        public List<string> GetUserNames()
+        public int GetBotCount()
         {
-            List<string> userNames = _dbContext.Players
-                .Where(player => player.Type == PlayerType.User)
-                .Select(player => player.Name)
+            int botCount = _dbContext.Players
+                .Where(player => player.Type == PlayerType.Bot)
+                .Count();
+            return botCount;
+        }
+
+        public List<Player> GetBots(int count)
+        {
+            List<Player> bots = _dbContext.Players
+                .Where(player => player.Type == PlayerType.Bot)
+                .Take(count)
                 .ToList();
-            return userNames;
+            return bots;
         }
     }
 }

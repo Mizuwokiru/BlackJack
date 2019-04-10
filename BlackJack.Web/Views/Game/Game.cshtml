@@ -11,42 +11,43 @@
         <div class="d-flex flex-column flex-md-row justify-content-between">
             @if (Model[0].State == RoundState.None)
             {
-                <button asp-action="Step" type="button" class="nav-item nav-link btn btn-primary text-white" disabled>
+                <a asp-action="Step" class="nav-item nav-link btn btn-primary text-white">
                     Get a card
-                </button>
-                <button asp-action="Skip" type="button" class="nav-item nav-link btn btn-primary text-white" disabled>
+                </a>
+                <a asp-action="EndRound" class="nav-item nav-link btn btn-primary text-white">
                     Skip
-                </button>
-                <button asp-action="Quit" type="button" class="nav-item nav-link btn btn-primary text-white">
+                </a>
+                <a asp-action="Quit" class="nav-item nav-link btn btn-primary text-white">
                     Quit
-                </button>
+                </a>
             }
-            @if (Model[0].State != RoundState.None) {
-                <button asp-action="NextRound" type="button" class="nav-item nav-link btn btn-primary text-white" disabled>
+            @if (Model[0].State != RoundState.None)
+            {
+                <a asp-action="NextRound" class="nav-item nav-link btn btn-primary text-white">
                     Next round
-                </button>
-                <button asp-action="FinishGame" type="button" class="nav-item nav-link btn btn-primary text-white" disabled>
-                    Finish game
-                </button>
-                <button asp-action="Quit" type="button" class="nav-item nav-link btn btn-primary text-white">
+                </a>
+                <a asp-action="EndGame" class="nav-item nav-link btn btn-primary text-white">
+                    End game
+                </a>
+                <a asp-action="Quit" class="nav-item nav-link btn btn-primary text-white">
                     Quit
-                </button>
+                </a>
             }
         </div>
     </nav>
 
     <div id="game-cards-block" class="row">
-        @foreach (var gamePlayerInfo in Model)
+        @foreach (var roundInfo in Model)
         {
-            <partial name="_Card" model="gamePlayerInfo" />
+            <partial name="_Card" model="roundInfo" />
         }
     </div>
 </div>
 
 @section Styles {
-    <link href="~/css/Home/Game.css" rel="stylesheet" />
+    <link href="~/css/Game/Game.css" rel="stylesheet" />
 }
 
 @section Scripts {
-    <script src="~/js/Home/Game.js"></script>
+    <script src="~/js/Game/Game.js"></script>
 }

@@ -1,47 +1,44 @@
 ﻿@model RoundViewModel
-@*
-    @{
-        string stateBorderClass = "";
-        string stateTextClass = "";
 
-        if (Model.State == RoundState.Won)
-        {
-            stateBorderClass = "border-success";
-            stateTextClass = "text-success";
-        }
-        if (Model.State == RoundState.Lose)
-        {
-            stateBorderClass = "border-danger";
-            stateTextClass = "text-danger";
-        }
-        if (Model.State == RoundState.Push)
-        {
-            stateBorderClass = "border-primary";
-            stateTextClass = "text-primary";
-        }
+@{
+    string stateBorderClass = "";
+    string stateTextClass = "";
 
-        string DisplayCard(int card)
-        {
-            string color = "black";
-            if ((card > 0x1F0B0 && card < 0x1F0D0) || card == 0x1F0A0)
-            {
-                color = "darkred";
-            }
-            return $"<span style=\"color: {color}\">&#{card};</span>";
-        }
+    if (Model.State == RoundState.Won)
+    {
+        stateBorderClass = "border-success";
+        stateTextClass = "text-success";
     }
+    if (Model.State == RoundState.Lose)
+    {
+        stateBorderClass = "border-danger";
+        stateTextClass = "text-danger";
+    }
+    if (Model.State == RoundState.Push)
+    {
+        stateBorderClass = "border-primary";
+        stateTextClass = "text-primary";
+    }
+}
 
-    <div class="col-md-3">
-        <div class="card mb-4 shadow-sm @stateBorderClass">
-            <div class="card-header @stateTextClass">@Model.Name</div>
-            <div class="card-body">
-                <p class="card-text">
+<div class="col-md-3">
+    <div class="card mb-4 shadow-sm @stateBorderClass">
+        <div class="card-header @stateTextClass">@Model.Player.Name</div>
+        <div class="card-body">
+            <p class="card-text">
+                @*@if (Model.Player.Type == PlayerType.Dealer && Model.Cards.Count == 2)
+                {
+                    @Html.DisplayCard(CardHelper.GetCard(Model.Cards[0].Suit, Model.Cards[0].Rank))
+                    @Html.DisplayCard(CardHelper.BlankCard)
+                }
+                else
+                {*@
                     @foreach (var card in Model.Cards)
                     {
-                        DisplayCard(card);
+                        @Html.DisplayCard(CardHelper.GetCard(card.Suit, card.Rank))
                     }
-                </p>
-            </div>
+                @*}*@
+            </p>
         </div>
     </div>
-*@
+</div>

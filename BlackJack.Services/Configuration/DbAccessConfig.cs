@@ -26,7 +26,11 @@ namespace BlackJack.Services.Configuration
 
             if (config["ORM"] == "Dapper")
             {
-
+                services.AddTransient<ICardRepository, DataAccess.Repositories.Dapper.CardRepository>();
+                services.AddTransient<IPlayerRepository, DataAccess.Repositories.Dapper.PlayerRepository>();
+                services.AddTransient<IGameRepository, DataAccess.Repositories.Dapper.GameRepository>();
+                services.AddTransient<IRoundRepository, DataAccess.Repositories.Dapper.RoundRepository>();
+                services.AddTransient<IRoundCardRepository, DataAccess.Repositories.Dapper.RoundCardRepository>();
             }
         }
     }

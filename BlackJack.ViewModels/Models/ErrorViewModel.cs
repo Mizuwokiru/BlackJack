@@ -1,4 +1,4 @@
-﻿namespace BlackJack.ViewModels.Models
+namespace BlackJack.ViewModels.Models
 {
     public class ErrorViewModel
     {

@@ -18,7 +18,7 @@ namespace BlackJack.Services.Services
 
         public IEnumerable<string> GetUsers()
         {
-            IEnumerable<string> users = _playerRepository.GetUserNames();
+            IEnumerable<string> users = _playerRepository.GetUsers();
             return users;
         }
 

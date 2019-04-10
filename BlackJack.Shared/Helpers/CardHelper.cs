@@ -1,4 +1,6 @@
 ﻿using BlackJack.Shared.Enums;
+using Microsoft.AspNetCore.Html;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,6 +32,16 @@ namespace BlackJack.Shared.Helpers
                 return 11;
             }
             return (int)rank;
+        }
+
+        public static HtmlString DisplayCard(this IHtmlHelper html, int card)
+        {
+            string color = "black";
+            if ((card > 0x1F0B0 && card < 0x1F0D0) || card == 0x1F0A0)
+            {
+                color = "darkred";
+            }
+            return new HtmlString($"<span style=\"color: {color}\">&#{card};</span>");
         }
     }
 }

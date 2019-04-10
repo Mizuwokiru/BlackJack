@@ -1,4 +1,5 @@
-﻿using BlackJack.Shared.Enums;
+﻿using BlackJack.DataAccess.Entities;
+using BlackJack.Shared.Enums;
 using System.Collections.Generic;
 
 namespace BlackJack.DataAccess.ResponseModels
@@ -7,10 +8,12 @@ namespace BlackJack.DataAccess.ResponseModels
     {
         public long RoundId { get; set; }
 
-        public PlayerModel Player { get; set; }
+        public string PlayerName { get; set; }
 
-        public List<CardModel> Cards { get; set; }
+        public PlayerType PlayerType { get; set; }
 
-        public RoundState State { get; set; }
+        public List<Card> Cards { get; set; }
+
+        public RoundState RoundState { get; set; }
     }
 }

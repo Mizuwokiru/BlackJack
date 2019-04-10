@@ -3,6 +3,8 @@ using BlackJack.ViewModels.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
 
 namespace BlackJack.Web.Controllers
 {
@@ -25,57 +27,58 @@ namespace BlackJack.Web.Controllers
 
         public IActionResult Game()
         {
-            List<RoundViewModel> roundViewModels = _gameService.GetRoundsInfo();
+            List<RoundViewModel> roundViewModels = _gameService.GetRoundsInfo().ToList();
             return View(roundViewModels);
         }
 
-        // TODO: New game
         public IActionResult NewGame(GameMenuViewModel gameMenuViewModel)
         {
             if (ModelState.IsValid)
             {
                 _gameService.NewGame(gameMenuViewModel.BotCount);
-                //return RedirectToAction(nameof(Game));
-                return Content("NewGame");
+                return RedirectToAction(nameof(Game));
             }
             return View("Menu", gameMenuViewModel);
         }
 
-        // TODO: Continue game
         public IActionResult ContinueGame()
         {
-            return Content("ContinueGame");
+            return RedirectToAction(nameof(Game));
         }
 
-        // TODO: Step
         public IActionResult Step()
         {
-            return Content("Step");
+            _gameService.Step();
+            return RedirectToAction(nameof(Game));
         }
 
-        // TODO: End round
         public IActionResult EndRound()
         {
-            return Content("EndRound");
+            _gameService.EndRound();
+            return RedirectToAction(nameof(Game));
         }
 
-        // TODO: Next round
         public IActionResult NextRound()
         {
-            return Content("NextRound");
+            _gameService.NextRound();
+            return RedirectToAction(nameof(Game));
         }
 
-        // TODO: End game
         public IActionResult EndGame()
         {
-            return Content("EndGame");
+            _gameService.EndGame();
+            return RedirectToAction(nameof(Menu));
         }
 
-        // TODO: Quit
         public IActionResult Quit()
         {
-            return Content("Quit");
+            return RedirectToAction(nameof(Menu));
         }
 
+        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+        public IActionResult Error()
+        {
+            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
     }
 }

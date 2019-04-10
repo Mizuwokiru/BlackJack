@@ -1,7 +1,6 @@
 ﻿using BlackJack.DataAccess.Entities;
 using BlackJack.DataAccess.Repositories.Interfaces;
 using BlackJack.DataAccess.ResponseModels;
-using BlackJack.Shared.Enums;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -17,41 +16,58 @@ namespace BlackJack.DataAccess.Repositories.EntityFrameworkCore
         {
         }
 
-        public Round GetLastRound(long userId)
+        private IQueryable<Round> GetLastRounds(long gameId)
         {
-            Round lastRound = _dbContext.Rounds
-                .Where(round => round.PlayerId == userId)
-                .OrderByDescending(round => round.CreationTime)
-                .FirstOrDefault();
-            return lastRound;
-        }
-
-        public List<Round> GetLastRounds(long gameId)
-        {
-            DateTime? lastCreationTime = _dbContext.Rounds.Max(round => round.CreationTime);
-            List<Round> lastRounds = _dbContext.Rounds
-                .Where(round => round.GameId == gameId && round.CreationTime == lastCreationTime)
-                .ToList();
+            DateTime? lastRoundTime = _dbContext.Rounds
+                .Where(round => round.GameId == gameId)
+                .Select(round => round.CreationTime)
+                .Max();
+            IQueryable<Round> lastRounds = _dbContext.Rounds
+                .Where(round => round.GameId == gameId && round.CreationTime == lastRoundTime);
             return lastRounds;
         }
 
-        public IEnumerable<RoundInfoModel> GetLastRoundInfo(long gameId)
+        public IEnumerable<RoundInfoModel> GetLastRoundsInfo(long gameId)
         {
-            IEnumerable<RoundInfoModel> roundInfoModels = GetLastRounds(gameId).Join(
-                _dbContext.Players,
-                round => round.PlayerId,
-                player => player.Id,
-                (round, player) => new RoundInfoModel
-                {
-                    RoundId = round.Id,
-                    Player = new PlayerModel { Name = player.Name, Type = player.Type },
-                    Cards = round.Cards
-                                .Select(roundCard => roundCard.Card)
-                                .Select(card => new CardModel { Id = card.Id, Suit = card.Suit, Rank = card.Rank })
-                                .ToList(),
-                    State = round.State
-                });
+            DateTime? lastRoundTime = _dbContext.Rounds
+                .Where(round => round.GameId == gameId)
+                .Select(round => round.CreationTime)
+                .Max();
+            IEnumerable<RoundInfoModel> roundInfoModels = GetLastRounds(gameId)
+                .Join(
+                    _dbContext.Players,
+                    round => round.PlayerId,
+                    player => player.Id,
+                    (round, player) => new RoundInfoModel
+                    {
+                        RoundId = round.Id,
+                        PlayerName = player.Name,
+                        PlayerType = player.Type,
+                        Cards = round.Cards.Select(roundCard => roundCard.Card).ToList(),
+                        RoundState = round.State
+                    });
             return roundInfoModels;
+        }
+
+        public StepInfoModel GetStepInfo(long userId, long gameId)
+        {
+            Round userRound = _dbContext.Rounds
+                .Where(round => round.PlayerId == userId && round.GameId == gameId)
+                .OrderByDescending(round => round.CreationTime)
+                .FirstOrDefault();
+            List<Card> cards = GetLastRounds(gameId)
+                .Join(
+                    _dbContext.RoundCards,
+                    round => round.Id,
+                    roundCard => roundCard.RoundId,
+                    (round, roundCard) => roundCard.Card)
+                .ToList();
+            var stepInfoModel = new StepInfoModel
+            {
+                UserRoundId = userRound.Id,
+                RoundsCards = cards
+            };
+            return stepInfoModel;
         }
 
         public void UpdateLastRoundInfo(IEnumerable<RoundInfoModel> roundInfoModels)
@@ -59,7 +75,7 @@ namespace BlackJack.DataAccess.Repositories.EntityFrameworkCore
             var sqlStringBuilder = new StringBuilder();
             foreach (var roundInfo in roundInfoModels)
             {
-                sqlStringBuilder.Append($"UPDATE {nameof(_dbContext.Rounds)} SET State = {(int)roundInfo.State} WHERE Id = {roundInfo.RoundId};{Environment.NewLine}");
+                sqlStringBuilder.AppendLine($"UPDATE {nameof(_dbContext.Rounds)} SET State = {(int)roundInfo.RoundState} WHERE Id = {roundInfo.RoundId};");
             }
             _dbContext.Database.ExecuteSqlCommand(sqlStringBuilder.ToString());
         }
