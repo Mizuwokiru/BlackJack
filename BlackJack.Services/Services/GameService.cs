@@ -1,5 +1,6 @@
 ﻿using BlackJack.DataAccess.Entities;
 using BlackJack.DataAccess.Repositories.Interfaces;
+using BlackJack.DataAccess.ResponseModels;
 using BlackJack.Services.Services.Interfaces;
 using BlackJack.Shared;
 using BlackJack.Shared.Enums;
@@ -59,24 +60,25 @@ namespace BlackJack.Services.Services
             CreateRound(neededBotCount);
         }
 
-        public List<RoundViewModel> GetRoundsInfo()
+        public IEnumerable<RoundViewModel> GetRoundsInfo()
         {
-            List<Round> lastRounds = _roundRepository.GetLastRounds(_game.Id);
+            IEnumerable<RoundInfoModel> roundInfoModels = _roundRepository.GetLastRoundInfo(_game.Id);
 
-            var roundViewModels = new List<RoundViewModel>();
-            foreach (var round in lastRounds)
+            IEnumerable<RoundViewModel> roundViewModels = roundInfoModels.Select(roundInfoModel => new RoundViewModel
             {
-                RoundViewModel roundViewModel = GetRoundInfo(round);
-                roundViewModels.Add(roundViewModel);
-            }
+                Player = new PlayerViewModel { Name = roundInfoModel.Player.Name, Type = roundInfoModel.Player.Type },
+                Cards = roundInfoModel.Cards.Select(cardModel => new CardViewModel { Suit = cardModel.Suit, Rank = cardModel.Rank }).ToList(),
+                State = roundInfoModel.State,
+                Score = CalculateCardScore(roundInfoModel.Cards)
+            });
 
             return roundViewModels;
         }
 
         public void Step()
         {
-            List<Round> rounds = _roundRepository.GetLastRounds(_game.Id);
-            List<long> shuffledCards = GetShuffledCards(rounds);
+            List<Card> cards = _cardRepository.GetCardsByGame(_game.Id);
+            List<long> shuffledCards = GetShuffledCards(cards);
 
             Round round = _roundRepository.GetLastRound(_user.Id);
 
@@ -86,9 +88,11 @@ namespace BlackJack.Services.Services
 
         public void EndRound()
         {
-            List<Round> rounds = _roundRepository.GetLastRounds(_game.Id);
-            CreateNonPlayableCards(rounds);
-            UpdateRounds(rounds);
+            //CreateNonPlayableCards(rounds);
+
+            List<RoundInfoModel> roundInfoModels = _roundRepository.GetLastRoundInfo(_game.Id).ToList();
+
+            UpdateRounds(roundInfoModels);
         }
 
         public void NextRound()
@@ -116,27 +120,6 @@ namespace BlackJack.Services.Services
                 bots.Add(bot);
             }
             _playerRepository.Add(bots);
-        }
-
-        // TODO: Remove it and use Join
-        private RoundViewModel GetRoundInfo(Round round)
-        {
-            Player player = _playerRepository.GetPlayer(round.Id);
-            PlayerViewModel playerViewModel = new PlayerViewModel { Name = player.Name, Type = player.Type };
-
-            List<Card> cards = _cardRepository.GetCards(round.Id);
-            List<CardViewModel> cardViewModels = new List<CardViewModel>();
-            foreach (var card in cards)
-            {
-                // TODO: Hide last card, if its dealer and he's 2 cards.
-                var cardViewModel = new CardViewModel { Suit = card.Suit, Rank = card.Rank };
-                cardViewModels.Add(cardViewModel);
-            }
-
-            int score = CalculateCardScore(cards);
-
-            var roundViewModel = new RoundViewModel { Player = playerViewModel, Cards = cardViewModels, State = round.State, Score = score };
-            return roundViewModel;
         }
 
         private void CreateRound(int neededBotCount)
@@ -169,7 +152,7 @@ namespace BlackJack.Services.Services
             _roundCardRepository.Add(roundCards);
         }
 
-        private List<long> GetShuffledCards(List<Round> rounds = null)
+        private List<long> GetShuffledCards(List<Card> cards = null)
         {
             var cardIds = new List<long>();
             for (int i = 0; i < BlackJackConstants.DeckCount; i++)
@@ -179,9 +162,8 @@ namespace BlackJack.Services.Services
                 cardIds.AddRange(deck);
             }
 
-            if (rounds != null)
+            if (cards != null)
             {
-                List<Card> cards = _cardRepository.GetCards(rounds);
                 foreach (var card in cards)
                 {
                     cardIds.Remove(card.Id);
@@ -200,7 +182,7 @@ namespace BlackJack.Services.Services
             return cardIds;
         }
 
-        private static int CalculateCardScore(List<Card> cards)
+        private static int CalculateCardScore(List<CardModel> cards)
         {
             int score = 0;
             foreach (var card in cards)
@@ -209,7 +191,7 @@ namespace BlackJack.Services.Services
             }
             while (score > 21)
             {
-                Card ace = cards.FirstOrDefault(card => card.Rank == Rank.Ace);
+                CardModel ace = cards.FirstOrDefault(card => card.Rank == Rank.Ace);
                 if (ace == null)
                 {
                     break;
@@ -225,74 +207,66 @@ namespace BlackJack.Services.Services
             // TODO: some AI for bots and dealer
         }
 
-        private void UpdateRounds(List<Round> rounds)
+        private void UpdateRounds(List<RoundInfoModel> roundInfoModels)
         {
-            Round dealerRound = rounds
-                .Where(round => round.PlayerId == BlackJackConstants.DealerId)
+            RoundInfoModel dealerRoundInfo = roundInfoModels
+                .Where(roundInfo => roundInfo.Player.Type == PlayerType.Dealer)
                 .First();
-            rounds.Remove(dealerRound);
+            roundInfoModels.Remove(dealerRoundInfo);
 
-            CheckOverkills(rounds);
+            foreach (var roundInfo in roundInfoModels)
+            {
+                int score = CalculateCardScore(roundInfo.Cards);
+                if (score > 21)
+                {
+                    roundInfo.State = RoundState.Lose;
+                }
+            }
 
-            List<Card> dealerCards = _cardRepository.GetCards(dealerRound.Id);
-            int dealerScore = CalculateCardScore(dealerCards);
+            int dealerScore = CalculateCardScore(dealerRoundInfo.Cards);
             if (dealerScore > 21)
             {
-                SetWinners(rounds);
+                SetWinners(roundInfoModels);
             }
             if (dealerScore <= 21)
             {
-                CheckStates(rounds, dealerScore);
+                CheckStates(roundInfoModels, dealerScore);
             }
-            _roundRepository.Update(rounds);
+            _roundRepository.UpdateLastRoundInfo(roundInfoModels);
         }
 
-        private void CheckOverkills(List<Round> rounds)
+        private void SetWinners(List<RoundInfoModel> roundInfoModels)
         {
-            foreach (var round in rounds)
+            foreach (var roundInfo in roundInfoModels)
             {
-                List<Card> cards = _cardRepository.GetCards(round.Id);
-                int score = CalculateCardScore(cards);
-                if (score > 21)
-                {
-                    round.State = RoundState.Lose;
-                }
-            }
-        }
-
-        private void SetWinners(List<Round> rounds)
-        {
-            foreach (var round in rounds)
-            {
-                if (round.State != RoundState.None)
+                if (roundInfo.State != RoundState.None)
                 {
                     continue;
                 }
-                round.State = RoundState.Won;
+                roundInfo.State = RoundState.Won;
             }
         }
 
-        private void CheckStates(List<Round> rounds, int dealerScore)
+        private void CheckStates(List<RoundInfoModel> roundInfoModels, int dealerScore)
         {
-            foreach (var round in rounds)
+            foreach (var roundInfo in roundInfoModels)
             {
-                if (round.State != RoundState.None)
+                if (roundInfo.State != RoundState.None)
                 {
                     continue;
                 }
-                List<Card> cards = _cardRepository.GetCards(round.Id);
-                int score = CalculateCardScore(cards);
+                int score = CalculateCardScore(roundInfo.Cards);
                 if (score > dealerScore)
                 {
-                    round.State = RoundState.Won;
+                    roundInfo.State = RoundState.Won;
                 }
                 if (score == dealerScore)
                 {
-                    round.State = RoundState.Push;
+                    roundInfo.State = RoundState.Push;
                 }
                 if (score < dealerScore)
                 {
-                    round.State = RoundState.Lose;
+                    roundInfo.State = RoundState.Lose;
                 }
             }
         }

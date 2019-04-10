@@ -7,7 +7,7 @@ namespace BlackJack.Services.Services.Interfaces
     {
         bool HasUnfinishedGame();
         void NewGame(int botCount);
-        List<RoundViewModel> GetRoundsInfo();
+        IEnumerable<RoundViewModel> GetRoundsInfo();
         void Step();
         void EndRound();
         void NextRound();
