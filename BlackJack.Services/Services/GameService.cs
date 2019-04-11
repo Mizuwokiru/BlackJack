@@ -82,6 +82,10 @@ namespace BlackJack.Services.Services
 
             var roundCard = new RoundCard { RoundId = stepInfoModel.UserRoundId, CardId = shuffledCards[0] };
             _roundCardRepository.Add(roundCard);
+            if (!IsStepPossible())
+            {
+                EndRound();
+            }
         }
 
         public void EndRound()
@@ -266,6 +270,17 @@ namespace BlackJack.Services.Services
                     roundInfo.RoundState = RoundState.Lose;
                 }
             }
+        }
+
+        private bool IsStepPossible()
+        {
+            List<Card> cards = _cardRepository.GetPlayerCards(_user.Id, _game.Id).ToList();
+            int score = CalculateCardScore(cards);
+            if (score >= 21)
+            {
+                return false;
+            }
+            return true;
         }
         #endregion
     }

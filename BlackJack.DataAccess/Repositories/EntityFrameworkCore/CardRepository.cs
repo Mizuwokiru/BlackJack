@@ -1,6 +1,8 @@
 ﻿using BlackJack.DataAccess.Entities;
 using BlackJack.DataAccess.Repositories.Interfaces;
+using System.Collections.Generic;
 using System.Data.Common;
+using System.Linq;
 
 namespace BlackJack.DataAccess.Repositories.EntityFrameworkCore
 {
@@ -8,6 +10,17 @@ namespace BlackJack.DataAccess.Repositories.EntityFrameworkCore
     {
         public CardRepository(DbConnection dbConnection) : base(dbConnection)
         {
+        }
+
+        public IEnumerable<Card> GetPlayerCards(long playerId, long gameId)
+        {
+            IEnumerable<Card> cards = _dbContext.Rounds
+                .Where(round => round.PlayerId == playerId && round.GameId == gameId)
+                .OrderByDescending(round => round.CreationTime)
+                .First()
+                .Cards
+                .Select(roundCard => roundCard.Card);
+            return cards;
         }
     }
 }

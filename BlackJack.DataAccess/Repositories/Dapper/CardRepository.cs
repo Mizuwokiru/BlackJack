@@ -51,5 +51,10 @@ namespace BlackJack.DataAccess.Repositories.Dapper
         {
             _dbConnection.Execute("UPDATE Cards SET Suit = @Suit, Rank = @Rank WHERE Id = @Id", items);
         }
+
+        public IEnumerable<Card> GetPlayerCards(long playerId, long gameId)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
