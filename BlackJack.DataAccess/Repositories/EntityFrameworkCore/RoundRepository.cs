@@ -79,5 +79,30 @@ namespace BlackJack.DataAccess.Repositories.EntityFrameworkCore
             }
             _dbContext.Database.ExecuteSqlCommand(sqlStringBuilder.ToString());
         }
+
+        public IEnumerable<HistoryRoundsInfoModel> GetHistoryRoundsInfo(long userId, int skipCount)
+        {
+            Game choosenGame = _dbContext.Rounds
+                .Where(round => round.PlayerId == userId)
+                .Select(round => round.Game)
+                .OrderByDescending(game => game.CreationTime)
+                .Distinct()
+                .Skip(skipCount)
+                .First();
+
+            IEnumerable<HistoryRoundsInfoModel> historyRoundsInfos = _dbContext.Rounds
+                .Where(round => round.GameId == choosenGame.Id)
+                .GroupBy(round => round.CreationTime)
+                .Select(rounds => new HistoryRoundsInfoModel
+                {
+                    Players = rounds.Select(round => new HistoryRoundInfoModel
+                    {
+                        PlayerName = round.Player.Name,
+                        Cards = round.Cards.Select(roundCard => roundCard.Card),
+                        State = round.State
+                    })
+                });
+            return historyRoundsInfos;
+        }
     }
 }

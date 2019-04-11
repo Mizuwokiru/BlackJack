@@ -1,4 +1,4 @@
-﻿@model IEnumerable<HistoryGameViewModel>
+﻿@model List<HistoryGameViewModel>
 
 @{
     ViewBag.Title = "Game history";
@@ -6,17 +6,17 @@
 }
 
 <div id="game-history-block" class="my-4 w-75 mx-auto">
-    @foreach (var historyGame in Model)
+    @for (int i = 0; i < Model.Count; i++)
     {
         <div class="row">
-            <a class="col btn btn-primary mb-4 shadow-sm text-decoration-none text-white rounded-0 shadow-sm" href="#">
+            <a asp-action="Game" asp-route-id="@i" class="col btn btn-primary mb-4 shadow-sm text-decoration-none text-white rounded-0 shadow-sm">
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-center">
                         <div class="d-flex align-items-start flex-column">
-                            <div>Player count: @historyGame.PlayerCount</div>
-                            <div>Round count: @historyGame.RoundCount</div>
+                            <div>Player count: @Model[i].PlayerCount</div>
+                            <div>Round count: @Model[i].RoundCount</div>
                         </div>
-                        <small>@historyGame.CreationTime.ToString("yyyy-MM-dd HH:mm")</small>
+                        <small>@Model[i].CreationTime.ToString("yyyy-MM-dd HH:mm")</small>
                     </div>
                 </div>
             </a>

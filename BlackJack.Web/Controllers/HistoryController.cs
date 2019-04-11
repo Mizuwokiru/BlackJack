@@ -3,6 +3,7 @@ using BlackJack.ViewModels.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace BlackJack.Web.Controllers
 {
@@ -21,14 +22,15 @@ namespace BlackJack.Web.Controllers
         [Route("[action]")]
         public IActionResult Index()
         {
-            IEnumerable<HistoryGameViewModel> historyGameViewModels = _historyService.GetGamesHistory();
+            List<HistoryGameViewModel> historyGameViewModels = _historyService.GetGamesHistory().ToList();
             return View(historyGameViewModels);
         }
 
-        [Route("[action]/{page}")]
-        public IActionResult Game(int page)
+        [Route("[action]/{id}")]
+        public IActionResult Game(int id)
         {
-            return View(page);
+            List<HistoryRoundsViewModel> historyRoundsViewModel = _historyService.GetRoundsHistory(id).ToList();
+            return View(historyRoundsViewModel);
         }
     }
 }

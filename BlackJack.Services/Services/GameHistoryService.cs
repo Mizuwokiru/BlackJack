@@ -12,13 +12,16 @@ namespace BlackJack.Services.Services
     public class GameHistoryService : IGameHistoryService
     {
         private readonly IGameRepository _gameRepository;
+        private readonly IRoundRepository _roundRepository;
         private readonly Player _user;
 
         public GameHistoryService(IPlayerRepository playerRepository,
             IGameRepository gameRepository,
+            IRoundRepository roundRepository,
             IHttpContextAccessor httpContextAccessor)
         {
             _gameRepository = gameRepository;
+            _roundRepository = roundRepository;
             _user = playerRepository.GetUser(httpContextAccessor.HttpContext.User.Identity.Name);
         }
 
@@ -34,6 +37,28 @@ namespace BlackJack.Services.Services
             });
 
             return historyGameViewModels;
+        }
+
+        public IEnumerable<HistoryRoundsViewModel> GetRoundsHistory(int gameOrder)
+        {
+            IEnumerable<HistoryRoundsInfoModel> historyRoundsInfo = _roundRepository.GetHistoryRoundsInfo(_user.Id, gameOrder);
+
+            IEnumerable<HistoryRoundsViewModel> historyRoundsViewModels = historyRoundsInfo
+                .Select(roundsInfo => new HistoryRoundsViewModel
+                {
+                    Players = roundsInfo.Players.Select(player => new HistoryRoundViewModel
+                    {
+                        PlayerName = player.PlayerName,
+                        Cards = player.Cards.Select(card => new CardViewModel
+                        {
+                            Suit = card.Suit,
+                            Rank = card.Rank
+                        }),
+                        State = player.State
+                    }).ToList()
+                });
+
+            return historyRoundsViewModels;
         }
     }
 }
