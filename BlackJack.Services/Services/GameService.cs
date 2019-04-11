@@ -63,7 +63,7 @@ namespace BlackJack.Services.Services
         public IEnumerable<RoundViewModel> GetRoundsInfo()
         {
             IEnumerable<RoundInfoModel> roundInfoModels = _roundRepository.GetLastRoundsInfo(_game.Id);
-
+            
             IEnumerable<RoundViewModel> roundViewModels = roundInfoModels.Select(roundInfoModel => new RoundViewModel
             {
                 Player = new PlayerViewModel { Name = roundInfoModel.PlayerName, Type = roundInfoModel.PlayerType },
@@ -185,19 +185,20 @@ namespace BlackJack.Services.Services
 
         private static int CalculateCardScore(List<Card> cards)
         {
+            var cardsCopy = new List<Card>(cards);
             int score = 0;
-            foreach (var card in cards)
+            foreach (var card in cardsCopy)
             {
                 score += CardHelper.GetCardScore(card.Rank);
             }
             while (score > 21)
             {
-                Card ace = cards.FirstOrDefault(card => card.Rank == Rank.Ace);
+                Card ace = cardsCopy.FirstOrDefault(card => card.Rank == Rank.Ace);
                 if (ace == null)
                 {
                     break;
                 }
-                cards.Remove(ace);
+                cardsCopy.Remove(ace);
                 score -= 10;
             }
             return score;

@@ -1,4 +1,6 @@
 ﻿using BlackJack.DataAccess.Entities;
+using BlackJack.DataAccess.ResponseModels;
+using System.Collections.Generic;
 
 namespace BlackJack.DataAccess.Repositories.Interfaces
 {
@@ -6,5 +8,6 @@ namespace BlackJack.DataAccess.Repositories.Interfaces
     {
         Game GetUnfinishedGame(long userId);
         int GetPlayerCount(long gameId);
+        IEnumerable<HistoryGameInfoModel> GetGamesHistory(long userId);
     }
 }

@@ -1,6 +1,8 @@
 ﻿using BlackJack.Services.Services.Interfaces;
+using BlackJack.ViewModels.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 
 namespace BlackJack.Web.Controllers
 {
@@ -8,7 +10,7 @@ namespace BlackJack.Web.Controllers
     [Route("[controller]")]
     public class HistoryController : Controller
     {
-        private IGameHistoryService _historyService;
+        private readonly IGameHistoryService _historyService;
 
         public HistoryController(IGameHistoryService historyService)
         {
@@ -19,7 +21,8 @@ namespace BlackJack.Web.Controllers
         [Route("[action]")]
         public IActionResult Index()
         {
-            return View();
+            IEnumerable<HistoryGameViewModel> historyGameViewModels = _historyService.GetGamesHistory();
+            return View(historyGameViewModels);
         }
 
         [Route("[action]/{page}")]

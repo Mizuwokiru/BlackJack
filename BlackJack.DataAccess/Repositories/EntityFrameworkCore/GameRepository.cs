@@ -1,5 +1,6 @@
 ﻿using BlackJack.DataAccess.Entities;
 using BlackJack.DataAccess.Repositories.Interfaces;
+using BlackJack.DataAccess.ResponseModels;
 using System;
 using System.Collections.Generic;
 using System.Data.Common;
@@ -38,6 +39,25 @@ namespace BlackJack.DataAccess.Repositories.EntityFrameworkCore
                 .Where(round => round.CreationTime == someDate)
                 .Count();
             return playerCount;
+        }
+
+        public IEnumerable<HistoryGameInfoModel> GetGamesHistory(long userId)
+        {
+            IEnumerable<HistoryGameInfoModel> userGames = _dbContext.Rounds
+                .Where(round => round.PlayerId == userId)
+                .Select(round => round.Game)
+                .Distinct()
+                .GroupJoin(
+                    _dbContext.Rounds,
+                    game => game.Id,
+                    round => round.GameId,
+                    (game, rounds) => new HistoryGameInfoModel
+                    {
+                        PlayerCount = rounds.GroupBy(round => round.PlayerId).Count(),
+                        RoundCount = rounds.Count(round => round.PlayerId == userId),
+                        CreationTime = game.CreationTime.Value
+                    });
+            return userGames;
         }
     }
 }
