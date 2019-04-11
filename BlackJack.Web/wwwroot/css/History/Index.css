@@ -1,12 +1,1 @@
-﻿.game-history-button {
-    background: rgba(34, 139, 34, 0.9);
-    transition: .3s;
-}
-
-.game-history-button:hover {
-    background: rgba(34, 139, 34, 0.8);
-}
-
-.game-history-button:active {
-    background: rgba(19, 136, 8, 1);
-}
+﻿

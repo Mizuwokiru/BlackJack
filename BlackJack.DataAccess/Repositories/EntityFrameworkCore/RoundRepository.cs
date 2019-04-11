@@ -43,7 +43,7 @@ namespace BlackJack.DataAccess.Repositories.EntityFrameworkCore
                         RoundId = round.Id,
                         PlayerName = player.Name,
                         PlayerType = player.Type,
-                        Cards = round.Cards.Select(roundCard => roundCard.Card).ToList(),
+                        Cards = round.Cards.OrderBy(roundCard => roundCard.CreationTime).Select(roundCard => roundCard.Card).ToList(),
                         RoundState = round.State
                     });
             return roundInfoModels;

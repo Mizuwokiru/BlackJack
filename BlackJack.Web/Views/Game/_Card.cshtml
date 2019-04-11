@@ -26,19 +26,15 @@
         <div class="card-header @stateTextClass">@Model.Player.Name</div>
         <div class="card-body">
             <p class="card-text">
-                @*@if (Model.Player.Type == PlayerType.Dealer && Model.Cards.Count == 2)
+                @foreach (var card in Model.Cards)
                 {
-                    @Html.DisplayCard(CardHelper.GetCard(Model.Cards[0].Suit, Model.Cards[0].Rank))
-                    @Html.DisplayCard(CardHelper.BlankCard)
+                    @Html.DisplayCard(CardHelper.GetCard(card.Suit, card.Rank))
                 }
-                else
-                {*@
-                    @foreach (var card in Model.Cards)
-                    {
-                        @Html.DisplayCard(CardHelper.GetCard(card.Suit, card.Rank))
-                    }
-                @*}*@
             </p>
+            <div class="d-flex justify-content-between align-items-center mt-4 @stateTextClass">
+                <span>Points:</span>
+                <strong>@Model.Score</strong>
+            </div>
         </div>
     </div>
 </div>

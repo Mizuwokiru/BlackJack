@@ -90,9 +90,16 @@ namespace BlackJack.Services.Services
 
         public void EndRound()
         {
-            //CreateNonPlayableCards(rounds);
-
             List<RoundInfoModel> roundInfoModels = _roundRepository.GetLastRoundsInfo(_game.Id).ToList();
+            List<Card> allRoundCards = roundInfoModels.SelectMany(roundInfo => roundInfo.Cards).ToList();
+            List<long> shuffledCards = GetShuffledCards(allRoundCards);
+            var roundCards = new List<RoundCard>();
+            foreach (var roundInfo in roundInfoModels)
+            {
+                IEnumerable<RoundCard> gotCards = DoPlayBot(roundInfo, shuffledCards);
+                roundCards.AddRange(gotCards);
+            }
+            _roundCardRepository.Add(roundCards);
             UpdateRounds(roundInfoModels);
         }
 
@@ -185,28 +192,43 @@ namespace BlackJack.Services.Services
 
         private static int CalculateCardScore(List<Card> cards)
         {
-            var cardsCopy = new List<Card>(cards);
             int score = 0;
-            foreach (var card in cardsCopy)
+            foreach (var card in cards)
             {
                 score += CardHelper.GetCardScore(card.Rank);
             }
-            while (score > 21)
+            if (score <= 21)
             {
-                Card ace = cardsCopy.FirstOrDefault(card => card.Rank == Rank.Ace);
-                if (ace == null)
-                {
-                    break;
-                }
-                cardsCopy.Remove(ace);
+                return score;
+            }
+            int aceCount = cards.Count(card => card.Rank == Rank.Ace);
+            while (score > 21 && aceCount > 0)
+            {
                 score -= 10;
+                aceCount--;
             }
             return score;
         }
 
-        private void CreateNonPlayableCards(List<Round> rounds)
+        private IEnumerable<RoundCard> DoPlayBot(RoundInfoModel roundInfo, List<long> shuffledCards)
         {
-            // TODO: some AI for bots and dealer
+            if (roundInfo.PlayerType == PlayerType.User)
+            {
+                return Enumerable.Empty<RoundCard>();
+            }
+            var roundCards = new List<RoundCard>();
+            int gotCardsCount = 0;
+            int score = CalculateCardScore(roundInfo.Cards);
+            while (score < 17)
+            {
+                Card card = _cardRepository.Get(shuffledCards[gotCardsCount]);
+                gotCardsCount++;
+                var roundCard = new RoundCard { CardId = card.Id, RoundId = roundInfo.RoundId };
+                roundCards.Add(roundCard);
+                roundInfo.Cards.Add(card);
+                score = CalculateCardScore(roundInfo.Cards);
+            }
+            return roundCards;
         }
 
         private void UpdateRounds(List<RoundInfoModel> roundInfoModels)

@@ -4,10 +4,12 @@
 @{
     ViewBag.Title = "Game";
     Layout = "_Layout";
+    RoundViewModel dealer = null;
+    bool hideDealerCard = Model.Single(round => round.Player.Type == PlayerType.User).State == RoundState.None;
 }
 
 <div id="game-block">
-    <nav class="sticky-top bg-white">
+    <nav>
         <div class="d-flex flex-column flex-md-row justify-content-between">
             @if (Model[0].State == RoundState.None)
             {
@@ -39,7 +41,35 @@
     <div id="game-cards-block" class="row">
         @foreach (var roundInfo in Model)
         {
+            @if (roundInfo.Player.Type == PlayerType.Dealer)
+            {
+                dealer = roundInfo;
+                continue;
+            }
             <partial name="_Card" model="roundInfo" />
+        }
+    </div>
+    <div id="dealer-game-cards-block" class="row justify-content-center">
+        @if (hideDealerCard)
+        {
+            <div class="col-md-3">
+                <div class="card mb-4 shadow-sm">
+                    <div class="card-header">@dealer.Player.Name</div>
+                    <div class="card-body">
+                        <p class="card-text">
+                            @Html.DisplayCard(CardHelper.GetCard(dealer.Cards[0].Suit, dealer.Cards[0].Rank))@Html.DisplayCard(CardHelper.BlankCard)
+                        </p>
+                        <div class="d-flex justify-content-between align-items-center mt-4">
+                            <span>Points:</span>
+                            <strong>?</strong>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+        @if (!hideDealerCard)
+        {
+            <partial name="_Card" model="dealer" />
         }
     </div>
 </div>

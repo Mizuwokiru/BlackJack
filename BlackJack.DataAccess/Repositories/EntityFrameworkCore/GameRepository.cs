@@ -56,7 +56,8 @@ namespace BlackJack.DataAccess.Repositories.EntityFrameworkCore
                         PlayerCount = rounds.GroupBy(round => round.PlayerId).Count(),
                         RoundCount = rounds.Count(round => round.PlayerId == userId),
                         CreationTime = game.CreationTime.Value
-                    });
+                    })
+                .OrderByDescending(gameInfo => gameInfo.CreationTime);
             return userGames;
         }
     }
