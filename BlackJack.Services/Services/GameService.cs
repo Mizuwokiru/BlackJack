@@ -145,6 +145,11 @@ namespace BlackJack.Services.Services
             _roundRepository.Add(rounds);
 
             CreateCards(rounds);
+
+            if (!IsStepPossible())
+            {
+                EndRound();
+            }
         }
 
         private void CreateCards(List<Round> rounds)
