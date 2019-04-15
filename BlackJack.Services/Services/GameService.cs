@@ -48,8 +48,8 @@ namespace BlackJack.Services.Services
         {
             EndGame();
 
-            _game = new Game();
-            _gameRepository.Add(_game);
+            Game newGame = new Game();
+            _gameRepository.Add(newGame);
 
             int availableBotCount = _playerRepository.GetBotCount();
             if (availableBotCount < neededBotCount)
