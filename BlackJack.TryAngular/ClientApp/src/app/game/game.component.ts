@@ -13,9 +13,10 @@ import { PlayerType } from '../_enums/player.type';
   styleUrls: ['./game.component.scss']
 })
 export class GameComponent implements OnInit {
-  roundPlayers: Round[];
+  roundPlayers: Round[] = [];
   canToPlay: boolean;
   dealer: Round;
+  isLoaded: boolean;
 
   constructor(private router: Router,
     private route: ActivatedRoute,
@@ -34,7 +35,12 @@ export class GameComponent implements OnInit {
             this.canToPlay = player.state == RoundState.None;
           }
           this.roundPlayers.push(player);
+          console.log(player.stringifiedCards);
         });
+
+        this.isLoaded = true;
+        console.log(this.roundPlayers);
+        console.log(this.dealer);
       });
   }
 
@@ -56,6 +62,6 @@ export class GameComponent implements OnInit {
   }
 
   quit() {
-    
+
   }
 }

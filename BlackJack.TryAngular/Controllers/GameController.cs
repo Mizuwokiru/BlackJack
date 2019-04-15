@@ -1,4 +1,4 @@
-﻿using BlackJack.Services.Services;
+﻿using BlackJack.Services.Services.Interfaces;
 using BlackJack.ViewModels.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -9,9 +9,9 @@ namespace BlackJack.TryAngular.Controllers
     [Authorize, ApiController, Route("api/[controller]")]
     public class GameController : Controller
     {
-        private readonly GameService _gameService;
+        private readonly IGameService _gameService;
 
-        public GameController(GameService gameService)
+        public GameController(IGameService gameService)
         {
             _gameService = gameService;
         }

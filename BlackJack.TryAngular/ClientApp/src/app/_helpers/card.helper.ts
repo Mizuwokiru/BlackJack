@@ -8,7 +8,7 @@ export class CardHelper {
     public static readonly RedColor = "darkred";
 
     private static getCardValue(card: Card): number {
-        let cardValue: number = this.BlankCard + (card.suit - 1) * 0x10 + card.rank;
+        let cardValue: number = CardHelper.BlankCard + (card.suit - 1) * 0x10 + card.rank;
         if (card.rank >= Rank.Queen) {
             cardValue++;
         }
@@ -16,25 +16,25 @@ export class CardHelper {
     }
 
     private static getCardHtmlByValue(cardValue: number): string {
-        let color = this.BlackColor;
-        if ((cardValue > 0x1F0B0 && cardValue < 0x1F0D0) || cardValue == this.BlankCard) {
-            color = this.RedColor;
+        let color = CardHelper.BlackColor;
+        if ((cardValue > 0x1F0B0 && cardValue < 0x1F0D0) || cardValue == CardHelper.BlankCard) {
+            color = CardHelper.RedColor;
         }
         return `<span style="color: ${color}">&#${cardValue};</span>`;
     }
 
     public static getCardHtml(card: Card): string {
-        return this.getCardHtmlByValue(this.getCardValue(card));
+        return CardHelper.getCardHtmlByValue(CardHelper.getCardValue(card));
     }
 
     public static getBlankCardHtml(): string {
-        return this.getCardHtmlByValue(this.BlankCard);
+        return CardHelper.getCardHtmlByValue(CardHelper.BlankCard);
     }
 
     public static getCardsHtml(cards: Card[]): string {
-        let stringifiedCards = cards.map(this.getCardHtml).join('');
+        let stringifiedCards = cards.map(CardHelper.getCardHtml).join('');
         if (cards.length == 1) {
-            stringifiedCards += this.getBlankCardHtml();
+            stringifiedCards += CardHelper.getBlankCardHtml();
         }
         return stringifiedCards;
     }

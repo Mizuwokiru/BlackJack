@@ -30,7 +30,7 @@ export class MenuComponent implements OnInit {
   newGame() {
     this.menuService.newGame(this.menu)
       .subscribe(
-        () => this.router.navigate(['/']),
+        () => this.router.navigate(['/game']),
         () => console.error("MenuComponent.newGame() error.")
       );
   }
