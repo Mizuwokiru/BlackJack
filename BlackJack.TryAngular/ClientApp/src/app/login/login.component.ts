@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { User } from '../_models/user';
 import { LoginService } from '../_services/login.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { range } from 'rxjs';
 
 @Component({
   selector: 'app-login',
@@ -36,7 +35,6 @@ export class LoginComponent implements OnInit {
         },
         () => {
           console.error('Error');
-          
         });
   }
 

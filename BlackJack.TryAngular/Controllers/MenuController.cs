@@ -5,8 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace BlackJack.TryAngular.Controllers
 {
-    [Authorize]
-    [ApiController, Route("api/[controller]")]
+    [Authorize, ApiController, Route("api/[controller]")]
     public class MenuController : Controller
     {
         private readonly IGameService _gameService;
@@ -17,7 +16,7 @@ namespace BlackJack.TryAngular.Controllers
         }
 
         [HttpGet]
-        public bool Get()
+        public bool HasUnfinishedGame()
         {
             bool hasUnfinishedGame = _gameService.HasUnfinishedGame();
             return hasUnfinishedGame;
@@ -36,9 +35,9 @@ namespace BlackJack.TryAngular.Controllers
         }
 
         [HttpPost, Route("[action]")]
-        public IActionResult Continue()
+        public IActionResult ContinueGame()
         {
-            bool hasUnfinishedGame = Get();
+            bool hasUnfinishedGame = HasUnfinishedGame();
             if (!hasUnfinishedGame)
             {
                 return BadRequest();
