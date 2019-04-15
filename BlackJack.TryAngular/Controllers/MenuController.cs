@@ -1,4 +1,5 @@
 ﻿using BlackJack.Services.Services.Interfaces;
+using BlackJack.Shared;
 using BlackJack.ViewModels.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -16,10 +17,15 @@ namespace BlackJack.TryAngular.Controllers
         }
 
         [HttpGet]
-        public bool HasUnfinishedGame()
+        public GameMenuViewModel GetMenu()
         {
             bool hasUnfinishedGame = _gameService.HasUnfinishedGame();
-            return hasUnfinishedGame;
+            var gameMenuViewModel = new GameMenuViewModel
+            {
+                HasUnfinishedGame = hasUnfinishedGame,
+                MaxBotCount = BlackJackConstants.MaxBotCount
+            };
+            return gameMenuViewModel;
         }
 
         [HttpPost, Route("[action]")]
@@ -31,17 +37,6 @@ namespace BlackJack.TryAngular.Controllers
             }
             
             _gameService.NewGame(gameMenuViewModel.BotCount);
-            return Ok();
-        }
-
-        [HttpPost, Route("[action]")]
-        public IActionResult ContinueGame()
-        {
-            bool hasUnfinishedGame = HasUnfinishedGame();
-            if (!hasUnfinishedGame)
-            {
-                return BadRequest();
-            }
             return Ok();
         }
     }

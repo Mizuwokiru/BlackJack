@@ -16,12 +16,13 @@
         </div>
         <div class="modal-body">
           <h6>Bot count:</h6>
-          <select name="" id="bot-count-select-box" class="form-control">
-            <option *ngFor="let i of botIndices">{{i}}</option>
+          <select name="botCountSelectBox" id="bot-count-select-box" [(ngModel)]="menu.botCount" class="form-control">
+            <option selected>0</option>
+            <option *ngFor="let i of botIndices" [ngValue]="i">{{i}}</option>
           </select>
         </div>
         <div class="modal-footer">
-          <input type="button" class="btn btn-primary" value="Start">
+          <input type="button" class="btn btn-primary" (click)="newGame()" value="Start">
           <input type="button" class="btn btn-secondary" data-dismiss="modal" value="Cancel">
         </div>
       </div>

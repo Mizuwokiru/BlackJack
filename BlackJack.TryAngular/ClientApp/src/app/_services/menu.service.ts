@@ -1,6 +1,7 @@
 import { Injectable } from "@angular/core";
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { Menu } from '../_models/menu';
 
 @Injectable({ providedIn: 'root' })
 export class MenuService {
@@ -8,7 +9,11 @@ export class MenuService {
 
     constructor(private http: HttpClient) { }
 
-    hasUnfinishedGames(): Observable<boolean> {
-        return this.http.get<boolean>(this.url);
+    getMenu(): Observable<Menu> {
+        return this.http.get<Menu>(this.url);
+    }
+
+    newGame(menu: Menu): Observable<any> {
+        return this.http.post(`${this.url}/NewGame`, menu);
     }
 }

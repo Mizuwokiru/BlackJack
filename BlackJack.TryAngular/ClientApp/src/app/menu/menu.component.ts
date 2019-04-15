@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { MenuService } from '../_services/menu.service';
+import { Router } from '@angular/router';
 import { range } from 'rxjs';
+
+import { Menu } from '../_models/menu';
+import { MenuService } from '../_services/menu.service';
 
 @Component({
   selector: 'app-menu',
@@ -9,21 +12,26 @@ import { range } from 'rxjs';
 })
 export class MenuComponent implements OnInit {
   isLoaded: boolean = false;
-  isContinueButtonShow: boolean = false;
-  somes: string[];  
+  menu: Menu;
   botIndices: number[] = [];
 
-  constructor(private menuService: MenuService) { }
+  constructor(private router: Router, private menuService: MenuService) { }
 
   ngOnInit() {
-    range(0, 8)
-        .subscribe(value => this.botIndices.push(value));
-
-    this.menuService.hasUnfinishedGames()
-        .subscribe(response => {
-          this.isContinueButtonShow = response;
+    this.menuService.getMenu()
+      .subscribe(response => {
+          this.menu = response;
+          range(1, this.menu.maxBotCount)
+            .subscribe(value => this.botIndices.push(value));
           this.isLoaded = true;
-        });
+      });
   }
 
+  newGame() {
+    this.menuService.newGame(this.menu)
+      .subscribe(
+        () => this.router.navigate(['/']),
+        () => console.error("MenuComponent.newGame() error.")
+      );
+  }
 }

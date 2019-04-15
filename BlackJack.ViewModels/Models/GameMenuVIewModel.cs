@@ -7,6 +7,8 @@ namespace BlackJack.ViewModels.Models
     {
         public bool HasUnfinishedGame { get; set; }
 
+        public int MaxBotCount { get; set; }
+
         [Range(0, BlackJackConstants.MaxBotCount)]
         public int BotCount { get; set; }
     }
