@@ -1,4 +1,4 @@
-﻿@model List<HistoryRoundsViewModel>
+﻿@model List<IEnumerable<HistoryRoundViewModel>>
 @{
     ViewBag.Title = "Game history";
     Layout = "_Layout";
@@ -16,7 +16,7 @@
 
                 <div id="collapse-round-@i" class="collapse" aria-labelledby="round-@i" data-parent="#round-history-block">
                     <div class="card-body">
-                        @foreach (var player in Model[i].Players)
+                        @foreach (var player in Model[i])
                         {
                             <h4>@player.PlayerName's cards:</h4>
                             @foreach (var card in player.Cards)

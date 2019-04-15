@@ -31,7 +31,7 @@ namespace BlackJack.DataAccess.Repositories.Dapper
             throw new System.NotImplementedException();
         }
 
-        public IEnumerable<IEnumerable<HistoryRoundInfoModel>> GetHistoryRoundsInfo(long userId, int skipCount)
+        public IEnumerable<IEnumerable<RoundInfoModel>> GetHistoryRoundsInfo(long userId, int skipCount)
         {
             throw new NotImplementedException();
         }

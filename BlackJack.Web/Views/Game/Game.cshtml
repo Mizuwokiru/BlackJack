@@ -5,7 +5,7 @@
     ViewBag.Title = "Game";
     Layout = "_Layout";
     RoundViewModel dealer = null;
-    bool hideDealerCard = Model.Single(round => round.Player.Type == PlayerType.User).State == RoundState.None;
+    bool hideDealerCard = Model.Single(round => round.PlayerType == PlayerType.User).State == RoundState.None;
 }
 
 <div id="game-block">
@@ -41,7 +41,7 @@
     <div id="game-cards-block" class="row">
         @foreach (var roundInfo in Model)
         {
-            @if (roundInfo.Player.Type == PlayerType.Dealer)
+            @if (roundInfo.PlayerType == PlayerType.Dealer)
             {
                 dealer = roundInfo;
                 continue;
@@ -54,7 +54,7 @@
         {
             <div class="col-md-3">
                 <div class="card mb-4 shadow-sm">
-                    <div class="card-header">@dealer.Player.Name</div>
+                    <div class="card-header">@dealer.PlayerName</div>
                     <div class="card-body">
                         <p class="card-text">
                             @Html.DisplayCard(CardHelper.GetCard(dealer.Cards[0].Suit, dealer.Cards[0].Rank))@Html.DisplayCard(CardHelper.BlankCard)

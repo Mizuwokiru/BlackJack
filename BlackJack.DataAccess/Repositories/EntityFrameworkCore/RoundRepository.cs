@@ -43,7 +43,7 @@ namespace BlackJack.DataAccess.Repositories.EntityFrameworkCore
                         PlayerName = player.Name,
                         PlayerType = player.Type,
                         Cards = round.Cards.OrderBy(roundCard => roundCard.CreationTime).Select(roundCard => roundCard.Card).ToList(),
-                        RoundState = round.State
+                        State = round.State
                     });
             return roundInfoModels;
         }
@@ -74,12 +74,12 @@ namespace BlackJack.DataAccess.Repositories.EntityFrameworkCore
             var sqlStringBuilder = new StringBuilder();
             foreach (var roundInfo in roundInfoModels)
             {
-                sqlStringBuilder.AppendLine($"UPDATE {nameof(_dbContext.Rounds)} SET State = {(int)roundInfo.RoundState} WHERE Id = {roundInfo.RoundId};");
+                sqlStringBuilder.AppendLine($"UPDATE {nameof(_dbContext.Rounds)} SET State = {(int)roundInfo.State} WHERE Id = {roundInfo.RoundId};");
             }
             _dbContext.Database.ExecuteSqlCommand(sqlStringBuilder.ToString());
         }
 
-        public IEnumerable<IEnumerable<HistoryRoundInfoModel>> GetHistoryRoundsInfo(long userId, int skipCount)
+        public IEnumerable<IEnumerable<RoundInfoModel>> GetHistoryRoundsInfo(long userId, int skipCount)
         {
             Game choosenGame = _dbContext.Rounds
                 .Where(round => round.PlayerId == userId)
@@ -89,14 +89,15 @@ namespace BlackJack.DataAccess.Repositories.EntityFrameworkCore
                 .Skip(skipCount)
                 .First();
 
-            IEnumerable<IEnumerable<HistoryRoundInfoModel>> historyRoundInfos = _dbContext.Rounds
+            IEnumerable<IEnumerable<RoundInfoModel>> historyRoundInfos = _dbContext.Rounds
                 .Where(round => round.GameId == choosenGame.Id)
                 .GroupBy(round => round.CreationTime)
-                .Select(rounds => new List<HistoryRoundInfoModel>(
-                    rounds.Select(round => new HistoryRoundInfoModel
+                .Select(rounds => new List<RoundInfoModel>(
+                    rounds.Select(round => new RoundInfoModel
                     {
                         PlayerName = round.Player.Name,
-                        Cards = round.Cards.Select(roundCard => roundCard.Card),
+                        PlayerType = round.Player.Type,
+                        Cards = round.Cards.Select(roundCard => roundCard.Card).ToList(),
                         State = round.State
                     })));
             return historyRoundInfos;

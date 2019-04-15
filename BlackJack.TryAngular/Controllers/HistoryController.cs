@@ -24,9 +24,9 @@ namespace BlackJack.TryAngular.Controllers
         }
 
         [HttpGet, Route("{gameOrderId}")]
-        public IEnumerable<IEnumerable<HistoryRoundViewModel>> Get(int gameOrderId)
+        public IEnumerable<IEnumerable<RoundViewModel>> Get(int gameOrderId)
         {
-            IEnumerable<IEnumerable<HistoryRoundViewModel>> roundsHistory = _historyService.GetRoundsHistory(gameOrderId);
+            IEnumerable<IEnumerable<RoundViewModel>> roundsHistory = _historyService.GetRoundsHistory(gameOrderId);
             return roundsHistory;
         }
     }

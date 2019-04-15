@@ -47,12 +47,6 @@ namespace BlackJack.Services.Configuration
                         options => options.MapFrom(
                             roundInfoModel => GameService.CalculateCardScore(roundInfoModel.Cards)));
                 config.CreateMap<HistoryGameInfoModel, HistoryGameViewModel>();
-                config.CreateMap<HistoryRoundInfoModel, HistoryRoundViewModel>()
-                    .ForMember(
-                        historyRoundViewModel => historyRoundViewModel.Cards,
-                        options => options.MapFrom(
-                            historyRoundInfoModel => Mapper.Map<IEnumerable<Card>,
-                                IEnumerable<CardViewModel>>(historyRoundInfoModel.Cards)));
             });
 
             services.AddTransient<IUserService, UserService>();

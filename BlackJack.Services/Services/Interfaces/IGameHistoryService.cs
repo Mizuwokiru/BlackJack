@@ -7,6 +7,6 @@ namespace BlackJack.Services.Services.Interfaces
     {
         IEnumerable<HistoryGameViewModel> GetGamesHistory();
 
-        IEnumerable<IEnumerable<HistoryRoundViewModel>> GetRoundsHistory(int gameOrder);
+        IEnumerable<IEnumerable<RoundViewModel>> GetRoundsHistory(int gameOrder);
     }
 }

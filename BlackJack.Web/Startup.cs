@@ -21,8 +21,7 @@ namespace BlackJack.Web
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-            services.AddBlackJackDbAccess(Configuration);
-            services.AddBlackJackServices();
+            services.AddBlackJackServices(Configuration["ORM"]);
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(options =>
                 {

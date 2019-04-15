@@ -2,7 +2,7 @@
   <div id="choose-player-block">
     <div class="input-group">
       <div class="input-group-prepend">
-        <select name="playerSelectBox" class="form-control">
+        <select id="player-select-box" class="form-control" (change)="onChangeDropdownUser($event.target.value)">
           <option *ngFor="let userName of userNames">{{ userName }}</option>
         </select>
       </div>

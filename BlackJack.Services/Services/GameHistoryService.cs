@@ -36,11 +36,11 @@ namespace BlackJack.Services.Services
             return historyGameViewModels;
         }
 
-        public IEnumerable<IEnumerable<HistoryRoundViewModel>> GetRoundsHistory(int gameOrder)
+        public IEnumerable<IEnumerable<RoundViewModel>> GetRoundsHistory(int gameOrder)
         {
-            IEnumerable<IEnumerable<HistoryRoundInfoModel>> historyRoundsInfo = _roundRepository.GetHistoryRoundsInfo(_user.Id, gameOrder);
-            IEnumerable<IEnumerable<HistoryRoundViewModel>> historyRoundViewModels =
-                Mapper.Map<IEnumerable<IEnumerable<HistoryRoundInfoModel>>, IEnumerable<IEnumerable<HistoryRoundViewModel>>>(historyRoundsInfo);
+            IEnumerable<IEnumerable<RoundInfoModel>> historyRoundsInfo = _roundRepository.GetHistoryRoundsInfo(_user.Id, gameOrder);
+            IEnumerable<IEnumerable<RoundViewModel>> historyRoundViewModels =
+                Mapper.Map<IEnumerable<IEnumerable<RoundInfoModel>>, IEnumerable<IEnumerable<RoundViewModel>>>(historyRoundsInfo);
             return historyRoundViewModels;
         }
     }

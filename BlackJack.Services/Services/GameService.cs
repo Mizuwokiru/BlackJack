@@ -243,7 +243,7 @@ namespace BlackJack.Services.Services
                 int score = CalculateCardScore(roundInfo.Cards);
                 if (score > BlackJackConstants.BlackJack)
                 {
-                    roundInfo.RoundState = RoundState.Lose;
+                    roundInfo.State = RoundState.Lose;
                 }
             }
 
@@ -263,11 +263,11 @@ namespace BlackJack.Services.Services
         {
             foreach (var roundInfo in roundInfoModels)
             {
-                if (roundInfo.RoundState != RoundState.None)
+                if (roundInfo.State != RoundState.None)
                 {
                     continue;
                 }
-                roundInfo.RoundState = RoundState.Won;
+                roundInfo.State = RoundState.Won;
             }
         }
 
@@ -275,22 +275,22 @@ namespace BlackJack.Services.Services
         {
             foreach (var roundInfo in roundInfoModels)
             {
-                if (roundInfo.RoundState != RoundState.None)
+                if (roundInfo.State != RoundState.None)
                 {
                     continue;
                 }
                 int score = CalculateCardScore(roundInfo.Cards);
                 if (score > dealerScore)
                 {
-                    roundInfo.RoundState = RoundState.Won;
+                    roundInfo.State = RoundState.Won;
                 }
                 if (score == dealerScore)
                 {
-                    roundInfo.RoundState = RoundState.Push;
+                    roundInfo.State = RoundState.Push;
                 }
                 if (score < dealerScore)
                 {
-                    roundInfo.RoundState = RoundState.Lose;
+                    roundInfo.State = RoundState.Lose;
                 }
             }
         }
