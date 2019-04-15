@@ -4,13 +4,15 @@ using System.Data.Common;
 using BlackJack.DataAccess.Entities;
 using BlackJack.DataAccess.Repositories.Interfaces;
 using BlackJack.DataAccess.ResponseModels;
+using BlackJack.Shared.Options;
 using Dapper;
+using Microsoft.Extensions.Options;
 
 namespace BlackJack.DataAccess.Repositories.Dapper
 {
     public class RoundRepository : BaseRepository<Round>, IRoundRepository
     {
-        public RoundRepository(DbConnection dbConnection) : base(dbConnection)
+        public RoundRepository(IOptions<DbSettingsOptions> options) : base(options)
         {
         }
 
@@ -29,7 +31,7 @@ namespace BlackJack.DataAccess.Repositories.Dapper
             throw new System.NotImplementedException();
         }
 
-        public IEnumerable<HistoryRoundsInfoModel> GetHistoryRoundsInfo(long userId, int skipCount)
+        public IEnumerable<IEnumerable<HistoryRoundInfoModel>> GetHistoryRoundsInfo(long userId, int skipCount)
         {
             throw new NotImplementedException();
         }

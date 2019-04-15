@@ -9,7 +9,7 @@ namespace BlackJack.DataAccess.Repositories.EntityFrameworkCore
 {
     public class PlayerRepository : BaseRepository<Player>, IPlayerRepository
     {
-        public PlayerRepository(DbConnection dbConnection) : base(dbConnection)
+        public PlayerRepository(GameDbContext dbContext) : base(dbContext)
         {
         }
 

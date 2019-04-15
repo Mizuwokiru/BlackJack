@@ -1,20 +1,19 @@
 ﻿using BlackJack.DataAccess.Entities;
 using BlackJack.Shared;
 using BlackJack.Shared.Enums;
+using BlackJack.Shared.Options;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
-using System.Data.Common;
 using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace BlackJack.DataAccess
 {
     public class GameDbContext : DbContext
     {
-        private readonly DbConnection dbConnection;
+        private readonly string _connectionString;
 
         public DbSet<Card> Cards { get; set; }
         public DbSet<Player> Players { get; set; }
@@ -22,9 +21,9 @@ namespace BlackJack.DataAccess
         public DbSet<Round> Rounds { get; set; }
         public DbSet<RoundCard> RoundCards { get; set; }
 
-        public GameDbContext(DbConnection connection)
+        public GameDbContext(IOptions<DbSettingsOptions> options)
         {
-            dbConnection = connection;
+            _connectionString = options.Value.ConnectionString;
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -51,7 +50,7 @@ namespace BlackJack.DataAccess
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseLazyLoadingProxies().UseSqlServer(dbConnection);
+            optionsBuilder.UseLazyLoadingProxies().UseSqlServer(_connectionString);
         }
 
         public override int SaveChanges()

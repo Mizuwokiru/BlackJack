@@ -6,7 +6,7 @@ namespace BlackJack.DataAccess.Repositories.EntityFrameworkCore
 {
     public class RoundCardRepository : BaseRepository<RoundCard>, IRoundCardRepository
     {
-        public RoundCardRepository(DbConnection dbConnection) : base(dbConnection)
+        public RoundCardRepository(GameDbContext dbContext) : base(dbContext)
         {
         }
     }

@@ -202,14 +202,14 @@ namespace BlackJack.Services.Services
             {
                 score += CardHelper.GetCardScore(card.Rank);
             }
-            if (score <= 21)
+            if (score <= BlackJackConstants.BlackJack)
             {
                 return score;
             }
             int aceCount = cards.Count(card => card.Rank == Rank.Ace);
-            while (score > 21 && aceCount > 0)
+            while (score > BlackJackConstants.BlackJack && aceCount > 0)
             {
-                score -= 10;
+                score -= (int)Rank.Ace - BlackJackConstants.AceSecondaryValue;
                 aceCount--;
             }
             return score;
@@ -224,7 +224,7 @@ namespace BlackJack.Services.Services
             var roundCards = new List<RoundCard>();
             int gotCardsCount = 0;
             int score = CalculateCardScore(roundInfo.Cards);
-            while (score < 17)
+            while (score < BlackJackConstants.DealerStopValue)
             {
                 Card card = _cardRepository.Get(shuffledCards[gotCardsCount]);
                 gotCardsCount++;
@@ -246,18 +246,18 @@ namespace BlackJack.Services.Services
             foreach (var roundInfo in roundInfoModels)
             {
                 int score = CalculateCardScore(roundInfo.Cards);
-                if (score > 21)
+                if (score > BlackJackConstants.BlackJack)
                 {
                     roundInfo.RoundState = RoundState.Lose;
                 }
             }
 
             int dealerScore = CalculateCardScore(dealerRoundInfo.Cards);
-            if (dealerScore > 21)
+            if (dealerScore > BlackJackConstants.BlackJack)
             {
                 SetWinners(roundInfoModels);
             }
-            if (dealerScore <= 21)
+            if (dealerScore <= BlackJackConstants.BlackJack)
             {
                 CheckStates(roundInfoModels, dealerScore);
             }
@@ -304,7 +304,7 @@ namespace BlackJack.Services.Services
         {
             List<Card> cards = _cardRepository.GetPlayerCards(_user.Id, _game.Id).ToList();
             int score = CalculateCardScore(cards);
-            if (score >= 21)
+            if (score >= BlackJackConstants.BlackJack)
             {
                 return false;
             }

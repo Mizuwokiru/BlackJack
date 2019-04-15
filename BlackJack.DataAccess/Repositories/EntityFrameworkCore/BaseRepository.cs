@@ -1,7 +1,6 @@
 ﻿using BlackJack.DataAccess.Entities;
 using BlackJack.DataAccess.Repositories.Interfaces;
 using System.Collections.Generic;
-using System.Data.Common;
 
 namespace BlackJack.DataAccess.Repositories.EntityFrameworkCore
 {
@@ -9,9 +8,9 @@ namespace BlackJack.DataAccess.Repositories.EntityFrameworkCore
     {
         protected readonly GameDbContext _dbContext;
 
-        public BaseRepository(DbConnection dbConnection)
+        public BaseRepository(GameDbContext dbContext)
         {
-            _dbContext = new GameDbContext(dbConnection);
+            _dbContext = dbContext;
         }
 
         public void Add(params T[] item)

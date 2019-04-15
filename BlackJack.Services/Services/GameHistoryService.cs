@@ -39,14 +39,13 @@ namespace BlackJack.Services.Services
             return historyGameViewModels;
         }
 
-        public IEnumerable<HistoryRoundsViewModel> GetRoundsHistory(int gameOrder)
+        public IEnumerable<IEnumerable<HistoryRoundViewModel>> GetRoundsHistory(int gameOrder)
         {
-            IEnumerable<HistoryRoundsInfoModel> historyRoundsInfo = _roundRepository.GetHistoryRoundsInfo(_user.Id, gameOrder);
+            IEnumerable<IEnumerable<HistoryRoundInfoModel>> historyRoundsInfo = _roundRepository.GetHistoryRoundsInfo(_user.Id, gameOrder);
 
-            IEnumerable<HistoryRoundsViewModel> historyRoundsViewModels = historyRoundsInfo
-                .Select(roundsInfo => new HistoryRoundsViewModel
-                {
-                    Players = roundsInfo.Players.Select(player => new HistoryRoundViewModel
+            IEnumerable<IEnumerable<HistoryRoundViewModel>> historyRoundViewModels = historyRoundsInfo
+                .Select(roundsInfo => new List<HistoryRoundViewModel>(
+                    roundsInfo.Select(player => new HistoryRoundViewModel
                     {
                         PlayerName = player.PlayerName,
                         Cards = player.Cards.Select(card => new CardViewModel
@@ -55,10 +54,9 @@ namespace BlackJack.Services.Services
                             Rank = card.Rank
                         }),
                         State = player.State
-                    }).ToList()
-                });
+                    })));
 
-            return historyRoundsViewModels;
+            return historyRoundViewModels;
         }
     }
 }

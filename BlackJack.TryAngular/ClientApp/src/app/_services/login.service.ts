@@ -20,7 +20,6 @@ export class LoginService {
     }
 
     getUserNames(): Observable<string[]> {
-        console.log('LoginService.getUserNames invoked');
         return this.http.get<string[]>(this.url);
     }
 

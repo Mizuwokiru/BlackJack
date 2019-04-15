@@ -12,7 +12,7 @@ namespace BlackJack.DataAccess.Repositories.EntityFrameworkCore
 {
     public class RoundRepository : BaseRepository<Round>, IRoundRepository
     {
-        public RoundRepository(DbConnection dbConnection) : base(dbConnection)
+        public RoundRepository(GameDbContext dbContext) : base(dbContext)
         {
         }
 
@@ -80,7 +80,7 @@ namespace BlackJack.DataAccess.Repositories.EntityFrameworkCore
             _dbContext.Database.ExecuteSqlCommand(sqlStringBuilder.ToString());
         }
 
-        public IEnumerable<HistoryRoundsInfoModel> GetHistoryRoundsInfo(long userId, int skipCount)
+        public IEnumerable<IEnumerable<HistoryRoundInfoModel>> GetHistoryRoundsInfo(long userId, int skipCount)
         {
             Game choosenGame = _dbContext.Rounds
                 .Where(round => round.PlayerId == userId)
@@ -90,19 +90,17 @@ namespace BlackJack.DataAccess.Repositories.EntityFrameworkCore
                 .Skip(skipCount)
                 .First();
 
-            IEnumerable<HistoryRoundsInfoModel> historyRoundsInfos = _dbContext.Rounds
+            IEnumerable<IEnumerable<HistoryRoundInfoModel>> historyRoundInfos = _dbContext.Rounds
                 .Where(round => round.GameId == choosenGame.Id)
                 .GroupBy(round => round.CreationTime)
-                .Select(rounds => new HistoryRoundsInfoModel
-                {
-                    Players = rounds.Select(round => new HistoryRoundInfoModel
+                .Select(rounds => new List<HistoryRoundInfoModel>(
+                    rounds.Select(round => new HistoryRoundInfoModel
                     {
                         PlayerName = round.Player.Name,
                         Cards = round.Cards.Select(roundCard => roundCard.Card),
                         State = round.State
-                    })
-                });
-            return historyRoundsInfos;
+                    })));
+            return historyRoundInfos;
         }
     }
 }

@@ -1,8 +1,8 @@
 ﻿using BlackJack.DataAccess.Entities;
 using BlackJack.DataAccess.Repositories.Interfaces;
-using BlackJack.Services.Helpers;
 using BlackJack.Services.Services.Interfaces;
 using BlackJack.Shared.Enums;
+using BlackJack.Shared.Options;
 using BlackJack.ViewModels.Models;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
@@ -17,10 +17,10 @@ namespace BlackJack.Services.Services
     public class UserService : IUserService
     {
         private readonly IPlayerRepository _playerRepository;
-        private readonly JwtSettings _jwtSettings;
+        private readonly JwtSettingsOptions _jwtSettings;
 
         public UserService(IPlayerRepository playerRepository,
-            IOptions<JwtSettings> options)
+            IOptions<JwtSettingsOptions> options)
         {
             _playerRepository = playerRepository;
             _jwtSettings = options.Value;
@@ -42,7 +42,7 @@ namespace BlackJack.Services.Services
             }
 
             var tokenHandler = new JwtSecurityTokenHandler();
-            byte[] key = Encoding.ASCII.GetBytes(_jwtSettings.SecretKey);
+            byte[] key = Encoding.ASCII.GetBytes(_jwtSettings.TokenSecret);
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new Claim[]

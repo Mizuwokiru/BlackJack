@@ -1,5 +1,5 @@
 ﻿using BlackJack.Services.Configuration;
-using BlackJack.Services.Helpers;
+using BlackJack.Shared.Options;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -27,14 +27,14 @@ namespace BlackJack.TryAngular
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
-            services.AddBlackJackDbAccess(Configuration);
-            services.AddBlackJackServices();
+            services.Configure<DbSettingsOptions>(Configuration.GetSection("DbSettings"));
+            services.AddBlackJackServices(Configuration["ORM"]);
 
-            IConfigurationSection settingsSection = Configuration.GetSection(nameof(JwtSettings));
-            services.Configure<JwtSettings>(settingsSection);
+            IConfigurationSection settingsSection = Configuration.GetSection("JwtSettings");
+            services.Configure<JwtSettingsOptions>(settingsSection);
 
-            JwtSettings settings = settingsSection.Get<JwtSettings>();
-            byte[] key = Encoding.ASCII.GetBytes(settings.SecretKey);
+            JwtSettingsOptions jwtOptions = settingsSection.Get<JwtSettingsOptions>();
+            byte[] key = Encoding.ASCII.GetBytes(jwtOptions.TokenSecret);
             services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;

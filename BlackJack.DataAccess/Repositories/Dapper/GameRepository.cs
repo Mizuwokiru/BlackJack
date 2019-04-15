@@ -1,16 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Common;
 using BlackJack.DataAccess.Entities;
 using BlackJack.DataAccess.Repositories.Interfaces;
 using BlackJack.DataAccess.ResponseModels;
+using BlackJack.Shared.Options;
 using Dapper;
+using Microsoft.Extensions.Options;
 
 namespace BlackJack.DataAccess.Repositories.Dapper
 {
     public class GameRepository : BaseRepository<Game>, IGameRepository
     {
-        public GameRepository(DbConnection dbConnection) : base(dbConnection)
+        public GameRepository(IOptions<DbSettingsOptions> options) : base(options)
         {
         }
 
