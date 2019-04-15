@@ -1,3 +1,27 @@
-<p>
-  game works!
-</p>
+<div *ngIf="roundPlayers" id="game-block">
+  <nav>
+      <div class="d-flex flex-column flex-md-row justify-content-between">
+        <a *ngIf="canToPlay" href="#" (click)="step()">
+          Get a card
+        </a>
+        <a *ngIf="canToPlay" href="#" (click)="skip()">
+          Skip
+        </a>
+        <a *ngIf="!canToPlay" href="#" (click)="nextRound()">
+          Next round
+        </a>
+        <a *ngIf="!canToPlay" href="#" (click)="endGame()">
+          End game
+        </a>
+        <a routerLink="/">
+          Quit
+        </a>
+      </div>
+  </nav>
+
+  <div id="game-cards-block" class="row">
+    <div class="col-md-3">
+      
+    </div>
+  </div>
+</div>

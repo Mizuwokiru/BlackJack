@@ -8,4 +8,5 @@ export class Round {
     cards?: Card[];
     state?: RoundState;
     score?: number;
+    stringifiedCards?: string;
 }

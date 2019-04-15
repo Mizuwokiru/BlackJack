@@ -17,21 +17,16 @@ namespace BlackJack.DataAccess.Repositories.EntityFrameworkCore
 
         private IQueryable<Round> GetLastRounds(long gameId)
         {
-            DateTime? lastRoundTime = _dbContext.Rounds
-                .Where(round => round.GameId == gameId)
-                .Select(round => round.CreationTime)
-                .Max();
             IQueryable<Round> lastRounds = _dbContext.Rounds
-                .Where(round => round.GameId == gameId && round.CreationTime == lastRoundTime);
+                .Where(lastRound => lastRound.GameId == gameId && lastRound.CreationTime ==
+                    _dbContext.Rounds
+                        .Where(round => round.GameId == gameId)
+                        .Max(round => round.CreationTime));
             return lastRounds;
         }
 
         public IEnumerable<RoundInfoModel> GetLastRoundsInfo(long gameId)
         {
-            DateTime? lastRoundTime = _dbContext.Rounds
-                .Where(round => round.GameId == gameId)
-                .Select(round => round.CreationTime)
-                .Max();
             IEnumerable<RoundInfoModel> roundInfoModels = GetLastRounds(gameId)
                 .Join(
                     _dbContext.Players,
@@ -50,9 +45,10 @@ namespace BlackJack.DataAccess.Repositories.EntityFrameworkCore
 
         public StepInfoModel GetStepInfo(long userId, long gameId)
         {
-            Round userRound = _dbContext.Rounds
+            long userRoundId = _dbContext.Rounds
                 .Where(round => round.PlayerId == userId && round.GameId == gameId)
                 .OrderByDescending(round => round.CreationTime)
+                .Select(round => round.Id)
                 .FirstOrDefault();
             List<Card> cards = GetLastRounds(gameId)
                 .Join(
@@ -63,7 +59,7 @@ namespace BlackJack.DataAccess.Repositories.EntityFrameworkCore
                 .ToList();
             var stepInfoModel = new StepInfoModel
             {
-                UserRoundId = userRound.Id,
+                UserRoundId = userRoundId,
                 RoundsCards = cards
             };
             return stepInfoModel;

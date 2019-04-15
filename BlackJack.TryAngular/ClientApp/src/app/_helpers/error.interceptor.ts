@@ -13,12 +13,10 @@ export class ErrorInterceptor implements HttpInterceptor {
         return next.handle(request).pipe(catchError(err => {
             if (err.status === 401) {
                 this.loginService.signOut();
-                //location.reload(true);
                 this.router.navigate(['/login']);
             }
 
-            const error = err.error.message || err.statusText;
-            return throwError(error);
+            return throwError(`${err.status} ${err.statusText}`);
         }));
     }
 }

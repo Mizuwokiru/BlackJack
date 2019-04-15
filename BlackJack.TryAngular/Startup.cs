@@ -29,6 +29,7 @@ namespace BlackJack.TryAngular
 
             services.Configure<DbSettingsOptions>(Configuration.GetSection("DbSettings"));
             services.AddBlackJackServices(Configuration["ORM"]);
+            services.AddBlackJackMapping();
 
             IConfigurationSection settingsSection = Configuration.GetSection("JwtSettings");
             services.Configure<JwtSettingsOptions>(settingsSection);
