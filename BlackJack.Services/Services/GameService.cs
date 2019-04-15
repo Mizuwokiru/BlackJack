@@ -1,4 +1,5 @@
-﻿using BlackJack.DataAccess.Entities;
+﻿using AutoMapper;
+using BlackJack.DataAccess.Entities;
 using BlackJack.DataAccess.Repositories.Interfaces;
 using BlackJack.DataAccess.ResponseModels;
 using BlackJack.Services.Services.Interfaces;
@@ -21,7 +22,7 @@ namespace BlackJack.Services.Services
         private readonly ICardRepository _cardRepository;
         private readonly IRoundCardRepository _roundCardRepository;
         private readonly Player _user;
-        private Game _game;
+        private Game _currentGame;
 
         public GameService(IGameRepository gameRepository,
             IPlayerRepository playerRepository,
@@ -36,12 +37,12 @@ namespace BlackJack.Services.Services
             _cardRepository = cardRepository;
             _roundCardRepository = roundCardRepository;
             _user = _playerRepository.GetUser(httpContextAccessor.HttpContext.User.Identity.Name);
-            _game = _gameRepository.GetUnfinishedGame(_user.Id);
+            _currentGame = _gameRepository.GetUnfinishedGame(_user.Id);
         }
 
         public bool HasUnfinishedGame()
         {
-            return _game != null;
+            return _currentGame != null;
         }
 
         public void NewGame(int neededBotCount)
@@ -50,6 +51,8 @@ namespace BlackJack.Services.Services
 
             Game newGame = new Game();
             _gameRepository.Add(newGame);
+
+            _currentGame = newGame;
 
             int availableBotCount = _playerRepository.GetBotCount();
             if (availableBotCount < neededBotCount)
@@ -62,22 +65,14 @@ namespace BlackJack.Services.Services
 
         public IEnumerable<RoundViewModel> GetRoundsInfo()
         {
-            IEnumerable<RoundInfoModel> roundInfoModels = _roundRepository.GetLastRoundsInfo(_game.Id);
-            
-            IEnumerable<RoundViewModel> roundViewModels = roundInfoModels.Select(roundInfoModel => new RoundViewModel
-            {
-                Player = new PlayerViewModel { Name = roundInfoModel.PlayerName, Type = roundInfoModel.PlayerType },
-                Cards = roundInfoModel.Cards.Select(cardModel => new CardViewModel { Suit = cardModel.Suit, Rank = cardModel.Rank }).ToList(),
-                State = roundInfoModel.RoundState,
-                Score = CalculateCardScore(roundInfoModel.Cards)
-            });
-
+            IEnumerable<RoundInfoModel> roundInfoModels = _roundRepository.GetLastRoundsInfo(_currentGame.Id);
+            IEnumerable<RoundViewModel> roundViewModels = Mapper.Map<IEnumerable<RoundInfoModel>, IEnumerable<RoundViewModel>>(roundInfoModels);
             return roundViewModels;
         }
 
         public void Step()
         {
-            StepInfoModel stepInfoModel = _roundRepository.GetStepInfo(_user.Id, _game.Id);
+            StepInfoModel stepInfoModel = _roundRepository.GetStepInfo(_user.Id, _currentGame.Id);
             List<long> shuffledCards = GetShuffledCards(stepInfoModel.RoundsCards);
 
             var roundCard = new RoundCard { RoundId = stepInfoModel.UserRoundId, CardId = shuffledCards[0] };
@@ -90,7 +85,7 @@ namespace BlackJack.Services.Services
 
         public void EndRound()
         {
-            List<RoundInfoModel> roundInfoModels = _roundRepository.GetLastRoundsInfo(_game.Id).ToList();
+            List<RoundInfoModel> roundInfoModels = _roundRepository.GetLastRoundsInfo(_currentGame.Id).ToList();
             List<Card> allRoundCards = roundInfoModels.SelectMany(roundInfo => roundInfo.Cards).ToList();
             List<long> shuffledCards = GetShuffledCards(allRoundCards);
             var roundCards = new List<RoundCard>();
@@ -105,16 +100,16 @@ namespace BlackJack.Services.Services
 
         public void NextRound()
         {
-            int lastRounds = _gameRepository.GetPlayerCount(_game.Id);
+            int lastRounds = _gameRepository.GetPlayerCount(_currentGame.Id);
             CreateRound(lastRounds);
         }
 
         public void EndGame()
         {
-            if (_game != null)
+            if (_currentGame != null)
             {
-                _game.IsFinished = true;
-                _gameRepository.Update(_game);
+                _currentGame.IsFinished = true;
+                _gameRepository.Update(_currentGame);
             }
         }
 
@@ -134,12 +129,12 @@ namespace BlackJack.Services.Services
         {
             List<Player> bots = _playerRepository.GetBots(neededBotCount);
 
-            Round userRound = new Round { GameId = _game.Id, PlayerId = _user.Id };
-            Round dealerRound = new Round { GameId = _game.Id, PlayerId = BlackJackConstants.DealerId };
+            Round userRound = new Round { GameId = _currentGame.Id, PlayerId = _user.Id };
+            Round dealerRound = new Round { GameId = _currentGame.Id, PlayerId = BlackJackConstants.DealerId };
             var rounds = new List<Round> { userRound, dealerRound };
             foreach (var bot in bots)
             {
-                Round botRound = new Round { GameId = _game.Id, PlayerId = bot.Id };
+                Round botRound = new Round { GameId = _currentGame.Id, PlayerId = bot.Id };
                 rounds.Add(botRound);
             }
             _roundRepository.Add(rounds);
@@ -195,7 +190,7 @@ namespace BlackJack.Services.Services
             return cardIds;
         }
 
-        private static int CalculateCardScore(List<Card> cards)
+        internal static int CalculateCardScore(List<Card> cards)
         {
             int score = 0;
             foreach (var card in cards)
@@ -302,7 +297,7 @@ namespace BlackJack.Services.Services
 
         private bool IsStepPossible()
         {
-            List<Card> cards = _cardRepository.GetPlayerCards(_user.Id, _game.Id).ToList();
+            List<Card> cards = _cardRepository.GetPlayerCards(_user.Id, _currentGame.Id).ToList();
             int score = CalculateCardScore(cards);
             if (score >= BlackJackConstants.BlackJack)
             {

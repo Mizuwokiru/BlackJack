@@ -24,9 +24,4 @@
     <ProjectReference Include="..\BlackJack.Services\BlackJack.Services.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <TypeScriptCompile Include="ClientApp\src\app\hero.ts" />
-    <TypeScriptCompile Include="ClientApp\src\app\mock-heroes.ts" />
-  </ItemGroup>
-
 </Project>

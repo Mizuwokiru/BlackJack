@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using AutoMapper;
 using BlackJack.DataAccess.Entities;
 using BlackJack.DataAccess.Repositories.Interfaces;
 using BlackJack.DataAccess.ResponseModels;
@@ -29,12 +30,8 @@ namespace BlackJack.Services.Services
         {
             IEnumerable<HistoryGameInfoModel> historyGamesInfo = _gameRepository.GetGamesHistory(_user.Id);
 
-            IEnumerable<HistoryGameViewModel> historyGameViewModels = historyGamesInfo.Select(historyGameInfo => new HistoryGameViewModel
-            {
-                RoundCount = historyGameInfo.RoundCount,
-                PlayerCount = historyGameInfo.PlayerCount,
-                CreationTime = historyGameInfo.CreationTime
-            });
+            IEnumerable<HistoryGameViewModel> historyGameViewModels =
+                Mapper.Map<IEnumerable<HistoryGameInfoModel>, IEnumerable<HistoryGameViewModel>>(historyGamesInfo);
 
             return historyGameViewModels;
         }
@@ -42,20 +39,8 @@ namespace BlackJack.Services.Services
         public IEnumerable<IEnumerable<HistoryRoundViewModel>> GetRoundsHistory(int gameOrder)
         {
             IEnumerable<IEnumerable<HistoryRoundInfoModel>> historyRoundsInfo = _roundRepository.GetHistoryRoundsInfo(_user.Id, gameOrder);
-
-            IEnumerable<IEnumerable<HistoryRoundViewModel>> historyRoundViewModels = historyRoundsInfo
-                .Select(roundsInfo => new List<HistoryRoundViewModel>(
-                    roundsInfo.Select(player => new HistoryRoundViewModel
-                    {
-                        PlayerName = player.PlayerName,
-                        Cards = player.Cards.Select(card => new CardViewModel
-                        {
-                            Suit = card.Suit,
-                            Rank = card.Rank
-                        }),
-                        State = player.State
-                    })));
-
+            IEnumerable<IEnumerable<HistoryRoundViewModel>> historyRoundViewModels =
+                Mapper.Map<IEnumerable<IEnumerable<HistoryRoundInfoModel>>, IEnumerable<IEnumerable<HistoryRoundViewModel>>>(historyRoundsInfo);
             return historyRoundViewModels;
         }
     }

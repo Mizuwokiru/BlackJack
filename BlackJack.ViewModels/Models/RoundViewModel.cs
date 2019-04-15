@@ -5,7 +5,9 @@ namespace BlackJack.ViewModels.Models
 {
     public class RoundViewModel
     {
-        public PlayerViewModel Player { get; set; }
+        public string PlayerName { get; set; }
+
+        public PlayerType PlayerType { get; set; }
 
         public List<CardViewModel> Cards { get; set; }
 
