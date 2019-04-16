@@ -1,6 +1,6 @@
 ﻿using BlackJack.Services.Services.Interfaces;
 using BlackJack.Shared;
-using BlackJack.ViewModels.Models;
+using BlackJack.ViewModels.Models.Menu;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -29,14 +29,14 @@ namespace BlackJack.TryAngular.Controllers
         }
 
         [HttpPost, Route("[action]")]
-        public IActionResult NewGame(GameMenuViewModel gameMenuViewModel)
+        public IActionResult NewGame([FromBody]NewGameViewModel newGameViewModel)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
             
-            _gameService.NewGame(gameMenuViewModel.BotCount);
+            _gameService.NewGame(newGameViewModel.BotCount);
             return Ok();
         }
     }

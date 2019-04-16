@@ -68,8 +68,9 @@ namespace BlackJack.Services.Services
             RoundViewModel player = roundViewModels.Where(roundViewModel => roundViewModel.PlayerType == PlayerType.User).First();
             if (player.State == RoundState.None)
             {
-                roundViewModels.Where(roundViewModel => roundViewModel.PlayerType == PlayerType.Dealer).First()
-                    .Cards.RemoveAt(1);
+                RoundViewModel dealer = roundViewModels.Where(roundViewModel => roundViewModel.PlayerType == PlayerType.Dealer).First();
+                dealer.Cards.RemoveAt(1);
+                dealer.Score = 0;
             }
             return roundViewModels;
         }

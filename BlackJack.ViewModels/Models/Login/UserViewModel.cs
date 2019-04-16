@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace BlackJack.ViewModels.Models
+namespace BlackJack.ViewModels.Models.Login
 {
     public class UserViewModel
     {

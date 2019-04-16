@@ -1,6 +1,6 @@
 ﻿using BlackJack.Services.Services.Interfaces;
 using BlackJack.Shared.Options;
-using BlackJack.ViewModels.Models;
+using BlackJack.ViewModels.Models.Login;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;

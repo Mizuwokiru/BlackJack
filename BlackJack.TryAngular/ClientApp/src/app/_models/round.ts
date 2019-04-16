@@ -1,6 +1,6 @@
-import { PlayerType } from '../_enums/player.type';
+import { PlayerType } from '../_enums/player-type';
 import { Card } from './card';
-import { RoundState } from '../_enums/round.state';
+import { RoundState } from '../_enums/round-state';
 
 export class Round {
     playerName?: string;

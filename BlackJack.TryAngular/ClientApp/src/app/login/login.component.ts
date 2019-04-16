@@ -12,6 +12,7 @@ import { LoginService } from '../_services/login.service';
 export class LoginComponent implements OnInit {
   user: User = new User();
   userNames: string[];
+  returnUrl: string;
 
   constructor(
       private route: ActivatedRoute,
@@ -19,6 +20,10 @@ export class LoginComponent implements OnInit {
       private loginService: LoginService) { }
 
   ngOnInit() {
+    if (this.loginService.currentUserValue) {
+      this.router.navigate(['/']);
+    }
+    this.returnUrl = this.route.snapshot.queryParamMap['returnUrl'] || '/';
     this.loginService.getUserNames()
         .subscribe(response => { 
           this.userNames = response;
@@ -26,15 +31,12 @@ export class LoginComponent implements OnInit {
             this.user.name = this.userNames[0];
           }
         });
-    if (this.loginService.currentUserValue) {
-      this.router.navigate(['/']);
-    }
   }
 
   login() {
     this.loginService.signIn(this.user)
         .subscribe(() => {
-          this.router.navigate(['/']);
+          this.router.navigate([this.returnUrl]);
         },
         () => {
           console.error('LoginComponent.login() error.');

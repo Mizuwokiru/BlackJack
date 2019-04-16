@@ -29,7 +29,7 @@ namespace BlackJack.Web.Controllers
         [Route("[action]/{id}")]
         public IActionResult Game(int id)
         {
-            List<IEnumerable<HistoryRoundViewModel>> historyRoundsViewModel = _historyService.GetRoundsHistory(id).ToList();
+            List<IEnumerable<RoundViewModel>> historyRoundsViewModel = _historyService.GetRoundsHistory(id).ToList();
             return View(historyRoundsViewModel);
         }
     }

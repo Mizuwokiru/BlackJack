@@ -2,9 +2,7 @@
 using BlackJack.DataAccess.Repositories.Interfaces;
 using BlackJack.Services.Services.Interfaces;
 using BlackJack.Shared.Enums;
-using BlackJack.Shared.Options;
-using BlackJack.ViewModels.Models;
-using Microsoft.Extensions.Options;
+using BlackJack.ViewModels.Models.Login;
 using System.Collections.Generic;
 
 namespace BlackJack.Services.Services

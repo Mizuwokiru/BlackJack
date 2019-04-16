@@ -1,5 +1,6 @@
 ﻿using BlackJack.Services.Services.Interfaces;
 using BlackJack.ViewModels.Models;
+using BlackJack.ViewModels.Models.Menu;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
@@ -31,14 +32,14 @@ namespace BlackJack.Web.Controllers
             return View(roundViewModels);
         }
 
-        public IActionResult NewGame(GameMenuViewModel gameMenuViewModel)
+        public IActionResult NewGame(NewGameViewModel newGameViewModel)
         {
             if (ModelState.IsValid)
             {
-                _gameService.NewGame(gameMenuViewModel.BotCount);
+                _gameService.NewGame(newGameViewModel.BotCount);
                 return RedirectToAction(nameof(Game));
             }
-            return View("Menu", gameMenuViewModel);
+            return View("Menu", newGameViewModel);
         }
 
         public IActionResult ContinueGame()
@@ -73,12 +74,6 @@ namespace BlackJack.Web.Controllers
         public IActionResult Quit()
         {
             return RedirectToAction(nameof(Menu));
-        }
-
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
     }
 }

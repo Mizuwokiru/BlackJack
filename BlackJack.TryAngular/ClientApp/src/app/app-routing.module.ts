@@ -1,21 +1,48 @@
 import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
-import { MenuComponent } from './menu/menu.component';
-import { LoginComponent } from './login/login.component';
+import { RouterModule, Routes } from '@angular/router';
+
 import { GameComponent } from './game/game.component';
+import { LoginComponent } from './login/login.component';
+import { MenuComponent } from './menu/menu.component';
+import { HistoryComponent } from './history/history.component';
+import { GameHistoryComponent } from './game-history/game-history.component';
+import { RoundHistoryComponent } from './round-history/round-history.component';
+import { LoginGuard } from './_guards/login.guard';
 
 const routes: Routes = [
   {
     path: '',
-    component: MenuComponent
+    redirectTo: '/Menu',
+    pathMatch: 'full'
   },
   {
-    path: 'login',
+    path: 'Login',
     component: LoginComponent
   },
   {
-    path: 'game',
-    component: GameComponent
+    path: 'Menu',
+    component: MenuComponent,
+    canActivate: [LoginGuard]
+  },
+  {
+    path: 'Game',
+    component: GameComponent,
+    canActivate: [LoginGuard]
+  },
+  {
+    path: 'History',
+    component: HistoryComponent,
+    canActivate: [LoginGuard]
+  },
+  {
+    path: 'History/:gameId',
+    component: GameHistoryComponent,
+    canActivate: [LoginGuard]
+  },
+  {
+    path: 'History/:gameId/:roundId',
+    component: RoundHistoryComponent,
+    canActivate: [LoginGuard]
   },
   {
     path: '**',

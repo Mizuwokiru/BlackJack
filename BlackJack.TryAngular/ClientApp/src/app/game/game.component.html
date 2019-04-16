@@ -1,54 +1,23 @@
 <div *ngIf="isLoaded" id="game-block">
   <nav>
       <div class="d-flex flex-column flex-md-row justify-content-between">
-        <a *ngIf="canToPlay" href="#" class="nav-item nav-link btn btn-primary text-white" (click)="step()">
+        <button *ngIf="canToPlay" class="nav-item nav-link btn btn-primary text-white" (click)="step()">
           Get a card
-        </a>
-        <a *ngIf="canToPlay" href="#" class="nav-item nav-link btn btn-primary text-white" (click)="skip()">
+        </button>
+        <button *ngIf="canToPlay" class="nav-item nav-link btn btn-primary text-white" (click)="skip()">
           Skip
-        </a>
-        <a *ngIf="!canToPlay" href="#" class="nav-item nav-link btn btn-primary text-white" (click)="nextRound()">
+        </button>
+        <button *ngIf="!canToPlay" class="nav-item nav-link btn btn-primary text-white" (click)="nextRound()">
           Next round
-        </a>
-        <a *ngIf="!canToPlay" href="#" class="nav-item nav-link btn btn-primary text-white" (click)="endGame()">
+        </button>
+        <button *ngIf="!canToPlay" class="nav-item nav-link btn btn-primary text-white" (click)="endGame()">
           End game
-        </a>
-        <a routerLink="/" class="nav-item nav-link btn btn-primary text-white">
+        </button>
+        <button routerLink="/" class="nav-item nav-link btn btn-primary text-white">
           Quit
-        </a>
+        </button>
       </div>
   </nav>
 
-  <div id="game-cards-block" class="row">
-    <div *ngFor="let player of roundPlayers" class="col-md-3">
-      <div class="card mb-4 shadow-sm">
-        <div class="card-header">
-          {{ player.playerName }}
-        </div>
-        <div class="card-body">
-          <p class="card-text" [innerHTML]="player.stringifiedCards"></p>
-          <div class="d-flex justify-content-between align-items-center mt-4">
-            <span>Points:</span>
-            <strong>{{ player.score }}</strong>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div id="dealer-game-cards-block" class="row justify-content-center">
-    <div class="col-md-3">
-      <div class="card mb-4 shadow-sm">
-        <div class="card-header">
-          {{ dealer.playerName }}
-        </div>
-        <div class="card-body">
-          <p class="card-text" innerHTML="{{ dealer.stringifiedCards }}"></p>
-          <div class="d-flex justify-content-between align-items-center mt-4">
-            <span>Points:</span>
-            <strong>{{ dealer.cards.length == 1 ? '?' : dealer.score }}</strong>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
+  <app-round-info [roundPlayers]="roundPlayers" [dealer]="dealer"></app-round-info>
 </div>

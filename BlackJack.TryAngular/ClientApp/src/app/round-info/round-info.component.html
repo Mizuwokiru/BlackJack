@@ -1,0 +1,6 @@
+<div id="game-cards-block" class="row">
+  <app-round-player-info *ngFor="let roundPlayer of roundPlayers" [roundPlayer]="roundPlayer"></app-round-player-info>
+</div>
+<div id="dealer-game-cards-block" class="row justify-content-center">
+  <app-round-player-info [roundPlayer]="dealer"></app-round-player-info>
+</div>

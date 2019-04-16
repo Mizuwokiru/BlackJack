@@ -1,6 +1,7 @@
 ﻿using BlackJack.DataAccess.Entities;
 using BlackJack.DataAccess.Repositories.Interfaces;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 
 namespace BlackJack.DataAccess.Repositories.EntityFrameworkCore
@@ -13,12 +14,14 @@ namespace BlackJack.DataAccess.Repositories.EntityFrameworkCore
 
         public IEnumerable<Card> GetPlayerCards(long playerId, long gameId)
         {
-            IEnumerable<Card> cards = _dbContext.Rounds
-                .Where(round => round.PlayerId == playerId && round.GameId == gameId)
-                .OrderByDescending(round => round.CreationTime)
-                .First()
-                .Cards
+            IEnumerable<Card> cards = _dbContext.RoundCards
+                .Where(roundCard => roundCard.Round.CreationTime ==
+                    _dbContext.Rounds
+                        .Where(round => round.GameId == gameId && round.PlayerId == playerId)
+                        .Max(round => round.CreationTime)
+                    && roundCard.Round.GameId == gameId && roundCard.Round.PlayerId == playerId)
                 .Select(roundCard => roundCard.Card);
+            Debug.WriteLine(string.Join(", ", cards.Select(card => $"{card.Rank} of {card.Suit}s")));
             return cards;
         }
     }

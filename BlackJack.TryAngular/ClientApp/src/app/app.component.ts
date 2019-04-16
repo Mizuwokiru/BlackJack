@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { User } from './_models/user';
-import { Router } from '@angular/router';
 import { LoginService } from './_services/login.service';
 
 @Component({
@@ -12,7 +11,6 @@ export class AppComponent {
   currentUser: User;
 
   constructor(
-    private router: Router,
     private loginService: LoginService
   ) {
     this.loginService.currentUser

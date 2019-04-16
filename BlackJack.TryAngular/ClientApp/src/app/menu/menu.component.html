@@ -1,8 +1,8 @@
 <div *ngIf="isLoaded" class="d-flex text-center h-100 justify-content-center align-items-center">
   <div id="game-menu-block">
-    <input *ngIf="menu.hasUnfinishedGame" type="button" class="btn btn-primary" value="Continue" routerLink="game">
+    <input *ngIf="menu.hasUnfinishedGame" type="button" class="btn btn-primary" value="Continue" routerLink="Game">
     <input type="button" class="btn btn-primary" data-toggle="modal" data-target="#bot-count-modal" value="New game">
-    <input type="button" class="btn btn-primary" value="Game history">
+    <input type="button" class="btn btn-primary" value="Game history" routerLink="History">
   </div>
   <div id="bot-count-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="bot-count-modal-title"
     aria-hidden="true">
