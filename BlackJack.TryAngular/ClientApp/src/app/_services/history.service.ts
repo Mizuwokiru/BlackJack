@@ -13,6 +13,7 @@ export class HistoryService {
     constructor(private http: HttpClient) { }
 
     getGames(): Observable<Game[]> {
+        console.log("getGames invoked");
         return this.http.get<Game[]>(this.url);
     }
 

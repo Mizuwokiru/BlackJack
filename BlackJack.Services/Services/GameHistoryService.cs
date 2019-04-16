@@ -5,7 +5,9 @@ using BlackJack.DataAccess.Entities;
 using BlackJack.DataAccess.Repositories.Interfaces;
 using BlackJack.DataAccess.ResponseModels;
 using BlackJack.Services.Services.Interfaces;
-using BlackJack.ViewModels.Models;
+using BlackJack.Shared.Enums;
+using BlackJack.ViewModels.Models.Game;
+using BlackJack.ViewModels.Models.History;
 using Microsoft.AspNetCore.Http;
 
 namespace BlackJack.Services.Services
@@ -26,22 +28,28 @@ namespace BlackJack.Services.Services
             _user = playerRepository.GetUser(httpContextAccessor.HttpContext.User.Identity.Name);
         }
 
-        public IEnumerable<HistoryGameViewModel> GetGamesHistory()
+        public IEnumerable<GameViewModel> GetGamesHistory()
         {
             IEnumerable<HistoryGameInfoModel> historyGamesInfo = _gameRepository.GetGamesHistory(_user.Id);
 
-            IEnumerable<HistoryGameViewModel> historyGameViewModels =
-                Mapper.Map<IEnumerable<HistoryGameInfoModel>, IEnumerable<HistoryGameViewModel>>(historyGamesInfo);
+            IEnumerable<GameViewModel> historyGameViewModels =
+                Mapper.Map<IEnumerable<HistoryGameInfoModel>, IEnumerable<GameViewModel>>(historyGamesInfo);
 
             return historyGameViewModels;
         }
 
-        public IEnumerable<IEnumerable<RoundViewModel>> GetRoundsHistory(int gameOrder)
+        public GameRoundsViewModel GetRoundsHistory(int gameSkipCount)
         {
-            IEnumerable<IEnumerable<RoundInfoModel>> historyRoundsInfo = _roundRepository.GetHistoryRoundsInfo(_user.Id, gameOrder);
-            IEnumerable<IEnumerable<RoundViewModel>> historyRoundViewModels =
-                Mapper.Map<IEnumerable<IEnumerable<RoundInfoModel>>, IEnumerable<IEnumerable<RoundViewModel>>>(historyRoundsInfo);
-            return historyRoundViewModels;
+            IEnumerable<RoundState> roundStates = _roundRepository.GetRoundStates(_user.Id, gameSkipCount);
+            var gameRoundsViewModel = new GameRoundsViewModel { RoundStates = roundStates };
+            return gameRoundsViewModel;
+        }
+
+        public IEnumerable<RoundViewModel> GetRoundInfo(int gameSkipCount, int roundSkipCount)
+        {
+            IEnumerable<RoundInfoModel> roundInfos = _roundRepository.GetRoundInfo(_user.Id, gameSkipCount, roundSkipCount);
+            IEnumerable<RoundViewModel> roundViewModels = Mapper.Map<IEnumerable<RoundInfoModel>, IEnumerable<RoundViewModel>>(roundInfos);
+            return roundViewModels;
         }
     }
 }

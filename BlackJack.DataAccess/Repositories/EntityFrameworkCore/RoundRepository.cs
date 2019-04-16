@@ -1,6 +1,7 @@
 ﻿using BlackJack.DataAccess.Entities;
 using BlackJack.DataAccess.Repositories.Interfaces;
 using BlackJack.DataAccess.ResponseModels;
+using BlackJack.Shared.Enums;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -75,28 +76,49 @@ namespace BlackJack.DataAccess.Repositories.EntityFrameworkCore
             _dbContext.Database.ExecuteSqlCommand(sqlStringBuilder.ToString());
         }
 
-        public IEnumerable<IEnumerable<RoundInfoModel>> GetHistoryRoundsInfo(long userId, int skipCount)
+        public IEnumerable<RoundState> GetRoundStates(long userId, int gameSkipCount)
         {
-            Game choosenGame = _dbContext.Rounds
-                .Where(round => round.PlayerId == userId)
-                .Select(round => round.Game)
-                .OrderByDescending(game => game.CreationTime)
-                .Distinct()
-                .Skip(skipCount)
-                .First();
+            IEnumerable<RoundState> roundStates = _dbContext.Rounds
+                .Where(round => round.PlayerId == userId && round.GameId == _dbContext.Rounds
+                    .Where(tmpRound => round.PlayerId == userId)
+                    .Select(tmpRound => round.Game)
+                    .OrderByDescending(game => game.CreationTime)
+                    .Distinct()
+                    .Skip(gameSkipCount)
+                    .First()
+                    .Id)
+                .Select(round => round.State);
+            return roundStates;
+        }
 
-            IEnumerable<IEnumerable<RoundInfoModel>> historyRoundInfos = _dbContext.Rounds
-                .Where(round => round.GameId == choosenGame.Id)
+        public IEnumerable<RoundInfoModel> GetRoundInfo(long userId, int gameSkipCount, int roundSkipCount)
+        {
+            IEnumerable<RoundInfoModel> roundInfos = _dbContext.Rounds
+                .Where(round => round.GameId == _dbContext.Rounds
+                    .Where(tmpRound => round.PlayerId == userId)
+                    .Select(tmpRound => round.Game)
+                    .OrderByDescending(game => game.CreationTime)
+                    .Distinct()
+                    .Skip(gameSkipCount)
+                    .First()
+                    .Id)
                 .GroupBy(round => round.CreationTime)
-                .Select(rounds => new List<RoundInfoModel>(
-                    rounds.Select(round => new RoundInfoModel
+                .OrderByDescending(roundsGroup => roundsGroup.Key)
+                .Skip(roundSkipCount)
+                .First()
+                .Join(
+                    _dbContext.Players,
+                    round => round.PlayerId,
+                    player => player.Id,
+                    (round, player) => new RoundInfoModel
                     {
-                        PlayerName = round.Player.Name,
-                        PlayerType = round.Player.Type,
-                        Cards = round.Cards.Select(roundCard => roundCard.Card).ToList(),
+                        RoundId = round.Id,
+                        PlayerName = player.Name,
+                        PlayerType = player.Type,
+                        Cards = round.Cards.OrderBy(roundCard => roundCard.CreationTime).Select(roundCard => roundCard.Card).ToList(),
                         State = round.State
-                    })));
-            return historyRoundInfos;
+                    });
+            return roundInfos;
         }
     }
 }

@@ -11,7 +11,8 @@ import { GameInfo } from '../_models/game-info';
 })
 export class GameHistoryComponent implements OnInit {
   gameId: number;
-  gameInfo: GameInfo;
+  gameInfo?: GameInfo;
+  isLoaded: boolean;
 
   constructor(private route: ActivatedRoute,
     private historyService: HistoryService) { }

@@ -6,7 +6,7 @@ using BlackJack.Services.Services.Interfaces;
 using BlackJack.Shared;
 using BlackJack.Shared.Enums;
 using BlackJack.Shared.Helpers;
-using BlackJack.ViewModels.Models;
+using BlackJack.ViewModels.Models.Game;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;

@@ -22,7 +22,7 @@ namespace BlackJack.Web.Controllers
         [Route("[action]")]
         public IActionResult Index()
         {
-            List<HistoryGameViewModel> historyGameViewModels = _historyService.GetGamesHistory().ToList();
+            List<GameViewModel> historyGameViewModels = _historyService.GetGamesHistory().ToList();
             return View(historyGameViewModels);
         }
 

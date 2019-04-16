@@ -1,6 +1,6 @@
 ﻿using BlackJack.Shared.Enums;
 
-namespace BlackJack.ViewModels.Models
+namespace BlackJack.ViewModels.Models.Game
 {
     public class CardViewModel
     {

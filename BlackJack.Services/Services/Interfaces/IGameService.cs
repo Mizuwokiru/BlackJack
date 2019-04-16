@@ -1,4 +1,4 @@
-﻿using BlackJack.ViewModels.Models;
+﻿using BlackJack.ViewModels.Models.Game;
 using System.Collections.Generic;
 
 namespace BlackJack.Services.Services.Interfaces

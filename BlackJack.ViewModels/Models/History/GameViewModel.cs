@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace BlackJack.ViewModels.Models
+namespace BlackJack.ViewModels.Models.History
 {
-    public class HistoryGameViewModel
+    public class GameViewModel
     {
         public int RoundCount { get; set; }
 

@@ -12,17 +12,20 @@ import { GameService } from '../_services/game.service';
   styleUrls: ['./game.component.scss']
 })
 export class GameComponent implements OnInit {
-  roundPlayers: Round[] = [];
+  roundPlayers: Round[];
   canToPlay: boolean;
   dealer: Round;
   isLoaded: boolean;
   
   constructor(private router: Router,
-    private gameService: GameService) { }
+    private gameService: GameService) {
+      router.routeReuseStrategy.shouldReuseRoute = () => false;
+    }
 
     ngOnInit() {
       this.gameService.getRoundsInfo()
         .subscribe(response => {
+          let roundPlayers: Round[] = [];
           response.forEach(player => {
             if (player.playerType == PlayerType.Dealer) {
               this.dealer = player;
@@ -31,26 +34,32 @@ export class GameComponent implements OnInit {
             if (player.playerType == PlayerType.User) {
               this.canToPlay = player.state == RoundState.None;
             }
-            this.roundPlayers.push(player);
+            roundPlayers.push(player);
           });
   
+          this.roundPlayers = roundPlayers;
           this.isLoaded = true;
         });
     }
   
+    private refresh() {
+      this.router.navigate(['/Game']);
+      this.ngOnInit();
+    }
+
     step() {
       this.gameService.step()
-        .subscribe(() => this.router.navigate(['/Game']));
+        .subscribe(() => this.refresh());
     }
   
     skip() {
       this.gameService.skip()
-        .subscribe(() => this.router.navigate(['/Game']));
+        .subscribe(() => this.refresh());
     }
   
     nextRound() {
       this.gameService.nextRound()
-        .subscribe(() => this.router.navigate(['/Game']));
+        .subscribe(() => this.refresh());
     }
   
     endGame() {

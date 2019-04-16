@@ -1,7 +1,7 @@
 ﻿using BlackJack.Shared.Enums;
 using System.Collections.Generic;
 
-namespace BlackJack.ViewModels.Models
+namespace BlackJack.ViewModels.Models.Game
 {
     public class RoundViewModel
     {

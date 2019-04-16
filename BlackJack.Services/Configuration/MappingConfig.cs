@@ -2,7 +2,8 @@
 using BlackJack.DataAccess.Entities;
 using BlackJack.DataAccess.ResponseModels;
 using BlackJack.Services.Services;
-using BlackJack.ViewModels.Models;
+using BlackJack.ViewModels.Models.Game;
+using BlackJack.ViewModels.Models.History;
 using Microsoft.Extensions.DependencyInjection;
 using System.Collections.Generic;
 
@@ -24,7 +25,7 @@ namespace BlackJack.Services.Configuration
                         roundViewModel => roundViewModel.Score,
                         options => options.MapFrom(
                             roundInfoModel => GameService.CalculateCardScore(roundInfoModel.Cards)));
-                config.CreateMap<HistoryGameInfoModel, HistoryGameViewModel>();
+                config.CreateMap<HistoryGameInfoModel, GameViewModel>();
             });
         }
     }
