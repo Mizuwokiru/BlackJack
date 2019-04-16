@@ -71,6 +71,7 @@ namespace BlackJack.TryAngular
                 app.UseExceptionHandler("/Error");
             }
 
+            app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
 
