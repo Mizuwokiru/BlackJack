@@ -1,4 +1,4 @@
-<div class="card mb-4 shadow-sm {{ colorClasses[0][roundPlayer.state] }}">
+<div *ngIf="roundPlayer" class="card mb-4 shadow-sm {{ colorClasses[0][roundPlayer.state] }}">
   <div class="card-header {{ colorClasses[1][roundPlayer.state] }}">
     {{ roundPlayer.playerName }}
   </div>

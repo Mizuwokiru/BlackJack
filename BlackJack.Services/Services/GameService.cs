@@ -108,8 +108,8 @@ namespace BlackJack.Services.Services
         public void NextRound()
         {
             Game game = _gameRepository.GetUnfinishedGame(_user.Id);
-            int lastRounds = _gameRepository.GetPlayerCount(game.Id);
-            CreateRound(game, lastRounds);
+            int lastRoundBotCount = _gameRepository.GetPlayerCount(game.Id) - 2;
+            CreateRound(game, lastRoundBotCount);
         }
 
         public void EndGame()

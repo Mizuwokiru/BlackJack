@@ -1,5 +1,6 @@
 ﻿using BlackJack.Services.Services.Interfaces;
 using BlackJack.ViewModels.Models;
+using BlackJack.ViewModels.Models.Login;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;

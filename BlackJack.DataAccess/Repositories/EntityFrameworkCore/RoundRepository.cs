@@ -80,10 +80,10 @@ namespace BlackJack.DataAccess.Repositories.EntityFrameworkCore
         {
             IEnumerable<RoundState> roundStates = _dbContext.Rounds
                 .Where(round => round.PlayerId == userId && round.GameId == _dbContext.Rounds
-                    .Where(tmpRound => round.PlayerId == userId)
-                    .Select(tmpRound => round.Game)
-                    .OrderByDescending(game => game.CreationTime)
+                    .Where(tmpRound => tmpRound.PlayerId == userId)
+                    .Select(tmpRound => tmpRound.Game)
                     .Distinct()
+                    .OrderByDescending(game => game.CreationTime)
                     .Skip(gameSkipCount)
                     .First()
                     .Id)
@@ -95,10 +95,10 @@ namespace BlackJack.DataAccess.Repositories.EntityFrameworkCore
         {
             IEnumerable<RoundInfoModel> roundInfos = _dbContext.Rounds
                 .Where(round => round.GameId == _dbContext.Rounds
-                    .Where(tmpRound => round.PlayerId == userId)
-                    .Select(tmpRound => round.Game)
-                    .OrderByDescending(game => game.CreationTime)
+                    .Where(tmpRound => tmpRound.PlayerId == userId)
+                    .Select(tmpRound => tmpRound.Game)
                     .Distinct()
+                    .OrderByDescending(game => game.CreationTime)
                     .Skip(gameSkipCount)
                     .First()
                     .Id)
