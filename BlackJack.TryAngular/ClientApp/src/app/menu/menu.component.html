@@ -16,7 +16,7 @@
         </div>
         <div class="modal-body">
           <h6>Bot count:</h6>
-          <select name="botCountSelectBox" id="bot-count-select-box" [(ngModel)]="menu.botCount" class="form-control">
+          <select name="botCountSelectBox" id="bot-count-select-box" [(ngModel)]="botCount" class="form-control">
             <option selected>0</option>
             <option *ngFor="let i of botIndices" [ngValue]="i">{{i}}</option>
           </select>

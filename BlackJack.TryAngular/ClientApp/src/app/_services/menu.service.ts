@@ -13,7 +13,7 @@ export class MenuService {
         return this.http.get<Menu>(this.url);
     }
 
-    newGame(menu: Menu): Observable<any> {
-        return this.http.post(`${this.url}/NewGame`, menu);
+    newGame(botCount: number): Observable<any> {
+        return this.http.post(`${this.url}/NewGame`, { botCount: botCount });
     }
 }

@@ -14,6 +14,7 @@ export class MenuComponent implements OnInit {
   isLoaded: boolean = false;
   menu: Menu;
   botIndices: number[] = [];
+  botCount: number;
 
   constructor(private router: Router, private menuService: MenuService) { }
 
@@ -28,7 +29,7 @@ export class MenuComponent implements OnInit {
   }
 
   newGame() {
-    this.menuService.newGame(this.menu)
+    this.menuService.newGame(this.botCount)
       .subscribe(
         () => this.router.navigate(['/Game']),
         () => console.error("MenuComponent.newGame() error.")

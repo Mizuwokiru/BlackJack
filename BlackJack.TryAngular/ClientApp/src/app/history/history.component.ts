@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { Game } from '../_models/game';
+import { HistoryService } from '../_services/history.service';
 
 @Component({
   selector: 'app-history',
@@ -6,10 +8,12 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./history.component.scss']
 })
 export class HistoryComponent implements OnInit {
+  games: Game[];
 
-  constructor() { }
+  constructor(private historyService: HistoryService) { }
 
   ngOnInit() {
+    this.historyService.getGames()
+      .subscribe(games => this.games = games);
   }
-
 }
