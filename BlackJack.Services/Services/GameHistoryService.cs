@@ -28,20 +28,20 @@ namespace BlackJack.Services.Services
             _user = playerRepository.GetUser(httpContextAccessor.HttpContext.User.Identity.Name);
         }
 
-        public IEnumerable<GameViewModel> GetGamesHistory()
+        public IEnumerable<HistoryGameViewModel> GetGamesHistory()
         {
             IEnumerable<HistoryGameInfoModel> historyGamesInfo = _gameRepository.GetGamesHistory(_user.Id);
 
-            IEnumerable<GameViewModel> historyGameViewModels =
-                Mapper.Map<IEnumerable<HistoryGameInfoModel>, IEnumerable<GameViewModel>>(historyGamesInfo);
+            IEnumerable<HistoryGameViewModel> historyGameViewModels =
+                Mapper.Map<IEnumerable<HistoryGameInfoModel>, IEnumerable<HistoryGameViewModel>>(historyGamesInfo);
 
             return historyGameViewModels;
         }
 
-        public GameRoundsViewModel GetRoundsHistory(int gameSkipCount)
+        public HistoryRoundsViewModel GetRoundsHistory(int gameSkipCount)
         {
             IEnumerable<RoundState> roundStates = _roundRepository.GetRoundStates(_user.Id, gameSkipCount);
-            var gameRoundsViewModel = new GameRoundsViewModel { RoundStates = roundStates };
+            var gameRoundsViewModel = new HistoryRoundsViewModel { RoundStates = roundStates };
             return gameRoundsViewModel;
         }
 

@@ -1,0 +1,14 @@
+html,
+body {
+  height: 100%
+}
+
+body {
+  overflow-x: hidden;
+}
+
+.dropdown-scrollable {
+  height: auto;
+  max-height: 250px;
+  overflow-x: hidden;
+}

@@ -2,7 +2,7 @@
 
 namespace BlackJack.ViewModels.Models.History
 {
-    public class GameViewModel
+    public class HistoryGameViewModel
     {
         public int RoundCount { get; set; }
 

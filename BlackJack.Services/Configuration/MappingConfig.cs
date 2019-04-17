@@ -25,7 +25,7 @@ namespace BlackJack.Services.Configuration
                         roundViewModel => roundViewModel.Score,
                         options => options.MapFrom(
                             roundInfoModel => GameService.CalculateCardScore(roundInfoModel.Cards)));
-                config.CreateMap<HistoryGameInfoModel, GameViewModel>();
+                config.CreateMap<HistoryGameInfoModel, HistoryGameViewModel>();
             });
         }
     }

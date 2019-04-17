@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace BlackJack.ViewModels.Models.History
 {
-    public class GameRoundsViewModel
+    public class HistoryRoundsViewModel
     {
         public IEnumerable<RoundState> RoundStates { get; set; }
     }

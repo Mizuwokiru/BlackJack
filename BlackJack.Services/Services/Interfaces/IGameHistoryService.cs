@@ -6,9 +6,9 @@ namespace BlackJack.Services.Services.Interfaces
 {
     public interface IGameHistoryService
     {
-        IEnumerable<GameViewModel> GetGamesHistory();
+        IEnumerable<HistoryGameViewModel> GetGamesHistory();
 
-        GameRoundsViewModel GetRoundsHistory(int gameSkipCount);
+        HistoryRoundsViewModel GetRoundsHistory(int gameSkipCount);
 
         IEnumerable<RoundViewModel> GetRoundInfo(int gameSkipCount, int roundSkipCount);
     }

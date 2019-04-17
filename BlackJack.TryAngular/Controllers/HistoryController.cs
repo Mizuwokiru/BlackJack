@@ -18,16 +18,16 @@ namespace BlackJack.TryAngular.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<GameViewModel> Get()
+        public IEnumerable<HistoryGameViewModel> Get()
         {
-            IEnumerable<GameViewModel> gamesHistory = _historyService.GetGamesHistory();
+            IEnumerable<HistoryGameViewModel> gamesHistory = _historyService.GetGamesHistory();
             return gamesHistory;
         }
 
         [HttpGet, Route("{gameId}")]
-        public GameRoundsViewModel Get(int gameId)
+        public HistoryRoundsViewModel Get(int gameId)
         {
-            GameRoundsViewModel roundsHistory = _historyService.GetRoundsHistory(gameId);
+            HistoryRoundsViewModel roundsHistory = _historyService.GetRoundsHistory(gameId);
             return roundsHistory;
         }
 
