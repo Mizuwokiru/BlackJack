@@ -79,7 +79,7 @@ namespace BlackJack.Services.Services
         {
             Game game = _gameRepository.GetUnfinishedGame(_user.Id);
             StepInfoModel stepInfoModel = _roundRepository.GetStepInfo(_user.Id, game.Id);
-            List<long> shuffledCards = GetShuffledCards(stepInfoModel.RoundsCards);
+            List<long> shuffledCards = GetShuffledCards(stepInfoModel.Cards);
 
             var roundCard = new RoundCard { RoundId = stepInfoModel.UserRoundId, CardId = shuffledCards[0] };
             _roundCardRepository.Add(roundCard);

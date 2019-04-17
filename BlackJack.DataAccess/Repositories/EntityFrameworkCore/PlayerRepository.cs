@@ -37,12 +37,11 @@ namespace BlackJack.DataAccess.Repositories.EntityFrameworkCore
             return botCount;
         }
 
-        public List<Player> GetBots(int count)
+        public IEnumerable<Player> GetBots(int count)
         {
-            List<Player> bots = _dbContext.Players
+            IEnumerable<Player> bots = _dbContext.Players
                 .Where(player => player.Type == PlayerType.Bot)
-                .Take(count)
-                .ToList();
+                .Take(count);
             return bots;
         }
     }

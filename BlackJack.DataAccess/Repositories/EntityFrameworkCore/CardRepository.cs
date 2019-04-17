@@ -1,7 +1,6 @@
 ﻿using BlackJack.DataAccess.Entities;
 using BlackJack.DataAccess.Repositories.Interfaces;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 
 namespace BlackJack.DataAccess.Repositories.EntityFrameworkCore
@@ -21,7 +20,6 @@ namespace BlackJack.DataAccess.Repositories.EntityFrameworkCore
                         .Max(round => round.CreationTime)
                     && roundCard.Round.GameId == gameId && roundCard.Round.PlayerId == playerId)
                 .Select(roundCard => roundCard.Card);
-            Debug.WriteLine(string.Join(", ", cards.Select(card => $"{card.Rank} of {card.Suit}s")));
             return cards;
         }
     }

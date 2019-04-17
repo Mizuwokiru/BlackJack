@@ -16,19 +16,13 @@ namespace BlackJack.DataAccess.Repositories.EntityFrameworkCore
         {
         }
 
-        private IQueryable<Round> GetLastRounds(long gameId)
+        public IEnumerable<RoundInfoModel> GetLastRoundsInfo(long gameId)
         {
-            IQueryable<Round> lastRounds = _dbContext.Rounds
+            IEnumerable<RoundInfoModel> roundInfoModels = _dbContext.Rounds
                 .Where(lastRound => lastRound.GameId == gameId && lastRound.CreationTime ==
                     _dbContext.Rounds
                         .Where(round => round.GameId == gameId)
-                        .Max(round => round.CreationTime));
-            return lastRounds;
-        }
-
-        public IEnumerable<RoundInfoModel> GetLastRoundsInfo(long gameId)
-        {
-            IEnumerable<RoundInfoModel> roundInfoModels = GetLastRounds(gameId)
+                        .Max(round => round.CreationTime))
                 .Join(
                     _dbContext.Players,
                     round => round.PlayerId,
@@ -51,17 +45,20 @@ namespace BlackJack.DataAccess.Repositories.EntityFrameworkCore
                 .OrderByDescending(round => round.CreationTime)
                 .Select(round => round.Id)
                 .FirstOrDefault();
-            List<Card> cards = GetLastRounds(gameId)
+            IEnumerable<Card> cards = _dbContext.Rounds
+                .Where(lastRound => lastRound.GameId == gameId && lastRound.CreationTime ==
+                    _dbContext.Rounds
+                        .Where(round => round.GameId == gameId)
+                        .Max(round => round.CreationTime))
                 .Join(
                     _dbContext.RoundCards,
                     round => round.Id,
                     roundCard => roundCard.RoundId,
-                    (round, roundCard) => roundCard.Card)
-                .ToList();
+                    (round, roundCard) => roundCard.Card);
             var stepInfoModel = new StepInfoModel
             {
                 UserRoundId = userRoundId,
-                RoundsCards = cards
+                Cards = cards
             };
             return stepInfoModel;
         }

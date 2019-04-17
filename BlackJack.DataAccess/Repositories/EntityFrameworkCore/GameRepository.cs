@@ -1,9 +1,7 @@
 ﻿using BlackJack.DataAccess.Entities;
 using BlackJack.DataAccess.Repositories.Interfaces;
 using BlackJack.DataAccess.ResponseModels;
-using System;
 using System.Collections.Generic;
-using System.Data.Common;
 using System.Linq;
 
 namespace BlackJack.DataAccess.Repositories.EntityFrameworkCore
@@ -30,13 +28,11 @@ namespace BlackJack.DataAccess.Repositories.EntityFrameworkCore
 
         public int GetPlayerCount(long gameId)
         {
-            IQueryable<Round> roundsByGame = _dbContext.Rounds
-                .Where(round => round.GameId == gameId);
-            DateTime? someDate = roundsByGame
-                .Select(round => round.CreationTime)
-                .FirstOrDefault();
-            int playerCount = roundsByGame
-                .Where(round => round.CreationTime == someDate)
+            int playerCount = _dbContext.Rounds
+                .Where(round => round.CreationTime == _dbContext.Rounds
+                    .Where(someRound => someRound.GameId == gameId)
+                    .Select(someRound => someRound.CreationTime)
+                    .FirstOrDefault())
                 .Count();
             return playerCount;
         }
