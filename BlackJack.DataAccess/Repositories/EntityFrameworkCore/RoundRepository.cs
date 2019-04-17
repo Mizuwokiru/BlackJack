@@ -58,7 +58,7 @@ namespace BlackJack.DataAccess.Repositories.EntityFrameworkCore
             var stepInfoModel = new StepInfoModel
             {
                 UserRoundId = userRoundId,
-                Cards = cards
+                RoundsCards = cards.ToList()
             };
             return stepInfoModel;
         }

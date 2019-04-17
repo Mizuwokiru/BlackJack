@@ -20,7 +20,7 @@ namespace BlackJack.Services.Configuration
                     .ForMember(
                         roundViewModel => roundViewModel.Cards,
                         options => options.MapFrom(
-                            roundInfoModel => Mapper.Map<List<Card>, List<CardViewModel>>(roundInfoModel.Cards)))
+                            roundInfoModel => Mapper.Map<IEnumerable<Card>, IEnumerable<CardViewModel>>(roundInfoModel.Cards)))
                     .ForMember(
                         roundViewModel => roundViewModel.Score,
                         options => options.MapFrom(

@@ -79,7 +79,7 @@ namespace BlackJack.Services.Services
         {
             Game game = _gameRepository.GetUnfinishedGame(_user.Id);
             StepInfoModel stepInfoModel = _roundRepository.GetStepInfo(_user.Id, game.Id);
-            List<long> shuffledCards = GetShuffledCards(stepInfoModel.Cards);
+            List<long> shuffledCards = GetShuffledCards(stepInfoModel.RoundsCards);
 
             var roundCard = new RoundCard { RoundId = stepInfoModel.UserRoundId, CardId = shuffledCards[0] };
             _roundCardRepository.Add(roundCard);
@@ -136,7 +136,7 @@ namespace BlackJack.Services.Services
 
         private void CreateRound(Game game, int neededBotCount)
         {
-            List<Player> bots = _playerRepository.GetBots(neededBotCount);
+            IEnumerable<Player> bots = _playerRepository.GetBots(neededBotCount);
 
             Round userRound = new Round { GameId = game.Id, PlayerId = _user.Id };
             Round dealerRound = new Round { GameId = game.Id, PlayerId = BlackJackConstants.DealerId };

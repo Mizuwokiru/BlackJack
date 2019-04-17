@@ -20,7 +20,7 @@ namespace BlackJack.DataAccess.Repositories.Dapper
         public IEnumerable<RoundInfoModel> GetLastRoundsInfo(long gameId)
         {
             string sqlQuery =
-                @"SELECT [Rounds].[Id], [Players].[Name], [Players].[Type], [Cards].*, [Rounds].[State] FROM [Rounds]
+                @"SELECT [Rounds].[Id], [Rounds].[State], [Players].*, [Cards].* FROM [Rounds]
                   INNER JOIN [Players] ON [Players].[Id] = [Rounds].[PlayerId]
                   INNER JOIN [RoundCards] ON [RoundCards].[RoundId] = [Rounds].[Id]
                   INNER JOIN [Cards] ON [Cards].[Id] = [RoundCards].[CardId]
@@ -44,7 +44,8 @@ namespace BlackJack.DataAccess.Repositories.Dapper
                                 RoundId = round.Id,
                                 State = round.State,
                                 PlayerName = player.Name,
-                                PlayerType = player.Type
+                                PlayerType = player.Type,
+                                Cards = new List<Card>()
                             };
                             roundInfoMap.Add(round.Id, roundInfo);
                         }
@@ -79,7 +80,7 @@ namespace BlackJack.DataAccess.Repositories.Dapper
                     var stepInfo = new StepInfoModel
                     {
                         UserRoundId = reader.Read<int>().Single(),
-                        Cards = reader.Read<Card>()
+                        RoundsCards = reader.Read<Card>().ToList()
                     };
                     return stepInfo;
                 }
@@ -123,7 +124,7 @@ namespace BlackJack.DataAccess.Repositories.Dapper
         public IEnumerable<RoundInfoModel> GetRoundInfo(long userId, int gameSkipCount, int roundSkipCount)
         {
             string sqlQuery =
-                @"SELECT [Rounds].[Id], [Players].[Name], [Players].[Type], [Cards].*, [Rounds].[State] FROM [Rounds]
+                @"SELECT [Rounds].[Id], [Rounds].[State], [Players].*, [Cards].* FROM [Rounds]
                   INNER JOIN [Players] ON [Players].[Id] = [Rounds].[PlayerId]
                   INNER JOIN [RoundCards] ON [RoundCards].[RoundId] = [Rounds].[Id]
                   INNER JOIN [Cards] ON [Cards].[Id] = [RoundCards].[CardId]
@@ -162,7 +163,8 @@ namespace BlackJack.DataAccess.Repositories.Dapper
                                 RoundId = round.Id,
                                 State = round.State,
                                 PlayerName = player.Name,
-                                PlayerType = player.Type
+                                PlayerType = player.Type,
+                                Cards = new List<Card>()
                             };
                             roundInfoMap.Add(round.Id, roundInfo);
                         }

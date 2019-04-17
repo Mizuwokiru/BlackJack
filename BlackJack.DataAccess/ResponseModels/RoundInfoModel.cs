@@ -12,7 +12,7 @@ namespace BlackJack.DataAccess.ResponseModels
 
         public PlayerType PlayerType { get; set; }
 
-        public IEnumerable<Card> Cards { get; set; }
+        public List<Card> Cards { get; set; }
 
         public RoundState State { get; set; }
     }

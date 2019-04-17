@@ -60,7 +60,8 @@ namespace BlackJack.DataAccess.Repositories.Dapper
                   INNER JOIN (
 	                  SELECT DISTINCT [Rounds].[GameId] AS [GameId], COUNT(*) AS [Count] FROM [Rounds]
 	                  GROUP BY [Rounds].[GameId], [Rounds].[CreationTime]
-                  ) AS [PlayerCounts] ON [PlayerCounts].[GameId] = [GamesByPlayer].[Id]";
+                  ) AS [PlayerCounts] ON [PlayerCounts].[GameId] = [GamesByPlayer].[Id]
+                  ORDER BY [GamesByPlayer].[CreationTime] DESC";
             using (var connection = new SqlConnection(_connectionString))
             {
                 IEnumerable<HistoryGameInfoModel> gamesHistory = connection.Query<HistoryGameInfoModel>(sqlQuery, new { UserId = userId });

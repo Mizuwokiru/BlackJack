@@ -7,6 +7,6 @@ namespace BlackJack.DataAccess.ResponseModels
     {
         public long UserRoundId { get; set; }
 
-        public IEnumerable<Card> Cards { get; set; }
+        public List<Card> RoundsCards { get; set; }
     }
 }

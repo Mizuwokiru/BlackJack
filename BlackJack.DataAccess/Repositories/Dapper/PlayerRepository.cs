@@ -34,7 +34,7 @@ namespace BlackJack.DataAccess.Repositories.Dapper
                   WHERE [Name] = @Name";
             using (var connection = new SqlConnection(_connectionString))
             {
-                Player player = connection.QuerySingleOrDefault(sqlQuery, new { Name = name });
+                Player player = connection.QuerySingleOrDefault<Player>(sqlQuery, new { Name = name });
                 return player;
             }
         }
