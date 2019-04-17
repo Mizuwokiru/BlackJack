@@ -1,12 +1,9 @@
 import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
-
-import { GameComponent } from './game/game.component';
+import { Routes, RouterModule } from '@angular/router';
 import { LoginComponent } from './login/login.component';
 import { MenuComponent } from './menu/menu.component';
+import { GameComponent } from './game/game.component';
 import { HistoryComponent } from './history/history.component';
-import { GameHistoryComponent } from './game-history/game-history.component';
-import { RoundHistoryComponent } from './round-history/round-history.component';
 import { LoginGuard } from './_guards/login.guard';
 
 const routes: Routes = [
@@ -32,17 +29,8 @@ const routes: Routes = [
   {
     path: 'History',
     component: HistoryComponent,
-    canActivate: [LoginGuard]
-  },
-  {
-    path: 'History/:gameId',
-    component: GameHistoryComponent,
-    canActivate: [LoginGuard]
-  },
-  {
-    path: 'History/:gameId/:roundId',
-    component: RoundHistoryComponent,
-    canActivate: [LoginGuard]
+    canActivate: [LoginGuard],
+    canActivateChild: [LoginGuard]
   },
   {
     path: '**',
