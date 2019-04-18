@@ -60,24 +60,37 @@ namespace BlackJack.Services.Services
             CreateRound(game, neededBotCount);
         }
 
-        public IEnumerable<RoundViewModel> GetRoundsInfo()
+        public RoundInfoViewModel GetRoundsInfo()
         {
             Game game = _gameRepository.GetUnfinishedGame(_user.Id);
+            if (game == null)
+            {
+                throw new InvalidOperationException("Game is not found");
+            }
             IEnumerable<RoundInfoModel> roundInfoModels = _roundRepository.GetLastRoundsInfo(game.Id);
             IEnumerable<RoundViewModel> roundViewModels = Mapper.Map<IEnumerable<RoundInfoModel>, IEnumerable<RoundViewModel>>(roundInfoModels);
-            RoundViewModel player = roundViewModels.Where(roundViewModel => roundViewModel.PlayerType == PlayerType.User).First();
-            if (player.State == RoundState.None)
+            RoundViewModel user = roundViewModels.Where(roundViewModel => roundViewModel.PlayerType == PlayerType.User).First();
+            RoundViewModel dealer = roundViewModels.Where(roundViewModel => roundViewModel.PlayerType == PlayerType.Dealer).First();
+            if (user.State == RoundState.None)
             {
-                RoundViewModel dealer = roundViewModels.Where(roundViewModel => roundViewModel.PlayerType == PlayerType.Dealer).First();
                 dealer.Cards.RemoveAt(1);
-                dealer.Score = 0;
             }
-            return roundViewModels;
+            var roundInfo = new RoundInfoViewModel
+            {
+                User = user,
+                Dealer = dealer,
+                Bots = roundViewModels.Except(new[] { user, dealer })
+            };
+            return roundInfo;
         }
 
         public void Step()
         {
             Game game = _gameRepository.GetUnfinishedGame(_user.Id);
+            if (game == null)
+            {
+                throw new InvalidOperationException("Game is not found");
+            }
             StepInfoModel stepInfoModel = _roundRepository.GetStepInfo(_user.Id, game.Id);
             List<long> shuffledCards = GetShuffledCards(stepInfoModel.RoundsCards);
 
@@ -92,6 +105,10 @@ namespace BlackJack.Services.Services
         public void EndRound()
         {
             Game game = _gameRepository.GetUnfinishedGame(_user.Id);
+            if (game == null)
+            {
+                throw new InvalidOperationException("Game is not found");
+            }
             List<RoundInfoModel> roundInfoModels = _roundRepository.GetLastRoundsInfo(game.Id).ToList();
             List<Card> allRoundCards = roundInfoModels.SelectMany(roundInfo => roundInfo.Cards).ToList();
             List<long> shuffledCards = GetShuffledCards(allRoundCards);
@@ -108,6 +125,10 @@ namespace BlackJack.Services.Services
         public void NextRound()
         {
             Game game = _gameRepository.GetUnfinishedGame(_user.Id);
+            if (game == null)
+            {
+                throw new InvalidOperationException("Game is not found");
+            }
             int lastRoundBotCount = _gameRepository.GetPlayerCount(game.Id) - 2;
             CreateRound(game, lastRoundBotCount);
         }

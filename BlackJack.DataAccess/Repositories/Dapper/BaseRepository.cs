@@ -31,21 +31,20 @@ namespace BlackJack.DataAccess.Repositories.Dapper
             {
                 IEnumerable<string> propertyNames = GetPropertyNames();
                 var now = DateTime.Now;
-                connection.Query<int>($@"INSERT INTO {nameof(T)}s (CreationTime, {
+                int[] ids = connection.Query<int>($@"INSERT INTO {nameof(T)}s (CreationTime, {
                     string.Join(", ", propertyNames)}) VALUES ('{now.ToString("yyyy-MM-dd HH:mm:ss.fffffff")}', {
                     string.Join(", ", propertyNames.Select(propertyName => $"@{propertyName}"))}); 
-                    SELECT CAST(SCOPE_IDENTITY() as int", items)
-                    .Select((value, index) =>
-                    {
-                        T item = items.ElementAtOrDefault(index);
-                        if (item != null)
-                        {
-                            item.Id = value;
-                            item.CreationTime = now;
-                        }
-                        return item;
-                    })
+                    SELECT CAST(SCOPE_IDENTITY() AS BIGINT", items)
                     .ToArray();
+                for (int i = 0; i < ids.Count(); i++)
+                {
+                    T item = items.ElementAtOrDefault(i);
+                    if (item != null)
+                    {
+                        item.Id = ids[i];
+                        item.CreationTime = now;
+                    }
+                }
             }
         }
 

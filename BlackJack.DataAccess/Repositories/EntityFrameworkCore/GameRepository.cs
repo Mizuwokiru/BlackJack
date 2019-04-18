@@ -17,11 +17,10 @@ namespace BlackJack.DataAccess.Repositories.EntityFrameworkCore
             Game unfinishedGame = _dbContext.Rounds
                 .Where(round => round.PlayerId == userId)
                 .Join(
-                    _dbContext.Games,
+                    _dbContext.Games.Where(game => !game.IsFinished),
                     round => round.GameId,
                     game => game.Id,
                     (round, game) => game)
-                .Where(game => !game.IsFinished)
                 .FirstOrDefault();
             return unfinishedGame;
         }
@@ -29,7 +28,7 @@ namespace BlackJack.DataAccess.Repositories.EntityFrameworkCore
         public int GetPlayerCount(long gameId)
         {
             int playerCount = _dbContext.Rounds
-                .Where(round => round.CreationTime == _dbContext.Rounds
+                .Where(round => round.GameId == gameId && round.CreationTime == _dbContext.Rounds
                     .Where(someRound => someRound.GameId == gameId)
                     .Select(someRound => someRound.CreationTime)
                     .FirstOrDefault())

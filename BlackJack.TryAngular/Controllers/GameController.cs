@@ -2,12 +2,13 @@
 using BlackJack.ViewModels.Models.Game;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
 
 namespace BlackJack.TryAngular.Controllers
 {
     [Authorize, ApiController, Route("api/[controller]")]
-    public class GameController : Controller
+    public class GameController : BaseController
     {
         private readonly IGameService _gameService;
 
@@ -17,38 +18,37 @@ namespace BlackJack.TryAngular.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<RoundViewModel> GetRoundsInfo()
+        public IActionResult GetRoundsInfo()
         {
-            IEnumerable<RoundViewModel> roundViewModels = _gameService.GetRoundsInfo();
-            return roundViewModels;
+            return StatusResult(() =>
+            {
+                RoundInfoViewModel roundInfo = _gameService.GetRoundsInfo();
+                return roundInfo;
+            });
         }
 
         [HttpPost, Route("[action]")]
         public IActionResult Step()
         {
-            _gameService.Step();
-            return Ok();
+            return StatusResult(() => _gameService.Step());
         }
 
         [HttpPost, Route("[action]")]
         public IActionResult Skip()
         {
-            _gameService.EndRound();
-            return Ok();
+            return StatusResult(() => _gameService.EndRound());
         }
 
         [HttpPost, Route("[action]")]
         public IActionResult NextRound()
         {
-            _gameService.NextRound();
-            return Ok();
+            return StatusResult(() => _gameService.NextRound());
         }
 
         [HttpPost, Route("[action]")]
         public IActionResult EndGame()
         {
-            _gameService.EndGame();
-            return Ok();
+            return StatusResult(() => _gameService.EndGame());
         }
     }
 }

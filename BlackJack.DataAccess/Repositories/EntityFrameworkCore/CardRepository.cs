@@ -14,12 +14,15 @@ namespace BlackJack.DataAccess.Repositories.EntityFrameworkCore
         public IEnumerable<Card> GetPlayerCards(long playerId, long gameId)
         {
             IEnumerable<Card> cards = _dbContext.RoundCards
-                .Where(roundCard => roundCard.Round.CreationTime ==
+                .Where(roundCard => roundCard.RoundId ==
                     _dbContext.Rounds
-                        .Where(round => round.GameId == gameId && round.PlayerId == playerId)
-                        .Max(round => round.CreationTime)
-                    && roundCard.Round.GameId == gameId && roundCard.Round.PlayerId == playerId)
+                        .First(round => round.PlayerId == playerId && round.GameId == gameId && round.CreationTime ==
+                            _dbContext.Rounds
+                                .Where(tmpRound => tmpRound.PlayerId == playerId && tmpRound.GameId == gameId)
+                                .Max(tmpRound => tmpRound.CreationTime))
+                                .Id)
                 .Select(roundCard => roundCard.Card);
+
             return cards;
         }
     }

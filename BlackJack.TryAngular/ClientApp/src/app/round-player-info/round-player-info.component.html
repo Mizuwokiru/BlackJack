@@ -1,0 +1,17 @@
+<div *ngIf="roundPlayer" class="card mb-4 shadow-sm {{ colorClasses[0][roundPlayer.state] }}">
+  <div class="card-header {{ colorClasses[1][roundPlayer.state] }}">
+    {{ roundPlayer.playerName }}
+  </div>
+  <div class="card-body player-cards">
+    <p class="card-text">
+      <app-card *ngFor="let card of roundPlayer.cards" [card]="card"></app-card>
+      <app-card *ngIf="roundPlayer.cards.length == 1"></app-card>
+    </p>
+  </div>
+  <div class="card-body">
+    <div class="d-flex justify-content-between align-items-center {{ colorClasses[1][roundPlayer.state] }}">
+      <span>Points:</span>
+      <strong>{{ roundPlayer.cards.length == 1 ? '?' : roundPlayer.score }}</strong>
+    </div>
+  </div>
+</div>

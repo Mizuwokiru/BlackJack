@@ -24,7 +24,7 @@ namespace BlackJack.DataAccess.Repositories.Dapper
                   INNER JOIN [Players] ON [Players].[Id] = [Rounds].[PlayerId]
                   INNER JOIN [RoundCards] ON [RoundCards].[RoundId] = [Rounds].[Id]
                   INNER JOIN [Cards] ON [Cards].[Id] = [RoundCards].[CardId]
-                  WHERE [Rounds].[CreationTime] = (
+                  WHERE [Rounds].[GameId] = @GameId AND [Rounds].[CreationTime] = (
 	                  SELECT MAX([CreationTime]) FROM [Rounds]
 	                  WHERE [GameId] = @GameId
                   )";
@@ -95,7 +95,7 @@ namespace BlackJack.DataAccess.Repositories.Dapper
             //    sqlStringBuilder.AppendLine($"UPDATE Rounds SET State = {(int)roundInfo.State} WHERE Id = {roundInfo.RoundId};");
             //}
             string sqlQuery =
-                @"UPDATE Rounds SET State = @State WHERE Id = @Id";
+                @"UPDATE Rounds SET State = @State WHERE Id = @RoundId";
             using (var connection = new SqlConnection(_connectionString))
             {
                 connection.Execute(sqlQuery, roundInfoModels);

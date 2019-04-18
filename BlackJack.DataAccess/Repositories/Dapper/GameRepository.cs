@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.SqlClient;
-using BlackJack.DataAccess.Entities;
+﻿using BlackJack.DataAccess.Entities;
 using BlackJack.DataAccess.Repositories.Interfaces;
 using BlackJack.DataAccess.ResponseModels;
 using BlackJack.Shared.Options;
 using Dapper;
 using Microsoft.Extensions.Options;
+using System.Collections.Generic;
+using System.Data.SqlClient;
 
 namespace BlackJack.DataAccess.Repositories.Dapper
 {

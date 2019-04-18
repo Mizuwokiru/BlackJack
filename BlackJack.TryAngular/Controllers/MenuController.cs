@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace BlackJack.TryAngular.Controllers
 {
     [Authorize, ApiController, Route("api/[controller]")]
-    public class MenuController : Controller
+    public class MenuController : BaseController
     {
         private readonly IGameService _gameService;
 

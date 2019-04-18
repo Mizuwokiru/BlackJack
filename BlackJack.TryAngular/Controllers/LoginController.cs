@@ -14,7 +14,7 @@ using System.Text;
 namespace BlackJack.TryAngular.Controllers
 {
     [ApiController, Route("api/[controller]")]
-    public class LoginController : Controller
+    public class LoginController : BaseController
     {
         private readonly IUserService _userService;
         private readonly JwtSettingsOptions _jwtSettings;

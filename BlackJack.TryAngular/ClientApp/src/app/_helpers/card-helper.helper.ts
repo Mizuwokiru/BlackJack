@@ -4,10 +4,10 @@ import { Rank } from '../_enums/rank.enum';
 export class CardHelper {
   public static readonly BlankCard: number = 0x1F0A0;
 
-  public static readonly BlackColor: string = 'black';
-  public static readonly RedColor: string = 'darkred';
+  public static readonly BlackColor: string = '#000';
+  public static readonly RedColor: string = '#A94442';
 
-  private static getCardValue(card: Card): number {
+  public static getCardValue(card: Card): number {
     if (!card) {
       return CardHelper.BlankCard;
     }
@@ -16,9 +16,5 @@ export class CardHelper {
       cardValue++;
     }
     return cardValue;
-  }
-
-  public static getCardUnicode(card: Card) {
-    return String.fromCodePoint(CardHelper.getCardValue(card));
   }
 }

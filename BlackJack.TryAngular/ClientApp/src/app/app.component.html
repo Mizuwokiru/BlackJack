@@ -2,7 +2,20 @@
 <!--  <a href="#" class="navbar-brand mr-auto">Black Jack</a>-->
 <!--  <div class="inner"> &lt;!&ndash; if logged &ndash;&gt;-->
 <!--    <span class="navbar-text mr-2"><strong>Bohdan</strong> is logged</span>-->
-<!--    <button class="btn btn-outline-success mb-1">Sign out</button>-->
+<!--    <button class="btn btn-outline-primary mb-1">Sign out</button>-->
 <!--  </div>-->
 <!--</nav>-->
-<router-outlet></router-outlet>
+<!--<router-outlet></router-outlet>-->
+
+<div class="d-flex w-100 h-100 mx-auto flex-column">
+  <header>
+    <nav class="navbar navbar-expand-lg navbar-light position-sticky bg-light row col shadow-sm">
+      <a routerLink="/" class="navbar-brand mr-auto">Black Jack</a>
+      <div class="inner"> <!-- if logged -->
+        <span class="navbar-text mr-2"><strong>Bohdan</strong> is logged</span>
+        <button class="btn btn-outline-primary mb-1">Sign out</button>
+      </div>
+    </nav>
+  </header>
+  <router-outlet></router-outlet>
+</div>

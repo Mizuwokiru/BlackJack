@@ -1,0 +1,12 @@
+:host {
+  margin-top: auto;
+  margin-bottom: auto;
+}
+
+.ng-valid[required], .ng-valid {
+  border: 1px solid #42A948;
+}
+
+.ng-invalid:not(form) {
+  border: 1px solid #A94442;
+}

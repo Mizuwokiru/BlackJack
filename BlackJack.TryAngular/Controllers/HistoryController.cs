@@ -8,7 +8,7 @@ using System.Collections.Generic;
 namespace BlackJack.TryAngular.Controllers
 {
     [Authorize, ApiController, Route("api/[controller]")]
-    public class HistoryController : Controller
+    public class HistoryController : BaseController
     {
         private readonly IGameHistoryService _historyService;
 
@@ -25,17 +25,23 @@ namespace BlackJack.TryAngular.Controllers
         }
 
         [HttpGet, Route("{gameId}")]
-        public HistoryRoundsViewModel Get(int gameId)
+        public IActionResult Get(int gameId)
         {
-            HistoryRoundsViewModel roundsHistory = _historyService.GetRoundsHistory(gameId);
-            return roundsHistory;
+            return StatusResult(() =>
+            {
+                HistoryRoundsViewModel roundsHistory = _historyService.GetRoundsHistory(gameId);
+                return roundsHistory;
+            });
         }
 
         [HttpGet, Route("{gameId}/{roundId}")]
-        public IEnumerable<RoundViewModel> Get(int gameId, int roundId)
+        public IActionResult Get(int gameId, int roundId)
         {
-            IEnumerable<RoundViewModel> roundInfos = _historyService.GetRoundInfo(gameId, roundId);
-            return roundInfos;
+            return StatusResult(() =>
+            {
+                IEnumerable<RoundViewModel> roundInfos = _historyService.GetRoundInfo(gameId, roundId);
+                return roundInfos;
+            });
         }
     }
 }

@@ -8,6 +8,12 @@ import { GameComponent } from './game/game.component';
 import { HistoryComponent } from './history/history.component';
 import { AppRoutingModule } from './app-routing.module';
 import { FormsModule } from '@angular/forms';
+import { RoundInfoComponent } from './round-info/round-info.component';
+import { RoundPlayerInfoComponent } from './round-player-info/round-player-info.component';
+import { CardComponent } from './card/card.component';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
+import { JwtInterceptor } from './_interceptors/jwt.interceptor';
+import { ErrorInterceptor } from './_interceptors/error.interceptor';
 
 @NgModule({
   declarations: [
@@ -15,14 +21,21 @@ import { FormsModule } from '@angular/forms';
     LoginComponent,
     MenuComponent,
     GameComponent,
-    HistoryComponent
+    HistoryComponent,
+    RoundInfoComponent,
+    RoundPlayerInfoComponent,
+    CardComponent
   ],
   imports: [
     BrowserModule,
     FormsModule,
+    HttpClientModule,
     AppRoutingModule
   ],
-  providers: [],
+  providers: [
+    { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
+    { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

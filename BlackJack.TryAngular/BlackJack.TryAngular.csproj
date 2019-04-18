@@ -6,6 +6,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="ClientAppOld\**" />
+    <Content Remove="ClientAppOld\**" />
+    <EmbeddedResource Remove="ClientAppOld\**" />
+    <None Remove="ClientAppOld\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove="ClientApp\src\app\hero.ts" />
     <None Remove="ClientApp\src\app\mock-heroes.ts" />
   </ItemGroup>

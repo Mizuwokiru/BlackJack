@@ -2,6 +2,7 @@
 using BlackJack.DataAccess.Entities;
 using BlackJack.DataAccess.ResponseModels;
 using BlackJack.Services.Services;
+using BlackJack.Shared.Enums;
 using BlackJack.ViewModels.Models.Game;
 using BlackJack.ViewModels.Models.History;
 using Microsoft.Extensions.DependencyInjection;
@@ -24,7 +25,7 @@ namespace BlackJack.Services.Configuration
                     .ForMember(
                         roundViewModel => roundViewModel.Score,
                         options => options.MapFrom(
-                            roundInfoModel => GameService.CalculateCardScore(roundInfoModel.Cards)));
+                            roundInfoModel => roundInfoModel.PlayerType == PlayerType.Dealer ? 0 : GameService.CalculateCardScore(roundInfoModel.Cards)));
                 config.CreateMap<HistoryGameInfoModel, HistoryGameViewModel>();
             });
         }
