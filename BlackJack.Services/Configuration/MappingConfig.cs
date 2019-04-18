@@ -2,7 +2,6 @@
 using BlackJack.DataAccess.Entities;
 using BlackJack.DataAccess.ResponseModels;
 using BlackJack.Services.Services;
-using BlackJack.Shared.Enums;
 using BlackJack.ViewModels.Models.Game;
 using BlackJack.ViewModels.Models.History;
 using Microsoft.Extensions.DependencyInjection;
