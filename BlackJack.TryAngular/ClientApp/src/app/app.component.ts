@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import { LoginService } from './_services/login.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-root',
@@ -6,5 +8,13 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  title = 'ClientApp';
+  constructor(
+    private loginService: LoginService,
+    private router: Router
+  ) { }
+
+  signOut() {
+    this.loginService.signOut();
+    this.router.navigate(['/Login']);
+  }
 }

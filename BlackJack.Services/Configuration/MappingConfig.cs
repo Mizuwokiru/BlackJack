@@ -25,7 +25,7 @@ namespace BlackJack.Services.Configuration
                     .ForMember(
                         roundViewModel => roundViewModel.Score,
                         options => options.MapFrom(
-                            roundInfoModel => roundInfoModel.PlayerType == PlayerType.Dealer ? 0 : GameService.CalculateCardScore(roundInfoModel.Cards)));
+                            roundInfoModel => roundInfoModel.Cards.Count == 1 ? 0 : GameService.CalculateCardScore(roundInfoModel.Cards)));
                 config.CreateMap<HistoryGameInfoModel, HistoryGameViewModel>();
             });
         }

@@ -18,16 +18,16 @@ export class GameComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    this.refresh();
+  }
+
+  refresh() {
     this.roundInfo = null;
     this.gameService.getRoundsInfo()
       .subscribe(
         response => this.roundInfo = response,
         () => { }
       );
-  }
-
-  refresh() {
-    this.ngOnInit();
   }
 
   step() {

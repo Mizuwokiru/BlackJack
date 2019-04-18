@@ -23,6 +23,10 @@ export class LoginComponent implements OnInit {
       this.router.navigate(['/']);
     }
     this.returnUrl = this.route.snapshot.queryParamMap['returnUrl'] || '/';
+    this.refresh();
+  }
+
+  refresh() {
     this.loginService.getUserNames()
       .subscribe(response => {
         this.userNames = response;
@@ -35,8 +39,10 @@ export class LoginComponent implements OnInit {
   signIn(): void {
     this.loginService.signIn(this.user)
       .subscribe(
-        () => this.router.navigate([this.returnUrl]),
-        () => { } // TODO: validation
+        (response) => this.router.navigate([this.returnUrl]),
+        () => {
+          this.refresh();
+        } // TODO: validation
       );
   }
 

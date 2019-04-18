@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { User } from '../_models/user.model';
 import { HttpClient } from '@angular/common/http';
+import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -25,7 +26,14 @@ export class LoginService {
   }
 
   signIn(user: User) {
-    return this.http.post<User>(this.url, user);
+    return this.http.post(this.url, user)
+      .pipe(map((user: User) => {
+        if (user && user.token) {
+          localStorage.setItem('currentUser', JSON.stringify(user));
+          this.currentUserSubject.next(user);
+        }
+        return user;
+      }));
   }
 
   signOut(): void {

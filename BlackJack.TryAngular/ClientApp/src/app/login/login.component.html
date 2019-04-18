@@ -7,11 +7,11 @@
                type="text" class="form-control dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
                aria-expanded="false" required (input)="onChangeUserName()" #userName="ngModel">
         <div class="dropdown-menu dropdown-scrollable w-25">
-          <button class="dropdown-item" (click)="onChooseUserNameFromDropdown($event.target.innerText)">Some</button>
+          <button *ngFor="let name of userNames" class="dropdown-item" (click)="onChooseUserNameFromDropdown($event.target.innerText)">{{ name }}</button>
         </div>
       </div>
     </div>
 
-    <button routerLink="/Menu" class="btn btn-primary w-100" (click)="signIn()" [disabled]="userName.invalid">Sign in</button>
+    <button class="btn btn-primary w-100" (click)="signIn()" [disabled]="userName.invalid">Sign in</button>
   </div>
 </main>
