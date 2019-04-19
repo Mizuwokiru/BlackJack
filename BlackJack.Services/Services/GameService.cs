@@ -2,10 +2,10 @@
 using BlackJack.DataAccess.Entities;
 using BlackJack.DataAccess.Repositories.Interfaces;
 using BlackJack.DataAccess.ResponseModels;
+using BlackJack.Services.Helpers;
 using BlackJack.Services.Services.Interfaces;
 using BlackJack.Shared;
 using BlackJack.Shared.Enums;
-using BlackJack.Shared.Helpers;
 using BlackJack.ViewModels.Models.Game;
 using Microsoft.AspNetCore.Http;
 using System;
@@ -251,7 +251,7 @@ namespace BlackJack.Services.Services
             int score = CalculateCardScore(roundInfo.Cards);
             while (score < BlackJackConstants.DealerStopValue)
             {
-                Card card = _cardRepository.Get(shuffledCards[gotCardsCount]);
+                Card card = CardHelper.GetCardById(shuffledCards[gotCardsCount]);
                 gotCardsCount++;
                 var roundCard = new RoundCard { CardId = card.Id, RoundId = roundInfo.RoundId };
                 roundCards.Add(roundCard);

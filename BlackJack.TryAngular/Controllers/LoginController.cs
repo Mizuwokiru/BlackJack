@@ -38,7 +38,7 @@ namespace BlackJack.TryAngular.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest(ModelState);
+                return BadRequest();
             }
 
             user = _userService.LoginUser(user.Name);

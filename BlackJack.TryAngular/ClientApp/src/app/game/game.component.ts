@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { GameService } from '../_services/game.service';
 import { RoundInfo } from '../_models/round-info.model';
 import { Router } from '@angular/router';
+import { RoundState } from '../_enums/round-state.enum';
 
 @Component({
   selector: 'app-game',
@@ -11,6 +12,8 @@ import { Router } from '@angular/router';
 })
 export class GameComponent implements OnInit {
   roundInfo: RoundInfo;
+
+  isCanToStep: boolean | null = null;
 
   constructor(
     private gameService: GameService,
@@ -25,7 +28,10 @@ export class GameComponent implements OnInit {
     this.roundInfo = null;
     this.gameService.getRoundsInfo()
       .subscribe(
-        response => this.roundInfo = response,
+        response => {
+          this.roundInfo = response;
+          this.isCanToStep = response.user.state == RoundState.None;
+        },
         () => { }
       );
   }

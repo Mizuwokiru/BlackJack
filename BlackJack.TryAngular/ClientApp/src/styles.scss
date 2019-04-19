@@ -12,3 +12,7 @@ body {
   max-height: 250px;
   overflow-x: hidden;
 }
+
+.btn[disabled] {
+  cursor: not-allowed;
+}

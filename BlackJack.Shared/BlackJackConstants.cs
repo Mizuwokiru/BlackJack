@@ -14,5 +14,9 @@
         public const int AceSecondaryValue = 1;
 
         public const int DealerStopValue = 17;
+
+        public const int SuitCount = 4;
+
+        public const int RankCount = 13;
     }
 }

@@ -23,10 +23,11 @@ export class MenuComponent implements OnInit {
   ngOnInit() {
     this.menuService.getMenu()
       .subscribe(response => {
-        range(1, response.maxBotCount)
+        range(0, response.maxBotCount + 1)
           .subscribe(value => this.botIndices.push(value));
         this.menu = response;
       });
+    this.botCount = 0;
   }
 
   newGame() {
