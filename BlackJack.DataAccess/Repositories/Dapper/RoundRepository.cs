@@ -50,7 +50,7 @@ namespace BlackJack.DataAccess.Repositories.Dapper
                             roundInfoMap.Add(round.Id, roundInfo);
                         }
 
-                        roundInfo.Cards.AsList().Add(card);
+                        roundInfo.Cards.Add(card);
                         return roundInfo;
                     },
                     new { GameId = gameId })
@@ -169,7 +169,7 @@ namespace BlackJack.DataAccess.Repositories.Dapper
                             roundInfoMap.Add(round.Id, roundInfo);
                         }
 
-                        roundInfo.Cards.AsList().Add(card);
+                        roundInfo.Cards.Add(card);
                         return roundInfo;
                     },
                     new { UserId = userId, GameSkip = gameSkipCount, RoundSkip = roundSkipCount })

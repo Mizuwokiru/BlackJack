@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MenuService } from '../_services/menu.service';
 import { Router } from '@angular/router';
 import { GameMenu } from '../_models/game-menu.model';
@@ -12,20 +12,23 @@ import { range } from 'rxjs';
 })
 export class MenuComponent implements OnInit {
   menu: GameMenu;
-  botIndices: number[] = [];
   botCount: number;
+
+  botIndices: number[] = [];
+  isContinueButtonShown: boolean;
 
   constructor(
     private menuService: MenuService,
     private router: Router
   ) { }
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.menuService.getMenu()
       .subscribe(response => {
         range(0, response.maxBotCount + 1)
           .subscribe(value => this.botIndices.push(value));
         this.menu = response;
+        this.isContinueButtonShown = response.hasUnfinishedGame;
       });
     this.botCount = 0;
   }

@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { Round } from '../_models/round.model';
+import { Round } from '../../_models/round.model';
 
 @Component({
   selector: 'app-round-player-info',

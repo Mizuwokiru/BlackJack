@@ -116,6 +116,7 @@ namespace BlackJack.Services.Services
             foreach (var roundInfo in roundInfoModels)
             {
                 IEnumerable<RoundCard> gotCards = DoPlayBot(roundInfo, shuffledCards);
+                shuffledCards.RemoveRange(0, gotCards.Count());
                 roundCards.AddRange(gotCards);
             }
             _roundCardRepository.Add(roundCards);
@@ -234,7 +235,7 @@ namespace BlackJack.Services.Services
             int aceCount = cards.Count(card => card.Rank == Rank.Ace);
             while (score > BlackJackConstants.BlackJack && aceCount > 0)
             {
-                score -= (int)Rank.Ace - BlackJackConstants.AceSecondaryValue;
+                score -= CardHelper.GetCardScore(Rank.Ace) - BlackJackConstants.AceSecondaryValue;
                 aceCount--;
             }
             return score;

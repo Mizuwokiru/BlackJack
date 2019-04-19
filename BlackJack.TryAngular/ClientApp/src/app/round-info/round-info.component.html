@@ -1,7 +1,7 @@
 <div id="game-cards-block" class="row">
-  <app-round-player-info class="col-md-3" [roundPlayer]="roundInfo.user"></app-round-player-info>
-  <app-round-player-info class="col-md-3" *ngFor="let bot of roundInfo.bots" [roundPlayer]="bot"></app-round-player-info>
+  <app-round-player-info class="col-md-3" [roundPlayer]="roundInfo?.user"></app-round-player-info>
+  <app-round-player-info class="col-md-3" *ngFor="let bot of roundInfo?.bots" [roundPlayer]="bot"></app-round-player-info>
 </div>
 <div class="row justify-content-center">
-  <app-round-player-info class="col-md-3" [roundPlayer]="roundInfo.dealer"></app-round-player-info>
+  <app-round-player-info class="col-md-3" [roundPlayer]="roundInfo?.dealer"></app-round-player-info>
 </div>

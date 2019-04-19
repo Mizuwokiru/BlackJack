@@ -1,8 +1,8 @@
-<main *ngIf="menu" class="d-flex align-items-center justify-content-center">
+<main class="d-flex align-items-center justify-content-center">
   <div class="btn-group-vertical w-25">
-    <button *ngIf="menu.hasUnfinishedGame" routerLink="/Game" class="btn btn-info">Continue</button>
-    <button class="btn btn-primary" data-toggle="modal" data-target="#bot-count-modal">New game</button>
-    <button class="btn btn-success">History</button>
+    <button *ngIf="isContinueButtonShown" routerLink="/Game" class="btn btn-outline-info">Continue</button>
+    <button class="btn btn-outline-primary" data-toggle="modal" data-target="#bot-count-modal">New game</button>
+    <button class="btn btn-outline-success">History</button>
   </div>
   <div id="bot-count-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="bot-count-modal-title"
        aria-hidden="true">
@@ -21,7 +21,7 @@
           </select>
         </div>
         <div class="modal-footer">
-          <input type="button" class="btn btn-primary" value="Start" (click)="newGame()">
+          <input type="button" class="btn btn-primary" data-dismiss="modal" value="Start" (click)="newGame()">
           <input type="button" class="btn btn-secondary" data-dismiss="modal" value="Cancel">
         </div>
       </div>
