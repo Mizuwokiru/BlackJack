@@ -6,6 +6,7 @@ using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 
@@ -27,24 +28,30 @@ namespace BlackJack.DataAccess.Repositories.Dapper
 
         public void Add(IEnumerable<T> items)
         {
+            IEnumerable<string> propertyNames = GetPropertyNames();
+            var now = DateTime.Now;
+            string sqlQuery =
+                $@"INSERT INTO {typeof(T).Name}s (CreationTime, {
+                string.Join(", ", propertyNames)})
+                OUTPUT INSERTED.Id AS Id
+                VALUES ('{now.ToString("yyyy-MM-dd HH:mm:ss.fffffff")}', {
+                string.Join(", ", propertyNames.Select(propertyName => $"@{propertyName}"))})";
             using (var connection = new SqlConnection(_connectionString))
             {
-                IEnumerable<string> propertyNames = GetPropertyNames();
-                var now = DateTime.Now;
-                int[] ids = connection.Query<int>($@"INSERT INTO {nameof(T)}s (CreationTime, {
-                    string.Join(", ", propertyNames)}) VALUES ('{now.ToString("yyyy-MM-dd HH:mm:ss.fffffff")}', {
-                    string.Join(", ", propertyNames.Select(propertyName => $"@{propertyName}"))}); 
-                    SELECT CAST(SCOPE_IDENTITY() AS BIGINT", items)
-                    .ToArray();
-                for (int i = 0; i < ids.Count(); i++)
+                var smth = connection.Query(sqlQuery, items);
+                foreach (var smthItem in smth)
                 {
-                    T item = items.ElementAtOrDefault(i);
-                    if (item != null)
-                    {
-                        item.Id = ids[i];
-                        item.CreationTime = now;
-                    }
+                    Debug.WriteLine(smthItem.ToString());
                 }
+                //for (int i = 0; i < ids.Count(); i++)
+                //{
+                //    T item = items.ElementAtOrDefault(i);
+                //    if (item != null)
+                //    {
+                //        item.Id = ids[i].Id;
+                //        item.CreationTime = now;
+                //    }
+                //}
             }
         }
 
@@ -52,7 +59,7 @@ namespace BlackJack.DataAccess.Repositories.Dapper
         {
             using (var connection = new SqlConnection(_connectionString))
             {
-                connection.Execute("DELETE FROM {nameof(T)}s WHERE Id = @Id", new { Id = id });
+                connection.Execute($"DELETE FROM {typeof(T).Name}s WHERE Id = @Id", new { Id = id });
             }
         }
 
@@ -60,7 +67,7 @@ namespace BlackJack.DataAccess.Repositories.Dapper
         {
             using (var connection = new SqlConnection(_connectionString))
             {
-                T record = connection.QuerySingle<T>($"SELECT * FROM {nameof(T)}s WHERE Id = @Id", new { Id = id });
+                T record = connection.QuerySingle<T>($"SELECT * FROM {typeof(T).Name}s WHERE Id = @Id", new { Id = id });
                 return record;
             }
         }
@@ -69,7 +76,7 @@ namespace BlackJack.DataAccess.Repositories.Dapper
         {
             using (var connection = new SqlConnection(_connectionString))
             {
-                IEnumerable<T> records = connection.Query<T>($"SELECT * FROM {nameof(T)}s");
+                IEnumerable<T> records = connection.Query<T>($"SELECT * FROM {typeof(T).Name}s");
                 return records;
             }
         }
@@ -84,7 +91,7 @@ namespace BlackJack.DataAccess.Repositories.Dapper
             using (var connection = new SqlConnection(_connectionString))
             {
                 IEnumerable<string> propertyNames = GetPropertyNames();
-                connection.Execute($@"UPDATE {nameof(T)}s SET {
+                connection.Execute($@"UPDATE {typeof(T).Name}s SET {
                     string.Join(", ", propertyNames.Select(propertyName => $"{propertyName} = @{propertyName}"))} WHERE Id = @Id", items);
             }
         }

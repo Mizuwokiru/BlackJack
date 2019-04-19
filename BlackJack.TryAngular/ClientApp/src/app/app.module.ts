@@ -14,6 +14,8 @@ import { CardComponent } from './round-info/round-player-info/card/card.componen
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { JwtInterceptor } from './_interceptors/jwt.interceptor';
 import { ErrorInterceptor } from './_interceptors/error.interceptor';
+import { GameHistoryComponent } from './history/game-history/game-history.component';
+import { RoundHistoryComponent } from './history/game-history/round-history/round-history.component';
 
 @NgModule({
   declarations: [
@@ -24,7 +26,9 @@ import { ErrorInterceptor } from './_interceptors/error.interceptor';
     HistoryComponent,
     RoundInfoComponent,
     RoundPlayerInfoComponent,
-    CardComponent
+    CardComponent,
+    GameHistoryComponent,
+    RoundHistoryComponent
   ],
   imports: [
     BrowserModule,

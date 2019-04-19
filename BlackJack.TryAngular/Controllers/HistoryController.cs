@@ -39,8 +39,8 @@ namespace BlackJack.TryAngular.Controllers
         {
             return StatusResult(() =>
             {
-                IEnumerable<RoundViewModel> roundInfos = _historyService.GetRoundInfo(gameId, roundId);
-                return roundInfos;
+                RoundInfoViewModel roundInfo = _historyService.GetRoundInfo(gameId, roundId);
+                return roundInfo;
             });
         }
     }

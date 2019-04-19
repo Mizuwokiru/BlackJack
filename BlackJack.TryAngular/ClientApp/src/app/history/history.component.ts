@@ -8,11 +8,13 @@ import { HistoryService } from '../_services/history.service';
   styleUrls: ['./history.component.scss']
 })
 export class HistoryComponent implements OnInit {
-  historyGames: HistoryGame[];
+  historyGames: Array<HistoryGame>;
 
   constructor(private historyService: HistoryService) { }
 
   ngOnInit() {
+    this.historyService.getGames()
+      .subscribe(games => this.historyGames = games);
   }
 
 }

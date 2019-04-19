@@ -2,7 +2,7 @@
   <div class="btn-group-vertical w-25">
     <button *ngIf="isContinueButtonShown" routerLink="/Game" class="btn btn-outline-info">Continue</button>
     <button class="btn btn-outline-primary" data-toggle="modal" data-target="#bot-count-modal">New game</button>
-    <button class="btn btn-outline-success">History</button>
+    <button routerLink="/History" class="btn btn-outline-success">History</button>
   </div>
   <div id="bot-count-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="bot-count-modal-title"
        aria-hidden="true">

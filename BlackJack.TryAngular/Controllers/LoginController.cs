@@ -50,7 +50,6 @@ namespace BlackJack.TryAngular.Controllers
                 {
                     new Claim(ClaimTypes.Name, user.Name.ToLower())
                 }),
-                Expires = DateTime.Now.AddSeconds(10),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
             SecurityToken token = tokenHandler.CreateToken(tokenDescriptor);

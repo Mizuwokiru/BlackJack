@@ -1,0 +1,8 @@
+<div *ngIf="historyRounds" class="my-4 w-75 mx-auto">
+  <div *ngFor="let roundState of historyRounds.roundStates; index as i" class="card">
+    <a [routerLink]="['/History', gameId, i]" class="btn btn-{{ roundStates.get(roundState).btnClass }} p-3">
+      Round {{ i + 1 }}
+      {{ roundStates.get(roundState).text }}
+    </a>
+  </div>
+</div>

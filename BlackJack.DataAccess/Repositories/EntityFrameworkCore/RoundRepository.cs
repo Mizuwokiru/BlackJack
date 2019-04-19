@@ -99,7 +99,6 @@ namespace BlackJack.DataAccess.Repositories.EntityFrameworkCore
                     .First()
                     .Id)
                 .GroupBy(round => round.CreationTime)
-                .OrderByDescending(roundsGroup => roundsGroup.Key)
                 .Skip(roundSkipCount)
                 .First()
                 .Join(

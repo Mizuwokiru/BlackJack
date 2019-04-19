@@ -21,8 +21,8 @@ export class LoginService {
     return this.currentUserSubject.value;
   }
 
-  getUserNames(): Observable<string[]> {
-    return this.http.get<string[]>(this.url);
+  getUserNames(): Observable<Array<string>> {
+    return this.http.get<Array<string>>(this.url);
   }
 
   signIn(user: User) {

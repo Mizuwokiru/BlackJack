@@ -9,7 +9,7 @@ import { LoginService } from '../_services/login.service';
   styleUrls: ['./login.component.scss']
 })
 export class LoginComponent implements OnInit {
-  userNames: string[];
+  userNames: Array<string>;
   user: User = new User();
   returnUrl: string;
 
