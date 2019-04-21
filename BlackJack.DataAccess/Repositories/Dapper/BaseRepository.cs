@@ -6,7 +6,6 @@ using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
-using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 
@@ -38,20 +37,12 @@ namespace BlackJack.DataAccess.Repositories.Dapper
                 string.Join(", ", propertyNames.Select(propertyName => $"@{propertyName}"))})";
             using (var connection = new SqlConnection(_connectionString))
             {
-                var smth = connection.Query(sqlQuery, items);
-                foreach (var smthItem in smth)
+                foreach (var item in items)
                 {
-                    Debug.WriteLine(smthItem.ToString());
+                    long id = connection.Query<long>(sqlQuery, item).First();
+                    item.Id = id;
+                    item.CreationTime = now;
                 }
-                //for (int i = 0; i < ids.Count(); i++)
-                //{
-                //    T item = items.ElementAtOrDefault(i);
-                //    if (item != null)
-                //    {
-                //        item.Id = ids[i].Id;
-                //        item.CreationTime = now;
-                //    }
-                //}
             }
         }
 

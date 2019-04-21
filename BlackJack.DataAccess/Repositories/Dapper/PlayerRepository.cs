@@ -42,7 +42,7 @@ namespace BlackJack.DataAccess.Repositories.Dapper
         public int GetBotCount()
         {
             string sqlQuery =
-                @"SELECT * FROM [Players]
+                @"SELECT COUNT(*) FROM [Players]
                   WHERE [Type] = @Type";
             using (var connection = new SqlConnection(_connectionString))
             {
