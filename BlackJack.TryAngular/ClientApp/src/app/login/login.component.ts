@@ -19,7 +19,7 @@ export class LoginComponent implements OnInit {
     private route: ActivatedRoute) { }
 
   ngOnInit() {
-    if (this.loginService.currentUserValue) {
+    if (this.loginService.currentUser) {
       this.router.navigate(['/']);
     }
     this.returnUrl = this.route.snapshot.queryParamMap['returnUrl'] || '/';
@@ -42,7 +42,7 @@ export class LoginComponent implements OnInit {
         (response) => this.router.navigate([this.returnUrl]),
         () => {
           this.refresh();
-        } // TODO: validation
+        }
       );
   }
 

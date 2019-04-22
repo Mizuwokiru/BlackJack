@@ -5,7 +5,7 @@
         <label for="userNameInput" pattern="">User name</label>
         <input [(ngModel)]="user.name" pattern="^\w+$" minlength="2" maxlength="32" name="userNameInput" id="userNameInput"
                type="text" class="form-control dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
-               aria-expanded="false" required (input)="onChangeUserName()" #userName="ngModel">
+               aria-expanded="false" required (input)="onChangeUserName()" autocomplete="off" #userName="ngModel">
         <div class="dropdown-menu dropdown-scrollable w-25">
           <button *ngFor="let name of userNames" class="dropdown-item" (click)="onChooseUserNameFromDropdown($event.target.innerText)">{{ name }}</button>
         </div>

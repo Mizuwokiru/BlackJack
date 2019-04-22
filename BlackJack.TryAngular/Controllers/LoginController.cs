@@ -44,12 +44,17 @@ namespace BlackJack.TryAngular.Controllers
             user = _userService.LoginUser(user.Name);
             var tokenHandler = new JwtSecurityTokenHandler();
             byte[] key = Encoding.ASCII.GetBytes(_jwtSettings.TokenSecret);
+            var now = DateTime.UtcNow;
             var tokenDescriptor = new SecurityTokenDescriptor
             {
+                Issuer = _jwtSettings.Issuer,
+                Audience = _jwtSettings.Audience,
+                NotBefore = now,
                 Subject = new ClaimsIdentity(new Claim[]
                 {
                     new Claim(ClaimTypes.Name, user.Name.ToLower())
                 }),
+                Expires = now.AddMinutes(_jwtSettings.Lifetime),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
             SecurityToken token = tokenHandler.CreateToken(tokenDescriptor);

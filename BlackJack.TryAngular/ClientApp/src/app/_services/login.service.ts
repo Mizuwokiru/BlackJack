@@ -10,14 +10,12 @@ import { map } from 'rxjs/operators';
 export class LoginService {
   private readonly url: string = 'api/Login';
   private currentUserSubject: BehaviorSubject<User>;
-  private currentUser: Observable<User>;
 
   constructor(private http: HttpClient) {
-    this.currentUserSubject = new BehaviorSubject<User>(JSON.parse(localStorage.getItem('currentUser')));
-    this.currentUser = this.currentUserSubject.asObservable();
+    this.currentUserSubject = new BehaviorSubject<User>(JSON.parse(sessionStorage.getItem('currentUser')));
   }
 
-  public get currentUserValue(): User {
+  public get currentUser(): User {
     return this.currentUserSubject.value;
   }
 
@@ -29,7 +27,7 @@ export class LoginService {
     return this.http.post(this.url, user)
       .pipe(map((user: User) => {
         if (user && user.token) {
-          localStorage.setItem('currentUser', JSON.stringify(user));
+          sessionStorage.setItem('currentUser', JSON.stringify(user));
           this.currentUserSubject.next(user);
         }
         return user;
@@ -37,7 +35,7 @@ export class LoginService {
   }
 
   signOut(): void {
-    localStorage.removeItem('currentUser');
+    sessionStorage.removeItem('currentUser');
     this.currentUserSubject.next(null);
   }
 }

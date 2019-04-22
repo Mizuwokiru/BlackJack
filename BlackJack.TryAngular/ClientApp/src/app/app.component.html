@@ -11,8 +11,8 @@
   <header>
     <nav class="navbar navbar-expand-lg navbar-light sticky-top bg-light row col shadow-sm">
       <a routerLink="/" class="navbar-brand mr-auto">Black Jack</a>
-      <div *ngIf="loginService.currentUserValue" class="inner"> <!-- if logged -->
-        <span class="navbar-text mr-2"><strong>{{ loginService.currentUserValue.name }}</strong> is logged</span>
+      <div *ngIf="loginService.currentUser" class="inner"> <!-- if logged -->
+        <span class="navbar-text mr-2"><strong>{{ loginService.currentUser.name }}</strong> is logged</span>
         <button class="btn btn-outline-primary mb-1" (click)="signOut()">Sign out</button>
       </div>
     </nav>

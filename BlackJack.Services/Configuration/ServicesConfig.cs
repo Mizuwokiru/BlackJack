@@ -8,9 +8,9 @@ namespace BlackJack.Services.Configuration
 {
     public static class ServicesConfig
     {
-        public static void AddBlackJackServices(this IServiceCollection services, string orm)
+        public static void AddBlackJackServices(this IServiceCollection services, bool isDapperEnabled)
         {
-            if (orm == "Dapper")
+            if (isDapperEnabled)
             {
                 services.AddTransient<ICardRepository, DataAccess.Repositories.Dapper.CardRepository>();
                 services.AddTransient<IPlayerRepository, DataAccess.Repositories.Dapper.PlayerRepository>();
@@ -19,7 +19,7 @@ namespace BlackJack.Services.Configuration
                 services.AddTransient<IRoundCardRepository, DataAccess.Repositories.Dapper.RoundCardRepository>();
             }
 
-            if (orm == "EntityFrameworkCore")
+            if (!isDapperEnabled)
             {
                 services.AddDbContext<GameDbContext>();
                 services.AddTransient<ICardRepository, DataAccess.Repositories.EntityFrameworkCore.CardRepository>();

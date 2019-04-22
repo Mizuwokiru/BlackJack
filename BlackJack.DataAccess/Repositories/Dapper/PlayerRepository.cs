@@ -54,8 +54,8 @@ namespace BlackJack.DataAccess.Repositories.Dapper
         public IEnumerable<Player> GetBots(int count)
         {
             string sqlQuery =
-                @"SELECT * FROM [Players]
-                  WHERE [Type] = @Type";
+                $@"SELECT TOP {count} * FROM [Players]
+                   WHERE [Type] = @Type";
             using (var connection = new SqlConnection(_connectionString))
             {
                 IEnumerable<Player> players = connection.Query<Player>(sqlQuery, new { Type = (int)PlayerType.Bot });

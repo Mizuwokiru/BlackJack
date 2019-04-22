@@ -15,8 +15,7 @@ export class LoginGuard implements CanActivate {
   canActivate(
     next: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-    const currentUser = this.loginService.currentUserValue;
-    console.log('guard invoked');
+    const currentUser = this.loginService.currentUser;
     if (currentUser) {
       return true;
     }

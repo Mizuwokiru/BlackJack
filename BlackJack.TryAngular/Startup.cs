@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using System;
 using System.Text;
 
 namespace BlackJack.TryAngular
@@ -28,7 +29,7 @@ namespace BlackJack.TryAngular
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
             services.Configure<DbSettingsOptions>(Configuration.GetSection("DbSettings"));
-            services.AddBlackJackServices(Configuration["ORM"]);
+            services.AddBlackJackServices(Convert.ToBoolean(Configuration["IsDapperEnabled"]));
             services.AddBlackJackMapping();
 
             IConfigurationSection settingsSection = Configuration.GetSection("JwtSettings");
@@ -44,12 +45,15 @@ namespace BlackJack.TryAngular
             .AddJwtBearer(options =>
             {
                 options.RequireHttpsMetadata = false;
-                options.SaveToken = true;
+                //options.SaveToken = true;
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
+                    ValidateIssuer = false,
+                    ValidIssuer = jwtOptions.Issuer,
+                    ValidAudience = jwtOptions.Audience,
                     ValidateIssuerSigningKey = true,
                     IssuerSigningKey = new SymmetricSecurityKey(key),
-                    ValidateIssuer = false,
+                    ValidateLifetime = true,
                     ValidateAudience = false
                 };
             });
