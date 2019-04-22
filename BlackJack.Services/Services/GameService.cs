@@ -21,7 +21,7 @@ namespace BlackJack.Services.Services
         private readonly IRoundRepository _roundRepository;
         private readonly ICardRepository _cardRepository;
         private readonly IRoundCardRepository _roundCardRepository;
-        private readonly Player _user;
+        private readonly long _userId;
 
         public GameService(IGameRepository gameRepository,
             IPlayerRepository playerRepository,
@@ -35,12 +35,12 @@ namespace BlackJack.Services.Services
             _roundRepository = roundRepository;
             _cardRepository = cardRepository;
             _roundCardRepository = roundCardRepository;
-            _user = _playerRepository.GetUser(httpContextAccessor.HttpContext.User.Identity.Name);
+            _userId = long.Parse(httpContextAccessor.HttpContext.User.Claims.Single(claim => claim.Type == BlackJackConstants.ClaimPlayerId).Value);
         }
 
         public bool HasUnfinishedGame()
         {
-            Game unfinishedGame = _gameRepository.GetUnfinishedGame(_user.Id);
+            Game unfinishedGame = _gameRepository.GetUnfinishedGame(_userId);
             return unfinishedGame != null;
         }
 
@@ -62,7 +62,7 @@ namespace BlackJack.Services.Services
 
         public RoundInfoViewModel GetRoundsInfo()
         {
-            Game game = _gameRepository.GetUnfinishedGame(_user.Id);
+            Game game = _gameRepository.GetUnfinishedGame(_userId);
             if (game == null)
             {
                 throw new InvalidOperationException("Game is not found");
@@ -86,12 +86,12 @@ namespace BlackJack.Services.Services
 
         public void Step()
         {
-            Game game = _gameRepository.GetUnfinishedGame(_user.Id);
+            Game game = _gameRepository.GetUnfinishedGame(_userId);
             if (game == null)
             {
                 throw new InvalidOperationException("Game is not found");
             }
-            StepInfoModel stepInfoModel = _roundRepository.GetStepInfo(_user.Id, game.Id);
+            StepInfoModel stepInfoModel = _roundRepository.GetStepInfo(_userId, game.Id);
             List<long> shuffledCards = GetShuffledCards(stepInfoModel.RoundsCards);
 
             var roundCard = new RoundCard { RoundId = stepInfoModel.UserRoundId, CardId = shuffledCards[0] };
@@ -104,7 +104,7 @@ namespace BlackJack.Services.Services
 
         public void EndRound()
         {
-            Game game = _gameRepository.GetUnfinishedGame(_user.Id);
+            Game game = _gameRepository.GetUnfinishedGame(_userId);
             if (game == null)
             {
                 throw new InvalidOperationException("Game is not found");
@@ -125,7 +125,7 @@ namespace BlackJack.Services.Services
 
         public void NextRound()
         {
-            Game game = _gameRepository.GetUnfinishedGame(_user.Id);
+            Game game = _gameRepository.GetUnfinishedGame(_userId);
             if (game == null)
             {
                 throw new InvalidOperationException("Game is not found");
@@ -136,7 +136,7 @@ namespace BlackJack.Services.Services
 
         public void EndGame()
         {
-            Game unfinishedGame = _gameRepository.GetUnfinishedGame(_user.Id);
+            Game unfinishedGame = _gameRepository.GetUnfinishedGame(_userId);
             if (unfinishedGame != null)
             {
                 unfinishedGame.IsFinished = true;
@@ -160,7 +160,7 @@ namespace BlackJack.Services.Services
         {
             IEnumerable<Player> bots = _playerRepository.GetBots(neededBotCount);
 
-            Round userRound = new Round { GameId = game.Id, PlayerId = _user.Id };
+            Round userRound = new Round { GameId = game.Id, PlayerId = _userId };
             Round dealerRound = new Round { GameId = game.Id, PlayerId = BlackJackConstants.DealerId };
             var rounds = new List<Round> { userRound, dealerRound };
             foreach (var bot in bots)
@@ -328,7 +328,7 @@ namespace BlackJack.Services.Services
 
         private bool IsStepPossible(Game game)
         {
-            List<Card> cards = _cardRepository.GetPlayerCards(_user.Id, game.Id).ToList();
+            List<Card> cards = _cardRepository.GetPlayerCards(_userId, game.Id).ToList();
             int score = CalculateCardScore(cards);
             if (score >= BlackJackConstants.BlackJack)
             {

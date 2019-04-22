@@ -11,7 +11,6 @@ import { LoginService } from '../_services/login.service';
 export class LoginComponent implements OnInit {
   userNames: Array<string>;
   user: User = new User();
-  returnUrl: string;
 
   constructor(
     private loginService: LoginService,
@@ -22,7 +21,6 @@ export class LoginComponent implements OnInit {
     if (this.loginService.currentUser) {
       this.router.navigate(['/']);
     }
-    this.returnUrl = this.route.snapshot.queryParamMap['returnUrl'] || '/';
     this.refresh();
   }
 
@@ -39,7 +37,7 @@ export class LoginComponent implements OnInit {
   signIn(): void {
     this.loginService.signIn(this.user)
       .subscribe(
-        (response) => this.router.navigate([this.returnUrl]),
+        (response) => this.router.navigate(['/']),
         () => {
           this.refresh();
         }

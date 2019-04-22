@@ -12,7 +12,7 @@ export class LoginService {
   private currentUserSubject: BehaviorSubject<User>;
 
   constructor(private http: HttpClient) {
-    this.currentUserSubject = new BehaviorSubject<User>(JSON.parse(sessionStorage.getItem('currentUser')));
+    this.currentUserSubject = new BehaviorSubject<User>(JSON.parse(localStorage.getItem('currentUser')));
   }
 
   public get currentUser(): User {
@@ -27,7 +27,7 @@ export class LoginService {
     return this.http.post(this.url, user)
       .pipe(map((user: User) => {
         if (user && user.token) {
-          sessionStorage.setItem('currentUser', JSON.stringify(user));
+          localStorage.setItem('currentUser', JSON.stringify(user));
           this.currentUserSubject.next(user);
         }
         return user;
@@ -35,7 +35,7 @@ export class LoginService {
   }
 
   signOut(): void {
-    sessionStorage.removeItem('currentUser');
+    localStorage.removeItem('currentUser');
     this.currentUserSubject.next(null);
   }
 }

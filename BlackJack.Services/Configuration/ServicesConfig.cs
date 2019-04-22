@@ -1,4 +1,5 @@
 ﻿using BlackJack.DataAccess;
+using BlackJack.DataAccess.Entities;
 using BlackJack.DataAccess.Repositories.Interfaces;
 using BlackJack.Services.Services;
 using BlackJack.Services.Services.Interfaces;
@@ -10,6 +11,10 @@ namespace BlackJack.Services.Configuration
     {
         public static void AddBlackJackServices(this IServiceCollection services, bool isDapperEnabled)
         {
+            services.AddDbContext<GameDbContext>();
+            services.AddIdentityCore<User>()
+                .AddEntityFrameworkStores<GameDbContext>();
+
             if (isDapperEnabled)
             {
                 services.AddTransient<ICardRepository, DataAccess.Repositories.Dapper.CardRepository>();
@@ -21,7 +26,6 @@ namespace BlackJack.Services.Configuration
 
             if (!isDapperEnabled)
             {
-                services.AddDbContext<GameDbContext>();
                 services.AddTransient<ICardRepository, DataAccess.Repositories.EntityFrameworkCore.CardRepository>();
                 services.AddTransient<IPlayerRepository, DataAccess.Repositories.EntityFrameworkCore.PlayerRepository>();
                 services.AddTransient<IGameRepository, DataAccess.Repositories.EntityFrameworkCore.GameRepository>();

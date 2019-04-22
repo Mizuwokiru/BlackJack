@@ -1,4 +1,5 @@
 ﻿using BlackJack.Services.Configuration;
+using BlackJack.Shared;
 using BlackJack.Shared.Options;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -25,12 +26,9 @@ namespace BlackJack.TryAngular
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services.AddTransient<IHttpContextAccessor, HttpContextAccessor>();
 
             services.Configure<DbSettingsOptions>(Configuration.GetSection("DbSettings"));
-            services.AddBlackJackServices(Convert.ToBoolean(Configuration["IsDapperEnabled"]));
-            services.AddBlackJackMapping();
 
             IConfigurationSection settingsSection = Configuration.GetSection("JwtSettings");
             services.Configure<JwtSettingsOptions>(settingsSection);
@@ -45,7 +43,8 @@ namespace BlackJack.TryAngular
             .AddJwtBearer(options =>
             {
                 options.RequireHttpsMetadata = false;
-                //options.SaveToken = true;
+                options.SaveToken = true;
+                options.ClaimsIssuer = jwtOptions.Issuer;
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateIssuer = false,
@@ -58,6 +57,12 @@ namespace BlackJack.TryAngular
                 };
             });
 
+            services.AddAuthorization();
+
+            services.AddBlackJackServices(Convert.ToBoolean(Configuration["IsDapperEnabled"]));
+            services.AddBlackJackMapping();
+
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
             services.AddSpaStaticFiles(configuration =>
             {
                 configuration.RootPath = "ClientApp/dist";

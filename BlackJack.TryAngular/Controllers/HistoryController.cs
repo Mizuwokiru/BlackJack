@@ -18,10 +18,13 @@ namespace BlackJack.TryAngular.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<HistoryGameViewModel> Get()
+        public IActionResult Get()
         {
-            IEnumerable<HistoryGameViewModel> gamesHistory = _historyService.GetGamesHistory();
-            return gamesHistory;
+            return StatusResult(() =>
+            {
+                IEnumerable<HistoryGameViewModel> gamesHistory = _historyService.GetGamesHistory();
+                return gamesHistory;
+            });
         }
 
         [HttpGet, Route("{gameId}")]

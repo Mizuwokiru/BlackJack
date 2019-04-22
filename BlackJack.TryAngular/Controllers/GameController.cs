@@ -27,6 +27,30 @@ namespace BlackJack.TryAngular.Controllers
             });
         }
 
+        [HttpGet, Route("[action]")]
+        public IActionResult Menu()
+        {
+            bool hasUnfinishedGame = _gameService.HasUnfinishedGame();
+            var gameMenuViewModel = new GameMenuViewModel
+            {
+                HasUnfinishedGame = hasUnfinishedGame,
+                MaxBotCount = BlackJackConstants.MaxBotCount
+            };
+            return gameMenuViewModel;
+        }
+
+        [HttpPost, Route("[action]")]
+        public IActionResult New()
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+
+            _gameService.NewGame(newGameViewModel.BotCount);
+            return Ok();
+        }
+
         [HttpPost, Route("[action]")]
         public IActionResult Step()
         {

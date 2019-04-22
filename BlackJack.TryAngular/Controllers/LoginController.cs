@@ -1,4 +1,5 @@
 ﻿using BlackJack.Services.Services.Interfaces;
+using BlackJack.Shared;
 using BlackJack.Shared.Options;
 using BlackJack.ViewModels.Models.Login;
 using Microsoft.AspNetCore.Http;
@@ -10,6 +11,7 @@ using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace BlackJack.TryAngular.Controllers
 {
@@ -34,26 +36,35 @@ namespace BlackJack.TryAngular.Controllers
         }
 
         [HttpPost, ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public IActionResult Post([FromBody]UserViewModel user)
+        public async Task<IActionResult> Post([FromBody]UserViewModel userViewModel)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest();
             }
 
-            user = _userService.LoginUser(user.Name);
-            byte[] key = Encoding.ASCII.GetBytes(_jwtSettings.TokenSecret);
+            ClaimsIdentity claimsIdentity = await _userService.LoginUser(userViewModel.Name);
+
             var now = DateTime.UtcNow;
+            var claims = new[]
+            {
+                new Claim(JwtRegisteredClaimNames.Sub, userViewModel.Name),
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                new Claim(JwtRegisteredClaimNames.Iat, new DateTimeOffset(now).ToUnixTimeSeconds().ToString(), ClaimValueTypes.Integer64),
+                claimsIdentity.FindFirst(BlackJackConstants.ClaimPlayerId)
+            };
+            byte[] key = Encoding.ASCII.GetBytes(_jwtSettings.TokenSecret);
             var token = new JwtSecurityToken(
                 _jwtSettings.Issuer,
                 _jwtSettings.Audience,
-                new Claim[] { new Claim(ClaimTypes.Name, user.Name.ToLower()) },
+                claims,
                 now,
                 now.AddMinutes(_jwtSettings.Lifetime),
                 new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256));
             string serializedToken = new JwtSecurityTokenHandler().WriteToken(token);
-            user.Token = serializedToken;
-            return Ok(user);
+            userViewModel.Token = serializedToken;
+
+            return Ok(userViewModel);
         }
     }
 }

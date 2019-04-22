@@ -1,7 +1,7 @@
 ﻿using BlackJack.Shared;
 using System.ComponentModel.DataAnnotations;
 
-namespace BlackJack.ViewModels.Models.Menu
+namespace BlackJack.ViewModels.Models.Game
 {
     public class NewGameViewModel
     {

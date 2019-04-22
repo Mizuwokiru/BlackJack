@@ -2,6 +2,7 @@
 using BlackJack.Shared;
 using BlackJack.Shared.Enums;
 using BlackJack.Shared.Options;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.Extensions.Options;
@@ -11,7 +12,7 @@ using System.Linq;
 
 namespace BlackJack.DataAccess
 {
-    public class GameDbContext : DbContext
+    public class GameDbContext : IdentityDbContext<User>
     {
         private readonly string _connectionString;
 
@@ -28,6 +29,7 @@ namespace BlackJack.DataAccess
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<Player>()
                 .HasIndex(property => property.Name)
                 .IsUnique();
@@ -50,6 +52,7 @@ namespace BlackJack.DataAccess
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
+            base.OnConfiguring(optionsBuilder);
             optionsBuilder.UseLazyLoadingProxies().UseSqlServer(_connectionString);
         }
 

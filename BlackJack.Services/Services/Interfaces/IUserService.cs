@@ -1,11 +1,12 @@
-﻿using BlackJack.ViewModels.Models.Login;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace BlackJack.Services.Services.Interfaces
 {
     public interface IUserService
     {
         IEnumerable<string> GetUsers();
-        UserViewModel LoginUser(string name);
+        Task<ClaimsIdentity> LoginUser(string name);
     }
 }
