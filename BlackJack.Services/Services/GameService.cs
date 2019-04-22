@@ -68,9 +68,9 @@ namespace BlackJack.Services.Services
                 throw new InvalidOperationException("Game is not found");
             }
             IEnumerable<RoundInfoModel> roundInfoModels = _roundRepository.GetLastRoundsInfo(game.Id);
-            IEnumerable<RoundViewModel> roundViewModels = Mapper.Map<IEnumerable<RoundInfoModel>, IEnumerable<RoundViewModel>>(roundInfoModels);
-            RoundViewModel user = roundViewModels.Where(roundViewModel => roundViewModel.PlayerType == PlayerType.User).First();
-            RoundViewModel dealer = roundViewModels.Where(roundViewModel => roundViewModel.PlayerType == PlayerType.Dealer).First();
+            IEnumerable<PlayerStateViewModel> roundViewModels = Mapper.Map<IEnumerable<RoundInfoModel>, IEnumerable<PlayerStateViewModel>>(roundInfoModels);
+            PlayerStateViewModel user = roundViewModels.Where(roundViewModel => roundViewModel.PlayerType == PlayerType.User).First();
+            PlayerStateViewModel dealer = roundViewModels.Where(roundViewModel => roundViewModel.PlayerType == PlayerType.Dealer).First();
             if (user.State == RoundState.None)
             {
                 dealer.Cards.RemoveAt(1);

@@ -49,9 +49,9 @@ namespace BlackJack.Services.Services
         public RoundInfoViewModel GetRoundInfo(int gameSkipCount, int roundSkipCount)
         {
             IEnumerable<RoundInfoModel> roundInfos = _roundRepository.GetRoundInfo(_userId, gameSkipCount, roundSkipCount);
-            IEnumerable<RoundViewModel> roundViewModels = Mapper.Map<IEnumerable<RoundInfoModel>, IEnumerable<RoundViewModel>>(roundInfos);
-            RoundViewModel user = roundViewModels.Where(roundViewModel => roundViewModel.PlayerType == PlayerType.User).First();
-            RoundViewModel dealer = roundViewModels.Where(roundViewModel => roundViewModel.PlayerType == PlayerType.Dealer).First();
+            IEnumerable<PlayerStateViewModel> roundViewModels = Mapper.Map<IEnumerable<RoundInfoModel>, IEnumerable<PlayerStateViewModel>>(roundInfos);
+            PlayerStateViewModel user = roundViewModels.Where(roundViewModel => roundViewModel.PlayerType == PlayerType.User).First();
+            PlayerStateViewModel dealer = roundViewModels.Where(roundViewModel => roundViewModel.PlayerType == PlayerType.Dealer).First();
             if (user.State == RoundState.None)
             {
                 dealer.Cards.RemoveAt(1);

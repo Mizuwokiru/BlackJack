@@ -4,10 +4,10 @@ namespace BlackJack.ViewModels.Models.Game
 {
     public class RoundInfoViewModel
     {
-        public RoundViewModel User { get; set; }
+        public PlayerStateViewModel User { get; set; }
 
-        public IEnumerable<RoundViewModel> Bots { get; set; }
+        public IEnumerable<PlayerStateViewModel> Bots { get; set; }
 
-        public RoundViewModel Dealer { get; set; }
+        public PlayerStateViewModel Dealer { get; set; }
     }
 }

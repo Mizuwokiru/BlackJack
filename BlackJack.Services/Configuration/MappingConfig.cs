@@ -16,7 +16,7 @@ namespace BlackJack.Services.Configuration
             Mapper.Initialize(config =>
             {
                 config.CreateMap<Card, CardViewModel>();
-                config.CreateMap<RoundInfoModel, RoundViewModel>()
+                config.CreateMap<RoundInfoModel, PlayerStateViewModel>()
                     .ForMember(
                         roundViewModel => roundViewModel.Cards,
                         options => options.MapFrom(

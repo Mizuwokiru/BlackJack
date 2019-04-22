@@ -31,7 +31,7 @@ namespace BlackJack.TryAngular.Controllers
         public IActionResult Menu()
         {
             bool hasUnfinishedGame = _gameService.HasUnfinishedGame();
-            var gameMenuViewModel = new GameMenuViewModel
+            var gameMenuViewModel = new MenuViewModel
             {
                 HasUnfinishedGame = hasUnfinishedGame,
                 MaxBotCount = BlackJackConstants.MaxBotCount

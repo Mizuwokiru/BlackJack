@@ -3,11 +3,9 @@ using System.Collections.Generic;
 
 namespace BlackJack.ViewModels.Models.Game
 {
-    public class RoundViewModel
+    public class PlayerStateViewModel
     {
         public string PlayerName { get; set; }
-
-        public PlayerType PlayerType { get; set; }
 
         public List<CardViewModel> Cards { get; set; }
 
