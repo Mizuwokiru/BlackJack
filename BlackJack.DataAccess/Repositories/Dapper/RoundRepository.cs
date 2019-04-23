@@ -25,9 +25,10 @@ namespace BlackJack.DataAccess.Repositories.Dapper
                   INNER JOIN [RoundCards] ON [RoundCards].[RoundId] = [Rounds].[Id]
                   INNER JOIN [Cards] ON [Cards].[Id] = [RoundCards].[CardId]
                   WHERE [Rounds].[GameId] = @GameId AND [Rounds].[CreationTime] = (
-	                  SELECT MAX([CreationTime]) FROM [Rounds]
-	                  WHERE [GameId] = @GameId
-                  )";
+                      SELECT MAX([CreationTime]) FROM [Rounds]
+                      WHERE [GameId] = @GameId
+                  )
+                  ORDER BY [Players].[Type], [Rounds].[Id]";
             using (var connection = new SqlConnection(_connectionString))
             {
                 var roundInfoMap = new Dictionary<long, RoundInfoModel>();
@@ -36,7 +37,6 @@ namespace BlackJack.DataAccess.Repositories.Dapper
                     (round, player, card) =>
                     {
                         RoundInfoModel roundInfo;
-
                         if (!roundInfoMap.TryGetValue(round.Id, out roundInfo))
                         {
                             roundInfo = new RoundInfoModel
@@ -63,7 +63,7 @@ namespace BlackJack.DataAccess.Repositories.Dapper
         public StepInfoModel GetStepInfo(long userId, long gameId)
         {
             string sqlQuery =
-                @"SELECT TOP 1 [Rounds].[Id] FROM [Rounds]
+                @"SELECT TOP 1 [Rounds].* FROM [Rounds]
                   WHERE [Rounds].[PlayerId] = @UserId AND [Rounds].[GameId] = @GameId
                   ORDER BY [Rounds].[CreationTime] DESC ;
                   SELECT [Cards].* FROM Rounds
@@ -77,10 +77,12 @@ namespace BlackJack.DataAccess.Repositories.Dapper
             {
                 using (SqlMapper.GridReader reader = connection.QueryMultiple(sqlQuery, new { UserId = userId, GameId = gameId }))
                 {
+                    Round userRound = reader.Read<Round>().Single();
                     var stepInfo = new StepInfoModel
                     {
-                        UserRoundId = reader.Read<int>().Single(),
-                        RoundsCards = reader.Read<Card>().ToList()
+                        UserRoundId = userRound.Id,
+                        UserState = userRound.State,
+                        RoundsCards = reader.Read<Card>()
                     };
                     return stepInfo;
                 }
@@ -103,12 +105,12 @@ namespace BlackJack.DataAccess.Repositories.Dapper
                 @"SELECT [State] FROM [Rounds]
                   WHERE [PlayerId] = @UserId AND [GameId] = (
                     SELECT [GameId] FROM (
-	                    SELECT [GameId], ROW_NUMBER() OVER (ORDER BY [Games].[CreationTime] DESC) AS RowIndex
-	                    FROM (
-		                  SELECT DISTINCT [GameId] FROM [Rounds]
-		                  WHERE [PlayerId] = @UserId
-	                    ) [RoundGames]
-	                    INNER JOIN [Games] ON [Games].[Id] = [RoundGames].[GameId]
+                     SELECT [GameId], ROW_NUMBER() OVER (ORDER BY [Games].[CreationTime] DESC) AS RowIndex
+                     FROM (
+                    SELECT DISTINCT [GameId] FROM [Rounds]
+                    WHERE [PlayerId] = @UserId
+                     ) [RoundGames]
+                     INNER JOIN [Games] ON [Games].[Id] = [RoundGames].[GameId]
                     ) [GamesByPlayer]
                     WHERE [GamesByPlayer].[RowIndex] > @Skip AND [GamesByPlayer].[RowIndex] <= @Skip + 1
                   )";
@@ -132,19 +134,19 @@ namespace BlackJack.DataAccess.Repositories.Dapper
                       WHERE [PlayerId] = @UserId
                   ) AND [Rounds].[CreationTime] = (
                       SELECT [RoundsBySkippedGames].[CreationTime] FROM (
-	                      SELECT [CreationTime], ROW_NUMBER() OVER (ORDER BY [CreationTime]) AS RowIndex FROM [Rounds]
-	                      WHERE [Rounds].[GameId] = (
-		                     SELECT [GameId] FROM (
-			                    SELECT [GameId], ROW_NUMBER() OVER (ORDER BY [Games].[CreationTime] DESC) AS RowIndex
-			                    FROM (
-				                    SELECT DISTINCT [GameId] FROM [Rounds]
-				                  WHERE [PlayerId] = @UserId
-			                    ) [RoundGames]
-			                    INNER JOIN [Games] ON [Games].[Id] = [RoundGames].[GameId]
-		                    ) [GamesByPlayer]
-		                  WHERE [GamesByPlayer].[RowIndex] > @GameSkip AND [GamesByPlayer].[RowIndex] <= @GameSkip + 1
-	                    )
-	                  GROUP BY [CreationTime]
+                       SELECT [CreationTime], ROW_NUMBER() OVER (ORDER BY [CreationTime]) AS RowIndex FROM [Rounds]
+                       WHERE [Rounds].[GameId] = (
+                       SELECT [GameId] FROM (
+                       SELECT [GameId], ROW_NUMBER() OVER (ORDER BY [Games].[CreationTime] DESC) AS RowIndex
+                       FROM (
+                        SELECT DISTINCT [GameId] FROM [Rounds]
+                      WHERE [PlayerId] = @UserId
+                       ) [RoundGames]
+                       INNER JOIN [Games] ON [Games].[Id] = [RoundGames].[GameId]
+                      ) [GamesByPlayer]
+                    WHERE [GamesByPlayer].[RowIndex] > @GameSkip AND [GamesByPlayer].[RowIndex] <= @GameSkip + 1
+                     )
+                   GROUP BY [CreationTime]
                   ) [RoundsBySkippedGames]
                   WHERE [RoundsBySkippedGames].[RowIndex] > @RoundSkip AND [RoundsBySkippedGames].[RowIndex] <= @RoundSkip + 1
                     )";

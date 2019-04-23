@@ -8,6 +8,6 @@ namespace BlackJack.DataAccess.Repositories.Interfaces
     {
         Game GetUnfinishedGame(long userId);
         int GetPlayerCount(long gameId);
-        IEnumerable<HistoryGameInfoModel> GetGamesHistory(long userId);
+        IEnumerable<GamesHistoryInfoModel> GetGamesHistory(long userId);
     }
 }

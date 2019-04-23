@@ -1,11 +1,11 @@
-﻿using BlackJack.Shared;
+﻿using BlackJack.Shared.Helpers;
 using System.ComponentModel.DataAnnotations;
 
-namespace BlackJack.ViewModels.Models.Game
+namespace BlackJack.ViewModels.Game
 {
     public class NewGameViewModel
     {
-        [Range(0, BlackJackConstants.MaxBotCount)]
+        [Range(0, Constants.MaxBotCount)]
         public int BotCount { get; set; }
     }
 }

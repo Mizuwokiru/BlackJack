@@ -43,27 +43,27 @@ namespace BlackJack.DataAccess.Repositories.Dapper
             }
         }
 
-        public IEnumerable<HistoryGameInfoModel> GetGamesHistory(long userId)
+        public IEnumerable<GamesHistoryInfoModel> GetGamesHistory(long userId)
         {
             string sqlQuery =
                 @"SELECT [GamesByPlayer].[CreationTime], [RoundCounts].[Count] AS [RoundCount], [PlayerCounts].[Count] AS [PlayerCount]
                   FROM (
-	                  SELECT DISTINCT [Games].* FROM [Games]
-	                  INNER JOIN [Rounds] ON [Rounds].[GameId] = [Games].[Id]
-	                  WHERE [Rounds].[PlayerId] = @UserId
+                   SELECT DISTINCT [Games].* FROM [Games]
+                   INNER JOIN [Rounds] ON [Rounds].[GameId] = [Games].[Id]
+                   WHERE [Rounds].[PlayerId] = @UserId
                   ) AS [GamesByPlayer]
                   INNER JOIN (
-	                  SELECT DISTINCT [Rounds].[GameId] AS [GameId], COUNT(*) AS [Count] FROM [Rounds]
-	                  GROUP BY [Rounds].[GameId], [Rounds].[PlayerId]
+                   SELECT DISTINCT [Rounds].[GameId] AS [GameId], COUNT(*) AS [Count] FROM [Rounds]
+                   GROUP BY [Rounds].[GameId], [Rounds].[PlayerId]
                   ) AS [RoundCounts] ON [RoundCounts].[GameId] = [GamesByPlayer].[Id]
                   INNER JOIN (
-	                  SELECT DISTINCT [Rounds].[GameId] AS [GameId], COUNT(*) AS [Count] FROM [Rounds]
-	                  GROUP BY [Rounds].[GameId], [Rounds].[CreationTime]
+                   SELECT DISTINCT [Rounds].[GameId] AS [GameId], COUNT(*) AS [Count] FROM [Rounds]
+                   GROUP BY [Rounds].[GameId], [Rounds].[CreationTime]
                   ) AS [PlayerCounts] ON [PlayerCounts].[GameId] = [GamesByPlayer].[Id]
                   ORDER BY [GamesByPlayer].[CreationTime] DESC";
             using (var connection = new SqlConnection(_connectionString))
             {
-                IEnumerable<HistoryGameInfoModel> gamesHistory = connection.Query<HistoryGameInfoModel>(sqlQuery, new { UserId = userId });
+                IEnumerable<GamesHistoryInfoModel> gamesHistory = connection.Query<GamesHistoryInfoModel>(sqlQuery, new { UserId = userId });
                 return gamesHistory;
             }
         }

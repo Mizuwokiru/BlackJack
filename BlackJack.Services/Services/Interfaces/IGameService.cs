@@ -1,15 +1,14 @@
-﻿using BlackJack.ViewModels.Models.Game;
-using System.Collections.Generic;
+﻿using BlackJack.ViewModels.Game;
 
 namespace BlackJack.Services.Services.Interfaces
 {
     public interface IGameService
     {
-        bool HasUnfinishedGame();
+        MenuViewModel GetMenu();
+        RoundInfoViewModel GetRoundInfo();
         void NewGame(int neededBotCount);
-        RoundInfoViewModel GetRoundsInfo();
         void Step();
-        void EndRound();
+        void Skip();
         void NextRound();
         void EndGame();
     }

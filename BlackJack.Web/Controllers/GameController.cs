@@ -1,79 +1,93 @@
 ﻿using BlackJack.Services.Services.Interfaces;
-using BlackJack.ViewModels.Models;
-using BlackJack.ViewModels.Models.Menu;
+using BlackJack.ViewModels.Error;
+using BlackJack.ViewModels.Game;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 
 namespace BlackJack.Web.Controllers
 {
     [Authorize]
-    public class GameController : Controller
+    [Route("api/[controller]")]
+    [ApiController]
+    public class GameController : ControllerBase
     {
         private readonly IGameService _gameService;
+        private readonly ILogger _logger;
 
-        public GameController(IGameService gameService)
+        public GameController(IGameService gameService,
+            ILogger<GameController> logger)
         {
             _gameService = gameService;
+            _logger = logger;
         }
 
+        [HttpGet]
+        public IActionResult Get()
+        {
+            RoundInfoViewModel roundInfo = _gameService.GetRoundInfo();
+            return Ok(roundInfo);
+        }
+
+        [Route("[action]")]
+        [HttpGet]
         public IActionResult Menu()
         {
-            bool hasUnfinishedGame = _gameService.HasUnfinishedGame();
-            var gameMenuViewModel = new GameMenuViewModel { HasUnfinishedGame = hasUnfinishedGame };
-            return View(gameMenuViewModel);
+            MenuViewModel menu = _gameService.GetMenu();
+            return Ok(menu);
         }
-
-        public IActionResult Game()
+        
+        [HttpPost]
+        public IActionResult New([FromBody]NewGameViewModel newGameViewModel)
         {
-            List<RoundViewModel> roundViewModels = _gameService.GetRoundsInfo().ToList();
-            return View(roundViewModels);
-        }
-
-        public IActionResult NewGame(NewGameViewModel newGameViewModel)
-        {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid) // TODO: DRY
             {
-                _gameService.NewGame(newGameViewModel.BotCount);
-                return RedirectToAction(nameof(Game));
+                IEnumerable<ValidationErrorViewModel> errors = ModelState
+                    .Select(modelStateEntry => new ValidationErrorViewModel
+                    {
+                        Property = modelStateEntry.Key,
+                        Errors = modelStateEntry.Value.Errors
+                            .Select(error => error.ErrorMessage)
+                    });
+                return BadRequest(errors);
             }
-            return View("Menu", newGameViewModel);
+
+            _gameService.NewGame(newGameViewModel.BotCount);
+            return Ok();
         }
 
-        public IActionResult ContinueGame()
-        {
-            return RedirectToAction(nameof(Game));
-        }
-
+        [Route("[action]")]
+        [HttpPost]
         public IActionResult Step()
         {
             _gameService.Step();
-            return RedirectToAction(nameof(Game));
+            return Ok();
         }
 
-        public IActionResult EndRound()
+        [Route("[action]")]
+        [HttpPost]
+        public IActionResult Skip()
         {
-            _gameService.EndRound();
-            return RedirectToAction(nameof(Game));
+            _gameService.Skip();
+            return Ok();
         }
 
+        [Route("[action]")]
+        [HttpPost]
         public IActionResult NextRound()
         {
             _gameService.NextRound();
-            return RedirectToAction(nameof(Game));
+            return Ok();
         }
 
+        [Route("[action]")]
+        [HttpPost]
         public IActionResult EndGame()
         {
             _gameService.EndGame();
-            return RedirectToAction(nameof(Menu));
-        }
-
-        public IActionResult Quit()
-        {
-            return RedirectToAction(nameof(Menu));
+            return Ok();
         }
     }
 }

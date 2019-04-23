@@ -33,16 +33,17 @@ namespace BlackJack.DataAccess.Repositories.EntityFrameworkCore
                         PlayerType = player.Type,
                         Cards = round.Cards.OrderBy(roundCard => roundCard.CreationTime).Select(roundCard => roundCard.Card).ToList(),
                         State = round.State
-                    });
+                    })
+                .OrderBy(roundInfoModel => roundInfoModel.PlayerType)
+                .ThenBy(roundInfoModel => roundInfoModel.RoundId);
             return roundInfoModels;
         }
 
         public StepInfoModel GetStepInfo(long userId, long gameId)
         {
-            long userRoundId = _dbContext.Rounds
+            Round userRound = _dbContext.Rounds
                 .Where(round => round.PlayerId == userId && round.GameId == gameId)
                 .OrderByDescending(round => round.CreationTime)
-                .Select(round => round.Id)
                 .FirstOrDefault();
             IEnumerable<Card> cards = _dbContext.Rounds
                 .Where(lastRound => lastRound.GameId == gameId && lastRound.CreationTime ==
@@ -56,8 +57,9 @@ namespace BlackJack.DataAccess.Repositories.EntityFrameworkCore
                     (round, roundCard) => roundCard.Card);
             var stepInfoModel = new StepInfoModel
             {
-                UserRoundId = userRoundId,
-                RoundsCards = cards.ToList()
+                UserRoundId = userRound.Id,
+                UserState = userRound.State,
+                RoundsCards = cards
             };
             return stepInfoModel;
         }

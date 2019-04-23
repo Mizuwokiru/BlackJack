@@ -1,4 +1,4 @@
-﻿namespace BlackJack.ViewModels.Models.Game
+﻿namespace BlackJack.ViewModels.Game
 {
     public class MenuViewModel
     {

@@ -36,9 +36,9 @@ namespace BlackJack.DataAccess.Repositories.EntityFrameworkCore
             return playerCount;
         }
 
-        public IEnumerable<HistoryGameInfoModel> GetGamesHistory(long userId)
+        public IEnumerable<GamesHistoryInfoModel> GetGamesHistory(long userId)
         {
-            IEnumerable<HistoryGameInfoModel> userGames = _dbContext.Rounds
+            IEnumerable<GamesHistoryInfoModel> userGames = _dbContext.Rounds
                 .Where(round => round.PlayerId == userId)
                 .Select(round => round.Game)
                 .Distinct()
@@ -46,7 +46,7 @@ namespace BlackJack.DataAccess.Repositories.EntityFrameworkCore
                     _dbContext.Rounds,
                     game => game.Id,
                     round => round.GameId,
-                    (game, rounds) => new HistoryGameInfoModel
+                    (game, rounds) => new GamesHistoryInfoModel
                     {
                         PlayerCount = rounds.GroupBy(round => round.PlayerId).Count(),
                         RoundCount = rounds.Count(round => round.PlayerId == userId),

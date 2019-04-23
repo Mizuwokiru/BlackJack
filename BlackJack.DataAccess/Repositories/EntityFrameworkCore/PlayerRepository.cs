@@ -2,7 +2,6 @@
 using BlackJack.DataAccess.Repositories.Interfaces;
 using BlackJack.Shared.Enums;
 using System.Collections.Generic;
-using System.Data.Common;
 using System.Linq;
 
 namespace BlackJack.DataAccess.Repositories.EntityFrameworkCore
@@ -19,14 +18,6 @@ namespace BlackJack.DataAccess.Repositories.EntityFrameworkCore
                 .Where(player => player.Type == PlayerType.User)
                 .Select(player => player.Name);
             return userNames;
-        }
-
-        public Player GetUser(string name)
-        {
-            Player user = _dbContext.Players
-                .Where(player => player.Name == name && player.Type == PlayerType.User)
-                .FirstOrDefault();
-            return user;
         }
 
         public int GetBotCount()

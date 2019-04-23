@@ -29,7 +29,7 @@ namespace BlackJack.DataAccess.Repositories.Dapper
                   )";
             using (var connection = new SqlConnection(_connectionString))
             {
-                IEnumerable<Card> cards = 
+                IEnumerable<Card> cards =
                     connection.Query<Card>(sqlQuery, new { GameId = gameId, PlayerId = playerId });
                 return cards;
             }

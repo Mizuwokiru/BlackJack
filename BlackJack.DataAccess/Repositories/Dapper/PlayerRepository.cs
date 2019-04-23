@@ -27,18 +27,6 @@ namespace BlackJack.DataAccess.Repositories.Dapper
             }
         }
 
-        public Player GetUser(string name)
-        {
-            string sqlQuery =
-                @"SELECT * FROM [Players]
-                  WHERE [Name] = @Name";
-            using (var connection = new SqlConnection(_connectionString))
-            {
-                Player player = connection.QuerySingleOrDefault<Player>(sqlQuery, new { Name = name });
-                return player;
-            }
-        }
-
         public int GetBotCount()
         {
             string sqlQuery =

@@ -1,7 +1,0 @@
-<div *ngIf="gameInfo" class="my-4 w-75 mx-auto">
-  <div *ngFor="let roundState of gameInfo.roundStates; index as i" class="card">
-    <a routerLink="/History/{{ gameId }}/{{ i }}" class="btn btn-success p-3">
-      Round {{ i + 1 }}
-    </a>
-  </div>
-</div>

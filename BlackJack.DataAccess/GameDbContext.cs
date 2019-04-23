@@ -1,6 +1,7 @@
 ﻿using BlackJack.DataAccess.Entities;
 using BlackJack.Shared;
 using BlackJack.Shared.Enums;
+using BlackJack.Shared.Helpers;
 using BlackJack.Shared.Options;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -43,7 +44,7 @@ namespace BlackJack.DataAccess
             modelBuilder.Entity<Player>()
                 .HasData(new Player
                 {
-                    Id = BlackJackConstants.DealerId,
+                    Id = Constants.DealerId,
                     CreationTime = DateTime.Now,
                     Name = "Dealer",
                     Type = PlayerType.Dealer
@@ -74,19 +75,16 @@ namespace BlackJack.DataAccess
 
         private Card[] GenerateCards()
         {
-            var cards = new List<Card>();
-            IEnumerable<Suit> suits = Enum.GetValues(typeof(Suit)).OfType<Suit>();
-            IEnumerable<Rank> ranks = Enum.GetValues(typeof(Rank)).OfType<Rank>();
-            int i = 1;
-            foreach (var suit in suits)
-            {
-                foreach (var rank in ranks)
+            var now = DateTime.Now;
+            Card[] cards = Enumerable.Range(1, Constants.CardCount)
+                .Select(i =>
                 {
-                    cards.Add(new Card { Id = i, CreationTime = DateTime.Now, Suit = suit, Rank = rank });
-                    i++;
-                }
-            }
-            return cards.ToArray();
+                    Tuple<Suit, Rank> cardData = CardHelper.GetCardById(i);
+                    var card = new Card { Id = i, CreationTime = now, Suit = cardData.Item1, Rank = cardData.Item2 };
+                    return card;
+                })
+                .ToArray();
+            return cards;
         }
     }
 }

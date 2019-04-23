@@ -1,13 +1,21 @@
-﻿using System.Collections.Generic;
+﻿using BlackJack.Shared.Enums;
+using System.Collections.Generic;
 
-namespace BlackJack.ViewModels.Models.Game
+namespace BlackJack.ViewModels.Game
 {
     public class RoundInfoViewModel
     {
-        public PlayerStateViewModel User { get; set; }
+        public IEnumerable<PlayerStateViewModel> Players { get; set; }
+    }
 
-        public IEnumerable<PlayerStateViewModel> Bots { get; set; }
+    public class PlayerStateViewModel
+    {
+        public string PlayerName { get; set; }
 
-        public PlayerStateViewModel Dealer { get; set; }
+        public List<int> Cards { get; set; }
+
+        public RoundState State { get; set; }
+
+        public int Score { get; set; }
     }
 }

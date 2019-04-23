@@ -1,0 +1,12 @@
+<div class="d-flex w-100 h-100 mx-auto flex-column">
+  <header>
+    <nav class="navbar navbar-expand-lg navbar-light sticky-top bg-light row col shadow-sm">
+      <a routerLink="/" class="navbar-brand mr-auto">Black Jack</a>
+      <div class="inner">
+        <span class="navbar-text mr-2"><strong>{{ userName }}</strong> is logged</span>
+        <button class="btn btn-outline-primary mb-1">Sign out</button>
+      </div>
+    </nav>
+  </header>
+  <router-outlet></router-outlet>
+</div>

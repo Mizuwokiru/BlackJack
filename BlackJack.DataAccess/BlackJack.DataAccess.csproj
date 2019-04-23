@@ -16,12 +16,14 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Repositories\Interfaces\" />
-    <Folder Include="Repositories\EntityFrameworkCore\" />
+    <ProjectReference Include="..\BlackJack.Shared\BlackJack.Shared.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\BlackJack.Shared\BlackJack.Shared.csproj" />
+    <Folder Include="ResponseModels\" />
+    <Folder Include="Repositories\Interfaces\" />
+    <Folder Include="Repositories\EntityFrameworkCore\" />
+    <Folder Include="Repositories\Dapper\" />
   </ItemGroup>
 
 </Project>
