@@ -37,6 +37,7 @@ namespace BlackJack.Web.Controllers
         [HttpGet]
         public IActionResult GetUsers()
         {
+            _logger.LogDebug("QQQQQ");
             UserNamesViewModel users = _loginService.GetUsers();
             return Ok(users);
         }

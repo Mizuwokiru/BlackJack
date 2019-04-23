@@ -2,18 +2,16 @@
   <div class="w-25">
     <div class="mb-3" id="login-block">
       <div class="form-group">
-        <label for="userNameInput" pattern="">User name</label>
-        <input pattern="^\w+$" minlength="2" maxlength="32" name="userNameInput" id="userNameInput"
+        <label for="user-name-input" pattern="">User name</label>
+        <input pattern="^\w+$" minlength="2" maxlength="32" name="user-name-input" id="user-name-input"
                type="text" class="form-control dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
-               aria-expanded="false" required autocomplete="off">
+               aria-expanded="false" required autocomplete="off" (input)="changeUserName()" [(ngModel)]="user.name" #userName="ngModel">
         <div class="dropdown-menu dropdown-scrollable w-25">
-          <button class="dropdown-item">Bohdan</button>
-          <button class="dropdown-item">Victor</button>
-          <button class="dropdown-item">Myhaylo</button>
+          <button *ngFor="let name of userNames" class="dropdown-item" (click)="chooseUserNameFromDropdown($event.target.innerText)">{{ name }}</button>
         </div>
       </div>
     </div>
 
-    <button class="btn btn-primary w-100">Sign in</button>
+    <button class="btn btn-primary w-100" (click)="login()">Sign in</button>
   </div>
 </main>
