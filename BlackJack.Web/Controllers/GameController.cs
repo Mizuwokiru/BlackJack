@@ -1,11 +1,7 @@
 ﻿using BlackJack.Services.Services.Interfaces;
-using BlackJack.ViewModels.Error;
 using BlackJack.ViewModels.Game;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace BlackJack.Web.Controllers
 {
@@ -15,13 +11,10 @@ namespace BlackJack.Web.Controllers
     public class GameController : ControllerBase
     {
         private readonly IGameService _gameService;
-        private readonly ILogger _logger;
 
-        public GameController(IGameService gameService,
-            ILogger<GameController> logger)
+        public GameController(IGameService gameService)
         {
             _gameService = gameService;
-            _logger = logger;
         }
 
         [HttpGet]
@@ -42,7 +35,7 @@ namespace BlackJack.Web.Controllers
         [HttpPost]
         public IActionResult New([FromBody]NewGameViewModel newGameViewModel)
         {
-            if (!ModelState.IsValid) // TODO: DRY
+            if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }

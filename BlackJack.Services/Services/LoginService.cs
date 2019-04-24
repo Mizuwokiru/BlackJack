@@ -1,6 +1,5 @@
 ﻿using BlackJack.DataAccess.Entities;
 using BlackJack.DataAccess.Repositories.Interfaces;
-using BlackJack.Services.Exceptions;
 using BlackJack.Services.Services.Interfaces;
 using BlackJack.Shared.Enums;
 using BlackJack.Shared.Helpers;

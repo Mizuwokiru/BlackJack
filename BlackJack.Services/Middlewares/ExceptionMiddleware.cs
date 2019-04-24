@@ -1,5 +1,4 @@
-﻿using BlackJack.Services.Exceptions;
-using BlackJack.ViewModels.Error;
+﻿using BlackJack.ViewModels.Error;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;

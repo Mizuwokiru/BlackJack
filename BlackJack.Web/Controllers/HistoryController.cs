@@ -3,7 +3,6 @@ using BlackJack.ViewModels.Game;
 using BlackJack.ViewModels.History;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 
 namespace BlackJack.Web.Controllers
 {
@@ -13,13 +12,10 @@ namespace BlackJack.Web.Controllers
     public class HistoryController : ControllerBase
     {
         private readonly IHistoryService _historyService;
-        private readonly ILogger _logger;
 
-        public HistoryController(IHistoryService historyService,
-            ILogger<HistoryController> logger)
+        public HistoryController(IHistoryService historyService)
         {
             _historyService = historyService;
-            _logger = logger;
         }
 
         [HttpGet]
