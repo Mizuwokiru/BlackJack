@@ -11,9 +11,16 @@
                 <input asp-for="@Model.User.Name" name="user-name-input" id="user-name-input" type="text" class="form-control dropdown-toggle"
                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" autocomplete="off" required />
                 <div class="invalid-feedback">
-                    @*@Html.ValidationMessage()*@
+                    @Html.ValidationMessageFor(Model => Model.User.Name)
+                </div>
+                <div class="dropdown-menu dropdown-scrollable w-25">
+                    @foreach (var userName in Model.UserNames.UserNames)
+                    {
+                        <button class="dropdown-item">@userName</button>
+                    }
                 </div>
             </div>
         </div>
+        <button class="btn btn-primary w-100">Sign in</button>
     </div>
 </form>
