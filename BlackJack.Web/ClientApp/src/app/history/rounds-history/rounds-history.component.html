@@ -1,3 +1,8 @@
-<p>
-  rounds-history works!
-</p>
+<div *ngIf="roundsHistory" class="my-4 w-75 mx-auto">
+  <div *ngFor="let roundState of roundsHistory.roundStates; index as i" class="card">
+    <a [routerLink]="['/History', gameId, i]" class="btn btn-{{ stateHelper.get(roundState).btnClass }} p-3">
+      Round {{ i + 1 }}
+      {{ stateHelper.get(roundState).text }}
+    </a>
+  </div>
+</div>

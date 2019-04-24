@@ -16,6 +16,9 @@ export class ErrorInterceptor implements HttpInterceptor {
         this.router.navigate(['/Authentication']);
       }
 
+      if (error.error && error.error.Name) {
+        return throwError(error.error.Name as Array<string>);
+      }
       return throwError(`${error.status} ${error.statusText}`);
     }));
   }

@@ -149,7 +149,8 @@ namespace BlackJack.DataAccess.Repositories.Dapper
                    GROUP BY [CreationTime]
                   ) [RoundsBySkippedGames]
                   WHERE [RoundsBySkippedGames].[RowIndex] > @RoundSkip AND [RoundsBySkippedGames].[RowIndex] <= @RoundSkip + 1
-                    )";
+                    )
+                  ORDER BY [Players].[Type], [Rounds].[Id]";
             using (var connection = new SqlConnection(_connectionString))
             {
                 var roundInfoMap = new Dictionary<long, RoundInfoModel>();

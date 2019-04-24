@@ -35,11 +35,6 @@ namespace BlackJack.Services.Services
         public async Task<ClaimsIdentity> Login(UserViewModel userViewModel)
         {
             User user = await _userManager.FindByNameAsync(userViewModel.Name);
-            User userNormalized = await _userManager.FindByNameAsync(userViewModel.Name.ToLowerInvariant());
-            if (user == null && userNormalized != null)
-            {
-                return await Task.FromException<ClaimsIdentity>(new UserNotFoundException($@"User '{userViewModel.Name}' is not found."));
-            }
             if (user == null)
             {
                 Player player = new Player { Name = userViewModel.Name, Type = PlayerType.User };

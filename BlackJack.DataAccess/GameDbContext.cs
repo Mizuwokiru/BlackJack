@@ -1,5 +1,4 @@
 ﻿using BlackJack.DataAccess.Entities;
-using BlackJack.Shared;
 using BlackJack.Shared.Enums;
 using BlackJack.Shared.Helpers;
 using BlackJack.Shared.Options;

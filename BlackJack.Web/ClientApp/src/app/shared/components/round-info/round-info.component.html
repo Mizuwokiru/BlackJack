@@ -1,3 +1,6 @@
-<p>
-  round-info works!
-</p>
+<div *ngIf="players" id="game-cards-block" class="row">
+  <app-round-player-info class="col-md-3" *ngFor="let player of players" [player]="player"></app-round-player-info>
+</div>
+<div *ngIf="dealer" class="row justify-content-center">
+  <app-round-player-info class="col-md-3" [player]="dealer"></app-round-player-info>
+</div>

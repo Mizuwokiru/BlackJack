@@ -25,7 +25,7 @@ import { ErrorInterceptor } from './shared/interceptors/error.interceptor';
       config: {
         tokenGetter: () => localStorage.getItem('access_token'),
         whitelistedDomains: ['localhost:44317'],
-        blacklistedRoutes: ['https://localhost:44317/Authentication/Login']
+        blacklistedRoutes: ['https://localhost:44317/Authentication/**']
       }
     })
   ],

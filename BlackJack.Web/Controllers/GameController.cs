@@ -44,14 +44,7 @@ namespace BlackJack.Web.Controllers
         {
             if (!ModelState.IsValid) // TODO: DRY
             {
-                IEnumerable<ValidationErrorViewModel> errors = ModelState
-                    .Select(modelStateEntry => new ValidationErrorViewModel
-                    {
-                        Property = modelStateEntry.Key,
-                        Errors = modelStateEntry.Value.Errors
-                            .Select(error => error.ErrorMessage)
-                    });
-                return BadRequest(errors);
+                return BadRequest(ModelState);
             }
 
             _gameService.NewGame(newGameViewModel.BotCount);

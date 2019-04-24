@@ -1,6 +1,6 @@
 <main class="d-flex align-items-center justify-content-center">
   <div class="btn-group-vertical w-25">
-    <button routerLink="/Game" class="btn btn-outline-info">Continue</button>
+    <button *ngIf="isContinueButtonShown" routerLink="/Game" class="btn btn-outline-info">Continue</button>
     <button class="btn btn-outline-primary" data-toggle="modal" data-target="#bot-count-modal">New game</button>
     <button routerLink="/History" class="btn btn-outline-success">History</button>
   </div>
@@ -15,19 +15,12 @@
         </div>
         <div class="modal-body">
           <label for="bot-count-select-box">Bot count:</label>
-          <select id="bot-count-select-box" class="form-control">
-            <option>0</option>
-            <option>1</option>
-            <option>2</option>
-            <option>3</option>
-            <option>4</option>
-            <option>5</option>
-            <option>6</option>
-            <option>7</option>
+          <select id="bot-count-select-box" class="form-control" [(ngModel)]="botCount">
+            <option *ngFor="let botIndex of botIndices" [ngValue]="botIndex">{{ botIndex }}</option>
           </select>
         </div>
         <div class="modal-footer">
-          <input routerLink="/Authentication" type="button" class="btn btn-primary" data-dismiss="modal" value="Start">
+          <input type="button" class="btn btn-primary" data-dismiss="modal" value="Start" (click)="newGame()">
           <input type="button" class="btn btn-secondary" data-dismiss="modal" value="Cancel">
         </div>
       </div>

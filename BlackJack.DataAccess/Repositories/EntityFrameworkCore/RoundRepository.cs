@@ -114,7 +114,9 @@ namespace BlackJack.DataAccess.Repositories.EntityFrameworkCore
                         PlayerType = player.Type,
                         Cards = round.Cards.OrderBy(roundCard => roundCard.CreationTime).Select(roundCard => roundCard.Card).ToList(),
                         State = round.State
-                    });
+                    })
+                .OrderBy(roundInfoModel => roundInfoModel.PlayerType)
+                .ThenBy(roundInfoModel => roundInfoModel.RoundId);
             return roundInfos;
         }
     }

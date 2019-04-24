@@ -6,6 +6,9 @@ import { CardComponent } from './components/card/card.component';
 
 @NgModule({
   declarations: [RoundInfoComponent, RoundPlayerInfoComponent, CardComponent],
+  exports: [
+    RoundInfoComponent
+  ],
   imports: [
     CommonModule
   ]

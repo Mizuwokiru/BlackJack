@@ -12,10 +12,11 @@ export class LoginComponent implements OnInit {
   private userNames: Array<string>;
   private user: User = new User();
 
+  private errors: Array<string> | null = null;
+
   constructor(
     private userService: UserService,
-    private router: Router,
-    private route: ActivatedRoute
+    private router: Router
   ) { }
 
   ngOnInit(): void {
@@ -33,11 +34,14 @@ export class LoginComponent implements OnInit {
     this.userService.login(this.user)
       .subscribe(
         response => this.router.navigate(['/']),
-        (error) => {
-          console.log(error);
-          this.ngOnInit();
+        error => {
+          this.errors = error as Array<string>;
         }
       );
+  }
+
+  clearErrors(): void {
+    this.errors = null;
   }
 
   changeUserName(): void {

@@ -270,9 +270,9 @@ namespace BlackJack.Services.Services
             while (score < Constants.DealerStopValue)
             {
                 Tuple<Suit, Rank> cardData = CardHelper.GetCardById(shuffledCards[gotCardsCount]);
-                Card card = new Card { Suit = cardData.Item1, Rank = cardData.Item2 };
+                Card card = new Card { Id = shuffledCards[gotCardsCount], Suit = cardData.Item1, Rank = cardData.Item2 };
                 gotCardsCount++;
-                var roundCard = new RoundCard { CardId = card.Id, RoundId = roundInfo.RoundId };
+                var roundCard = new RoundCard { CardId = shuffledCards[gotCardsCount], RoundId = roundInfo.RoundId };
                 roundCards.Add(roundCard);
                 roundInfo.Cards.Add(card);
                 score = CalculateCardScore(roundInfo.Cards);
