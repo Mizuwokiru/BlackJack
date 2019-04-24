@@ -271,8 +271,8 @@ namespace BlackJack.Services.Services
             {
                 Tuple<Suit, Rank> cardData = CardHelper.GetCardById(shuffledCards[gotCardsCount]);
                 Card card = new Card { Id = shuffledCards[gotCardsCount], Suit = cardData.Item1, Rank = cardData.Item2 };
+                var roundCard = new RoundCard { CardId = card.Id, RoundId = roundInfo.RoundId };
                 gotCardsCount++;
-                var roundCard = new RoundCard { CardId = shuffledCards[gotCardsCount], RoundId = roundInfo.RoundId };
                 roundCards.Add(roundCard);
                 roundInfo.Cards.Add(card);
                 score = CalculateCardScore(roundInfo.Cards);
