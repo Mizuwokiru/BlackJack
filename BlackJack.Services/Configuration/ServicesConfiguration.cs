@@ -9,6 +9,7 @@ using BlackJack.Shared.Helpers;
 using BlackJack.Shared.Options;
 using BlackJack.ViewModels.Game;
 using BlackJack.ViewModels.History;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
@@ -100,12 +101,24 @@ namespace BlackJack.Services.Configuration
             services.AddIdentityCore<User>()
                 .AddEntityFrameworkStores<GameDbContext>();
 
+            services.AddAuthorization();
+
             return services;
         }
 
         public static IServiceCollection AddBlackJackMvcIdentity(this IServiceCollection services)
         {
-            // TODO: MVC Identity DI
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                .AddCookie(options =>
+                {
+                    options.LoginPath = new PathString("/Authentication/Login");
+                });
+
+            services.AddIdentityCore<User>()
+                .AddEntityFrameworkStores<GameDbContext>();
+
+            services.AddAuthorization();
+
             return services;
         }
     }

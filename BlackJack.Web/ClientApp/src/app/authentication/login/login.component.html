@@ -2,7 +2,7 @@
   <div class="w-25">
     <div class="mb-3" id="login-block">
       <div class="form-group" [class.was-validated]="errors !== null">
-        <label for="user-name-input" pattern="">User name</label>
+        <label for="user-name-input">User name</label>
         <input pattern="^\w+$" minlength="2" maxlength="32" name="user-name-input" id="user-name-input"
                type="text" class="form-control dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
                aria-expanded="false" required autocomplete="off" (click)="clearErrors()" (input)="changeUserName()" [(ngModel)]="user.name" #userName="ngModel">

@@ -1,0 +1,19 @@
+﻿@model LoginViewModel
+@{
+    ViewData["Title"] = "Login";
+}
+
+<form id="main-block" class="d-flex text-center h-100 justify-content-center align-items-center need-validate">
+    <div class="w-25">
+        <div class="mb-3" id="login-block">
+            <div class="form-group">
+                <label for="user-name-input">User name</label>
+                <input asp-for="@Model.User.Name" name="user-name-input" id="user-name-input" type="text" class="form-control dropdown-toggle"
+                       data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" autocomplete="off" required />
+                <div class="invalid-feedback">
+                    @*@Html.ValidationMessage()*@
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
