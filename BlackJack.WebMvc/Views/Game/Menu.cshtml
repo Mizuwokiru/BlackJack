@@ -1,7 +1,41 @@
-﻿
+﻿@model MenuGameViewModel
 @{
     ViewData["Title"] = "Menu";
 }
 
-<h2>Menu</h2>
-
+<main class="d-flex align-items-center justify-content-center">
+    <div class="btn-group-vertical w-25">
+        @if (Model.Menu.HasUnfinishedGame)
+        {
+            <button asp-action="Continue" class="btn btn-outline-info">Continue</button>
+        }
+        <button class="btn btn-outline-primary" data-toggle="modal" data-target="#bot-count-modal">New game</button>
+        <button asp-controller="History" asp-action="Index" class="btn btn-outline-success">History</button>
+    </div>
+    <div id="bot-count-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="bot-count-modal-title" aria-hidden="true">
+        <form class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 id="bot-count-modal-title" class="modal-title">Game creation</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <label for="bot-count-select-box">Bot count:</label>
+                    <select asp-for="@Model.NewGame.BotCount" id="bot-count-select-box" class="form-control">
+                        <option selected>0</option>
+                        @for (int i = 1; i <= Model.Menu.MaxBotCount; i++)
+                        {
+                            <option>@i</option>
+                        }
+                    </select>
+                </div>
+                <div class="modal-footer">
+                    <input type="submit" class="btn btn-primary" data-dismiss="modal" value="Start">
+                    <input type="button" class="btn btn-secondary" data-dismiss="modal" value="Cancel">
+                </div>
+            </div>
+        </form>
+    </div>
+</main>

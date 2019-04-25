@@ -104,15 +104,15 @@ namespace BlackJack.DataAccess.Repositories.Dapper
             string sqlQuery =
                 @"SELECT [State] FROM [Rounds]
                   WHERE [PlayerId] = @UserId AND [GameId] = (
-                    SELECT [GameId] FROM (
-                     SELECT [GameId], ROW_NUMBER() OVER (ORDER BY [Games].[CreationTime] DESC) AS RowIndex
-                     FROM (
-                    SELECT DISTINCT [GameId] FROM [Rounds]
-                    WHERE [PlayerId] = @UserId
-                     ) [RoundGames]
-                     INNER JOIN [Games] ON [Games].[Id] = [RoundGames].[GameId]
-                    ) [GamesByPlayer]
-                    WHERE [GamesByPlayer].[RowIndex] > @Skip AND [GamesByPlayer].[RowIndex] <= @Skip + 1
+                      SELECT [GameId] FROM (
+                          SELECT [GameId], ROW_NUMBER() OVER (ORDER BY [Games].[CreationTime] DESC) AS RowIndex
+                          FROM (
+                              SELECT DISTINCT [GameId] FROM [Rounds]
+                              WHERE [PlayerId] = @UserId
+                          ) [RoundGames]
+                          INNER JOIN [Games] ON [Games].[Id] = [RoundGames].[GameId]
+                      ) [GamesByPlayer]
+                      WHERE [GamesByPlayer].[RowIndex] > @Skip AND [GamesByPlayer].[RowIndex] <= @Skip + 1
                   )";
             using (var connection = new SqlConnection(_connectionString))
             {
@@ -128,28 +128,24 @@ namespace BlackJack.DataAccess.Repositories.Dapper
                   INNER JOIN [Players] ON [Players].[Id] = [Rounds].[PlayerId]
                   INNER JOIN [RoundCards] ON [RoundCards].[RoundId] = [Rounds].[Id]
                   INNER JOIN [Cards] ON [Cards].[Id] = [RoundCards].[CardId]
-                  WHERE [Rounds].[GameId] IN (
-                      SELECT [GameId] FROM [Rounds]
-                      INNER JOIN [Games] ON [Games].[Id] = [Rounds].[GameId]
-                      WHERE [PlayerId] = @UserId
-                  ) AND [Rounds].[CreationTime] = (
+                  WHERE [Rounds].[CreationTime] = (
                       SELECT [RoundsBySkippedGames].[CreationTime] FROM (
-                       SELECT [CreationTime], ROW_NUMBER() OVER (ORDER BY [CreationTime]) AS RowIndex FROM [Rounds]
-                       WHERE [Rounds].[GameId] = (
-                       SELECT [GameId] FROM (
-                       SELECT [GameId], ROW_NUMBER() OVER (ORDER BY [Games].[CreationTime] DESC) AS RowIndex
-                       FROM (
-                        SELECT DISTINCT [GameId] FROM [Rounds]
-                      WHERE [PlayerId] = @UserId
-                       ) [RoundGames]
-                       INNER JOIN [Games] ON [Games].[Id] = [RoundGames].[GameId]
-                      ) [GamesByPlayer]
-                    WHERE [GamesByPlayer].[RowIndex] > @GameSkip AND [GamesByPlayer].[RowIndex] <= @GameSkip + 1
-                     )
-                   GROUP BY [CreationTime]
-                  ) [RoundsBySkippedGames]
-                  WHERE [RoundsBySkippedGames].[RowIndex] > @RoundSkip AND [RoundsBySkippedGames].[RowIndex] <= @RoundSkip + 1
-                    )
+                          SELECT [CreationTime], ROW_NUMBER() OVER (ORDER BY [CreationTime]) AS RowIndex FROM [Rounds]
+                          WHERE [Rounds].[GameId] = (
+                              SELECT [GameId] FROM (
+                                  SELECT [GameId], ROW_NUMBER() OVER (ORDER BY [Games].[CreationTime] DESC) AS RowIndex
+                                  FROM (
+                                      SELECT DISTINCT [GameId] FROM [Rounds]
+                                      WHERE [PlayerId] = @UserId
+                                  ) [RoundGames]
+                                  INNER JOIN [Games] ON [Games].[Id] = [RoundGames].[GameId]
+                              ) [GamesByPlayer]
+                              WHERE [GamesByPlayer].[RowIndex] > @GameSkip AND [GamesByPlayer].[RowIndex] <= @GameSkip + 1
+                          )
+                          GROUP BY [CreationTime]
+                      ) [RoundsBySkippedGames]
+                      WHERE [RoundsBySkippedGames].[RowIndex] > @RoundSkip AND [RoundsBySkippedGames].[RowIndex] <= @RoundSkip + 1
+                  )
                   ORDER BY [Players].[Type], [Rounds].[Id]";
             using (var connection = new SqlConnection(_connectionString))
             {

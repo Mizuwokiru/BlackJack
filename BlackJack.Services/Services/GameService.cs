@@ -41,10 +41,10 @@ namespace BlackJack.Services.Services
             }
         }
 
-        public MenuGameViewModel GetMenu()
+        public MenuMenuGameViewModel GetMenu()
         {
             Game unfinishedGame = _gameRepository.GetUnfinishedGame(_userId);
-            var menu = new MenuGameViewModel
+            var menu = new MenuMenuGameViewModel
             {
                 HasUnfinishedGame = unfinishedGame != null,
                 MaxBotCount = Constants.MaxBotCount

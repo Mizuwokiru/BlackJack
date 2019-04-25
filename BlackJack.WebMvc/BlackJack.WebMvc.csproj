@@ -14,8 +14,4 @@
     <ProjectReference Include="..\BlackJack.Services\BlackJack.Services.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Views\History\" />
-  </ItemGroup>
-
 </Project>

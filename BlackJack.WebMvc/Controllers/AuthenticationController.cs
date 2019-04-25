@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
-using System.Threading.Tasks;
-using BlackJack.Services.Services.Interfaces;
+﻿using BlackJack.Services.Services.Interfaces;
 using BlackJack.ViewModels.Login;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace BlackJack.WebMvc.Controllers
 {
@@ -48,7 +45,7 @@ namespace BlackJack.WebMvc.Controllers
             claimsIdentity.AddClaim(new Claim(ClaimsIdentity.DefaultNameClaimType, loginViewModel.User.Name));
 
             await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
-            return RedirectToAction("Index", "Game");
+            return RedirectToAction("Menu", "Game");
         }
     }
 }

@@ -4,7 +4,7 @@ namespace BlackJack.Services.Services.Interfaces
 {
     public interface IGameService
     {
-        MenuGameViewModel GetMenu();
+        MenuMenuGameViewModel GetMenu();
         GameViewModel GetRoundInfo();
         void NewGame(int neededBotCount);
         void Step();

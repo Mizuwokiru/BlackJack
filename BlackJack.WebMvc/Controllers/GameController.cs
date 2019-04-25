@@ -12,10 +12,15 @@ namespace BlackJack.WebMvc.Controllers
     {
         public IActionResult Index()
         {
-            return RedirectToAction(nameof(Menu));
+            return View();
         }
 
         public IActionResult Menu()
+        {
+            return View();
+        }
+
+        public IActionResult Continue()
         {
             return View();
         }
