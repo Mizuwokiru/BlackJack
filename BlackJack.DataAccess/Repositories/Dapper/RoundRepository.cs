@@ -20,43 +20,17 @@ namespace BlackJack.DataAccess.Repositories.Dapper
         public IEnumerable<RoundInfoModel> GetLastRoundsInfo(long gameId)
         {
             string sqlQuery =
-                @"SELECT [Rounds].[Id], [Rounds].[State], [Players].*, [Cards].* FROM [Rounds]
+                @"SELECT [Rounds].[Id] AS [RoundId], [Rounds].[State], [Players].[Name] AS [PlayerName], [Players].[Type] AS [PlayerType] FROM [Rounds]
                   INNER JOIN [Players] ON [Players].[Id] = [Rounds].[PlayerId]
-                  INNER JOIN [RoundCards] ON [RoundCards].[RoundId] = [Rounds].[Id]
-                  INNER JOIN [Cards] ON [Cards].[Id] = [RoundCards].[CardId]
                   WHERE [Rounds].[GameId] = @GameId AND [Rounds].[CreationTime] = (
                       SELECT MAX([CreationTime]) FROM [Rounds]
                       WHERE [GameId] = @GameId
                   )
-                  ORDER BY [Players].[Type], [Rounds].[Id]";
+                  ORDER BY [PlayerName], [RoundId]";
             using (var connection = new SqlConnection(_connectionString))
             {
-                var roundInfoMap = new Dictionary<long, RoundInfoModel>();
-
-                IEnumerable<RoundInfoModel> roundInfos = connection.Query<Round, Player, Card, RoundInfoModel>(sqlQuery,
-                    (round, player, card) =>
-                    {
-                        RoundInfoModel roundInfo;
-                        if (!roundInfoMap.TryGetValue(round.Id, out roundInfo))
-                        {
-                            roundInfo = new RoundInfoModel
-                            {
-                                RoundId = round.Id,
-                                State = round.State,
-                                PlayerName = player.Name,
-                                PlayerType = player.Type,
-                                Cards = new List<Card>()
-                            };
-                            roundInfoMap.Add(round.Id, roundInfo);
-                        }
-
-                        roundInfo.Cards.Add(card);
-                        return roundInfo;
-                    },
-                    new { GameId = gameId })
-                .Distinct();
-
-                return roundInfos;
+                IEnumerable<RoundInfoModel> roundInfoModels = connection.Query<RoundInfoModel>(sqlQuery, new { GameId = gameId });
+                return roundInfoModels;
             }
         }
 
@@ -124,10 +98,8 @@ namespace BlackJack.DataAccess.Repositories.Dapper
         public IEnumerable<RoundInfoModel> GetRoundInfo(long userId, int gameSkipCount, int roundSkipCount)
         {
             string sqlQuery =
-                @"SELECT [Rounds].[Id], [Rounds].[State], [Players].*, [Cards].* FROM [Rounds]
+                @"SELECT [Rounds].[Id] AS [RoundId], [Rounds].[State], [Players].[Name] AS [PlayerName], [Players].[Type] AS [PlayerType] FROM [Rounds]
                   INNER JOIN [Players] ON [Players].[Id] = [Rounds].[PlayerId]
-                  INNER JOIN [RoundCards] ON [RoundCards].[RoundId] = [Rounds].[Id]
-                  INNER JOIN [Cards] ON [Cards].[Id] = [RoundCards].[CardId]
                   WHERE [Rounds].[GameId] IN (
                       SELECT [GameId] FROM [Rounds]
                       INNER JOIN [Games] ON [Games].[Id] = [Rounds].[GameId]
@@ -153,33 +125,9 @@ namespace BlackJack.DataAccess.Repositories.Dapper
                   ORDER BY [Players].[Type], [Rounds].[Id]";
             using (var connection = new SqlConnection(_connectionString))
             {
-                var roundInfoMap = new Dictionary<long, RoundInfoModel>();
-
-                IEnumerable<RoundInfoModel> roundInfos = connection.Query<Round, Player, Card, RoundInfoModel>(sqlQuery,
-                    (round, player, card) =>
-                    {
-                        RoundInfoModel roundInfo;
-
-                        if (!roundInfoMap.TryGetValue(round.Id, out roundInfo))
-                        {
-                            roundInfo = new RoundInfoModel
-                            {
-                                RoundId = round.Id,
-                                State = round.State,
-                                PlayerName = player.Name,
-                                PlayerType = player.Type,
-                                Cards = new List<Card>()
-                            };
-                            roundInfoMap.Add(round.Id, roundInfo);
-                        }
-
-                        roundInfo.Cards.Add(card);
-                        return roundInfo;
-                    },
-                    new { UserId = userId, GameSkip = gameSkipCount, RoundSkip = roundSkipCount })
-                .Distinct();
-
-                return roundInfos;
+                IEnumerable<RoundInfoModel> roundInfoModels = connection.Query<RoundInfoModel>(sqlQuery,
+                    new { UserId = userId, GameSkip = gameSkipCount, RoundSkip = roundSkipCount });
+                return roundInfoModels;
             }
         }
     }

@@ -14,14 +14,17 @@ namespace BlackJack.Services.Services
 {
     public class HistoryService : IHistoryService
     {
+        private readonly ICardRepository _cardRepository;
         private readonly IGameRepository _gameRepository;
         private readonly IRoundRepository _roundRepository;
         private readonly long _userId;
 
-        public HistoryService(IGameRepository gameRepository,
+        public HistoryService(ICardRepository cardRepository,
+            IGameRepository gameRepository,
             IRoundRepository roundRepository,
             IHttpContextAccessor httpContextAccessor)
         {
+            _cardRepository = cardRepository;
             _gameRepository = gameRepository;
             _roundRepository = roundRepository;
             string playerIdClaimValue = httpContextAccessor.HttpContext.User.FindFirst(Constants.ClaimPlayerId).Value;
@@ -50,7 +53,8 @@ namespace BlackJack.Services.Services
 
         public GameViewModel GetRoundInfo(int gameSkipCount, int roundSkipCount)
         {
-            IEnumerable<RoundInfoModel> roundInfos = _roundRepository.GetRoundInfo(_userId, gameSkipCount, roundSkipCount);
+            IEnumerable<RoundInfoModel> roundInfos = _roundRepository.GetRoundInfo(_userId, gameSkipCount, roundSkipCount).ToList();
+            _cardRepository.GetRoundCards(roundInfos);
             List<PlayerGameViewModel> players = Mapper.Map<IEnumerable<RoundInfoModel>, IEnumerable<PlayerGameViewModel>>(roundInfos).ToList();
             if (players[0].State == RoundState.None)
             {

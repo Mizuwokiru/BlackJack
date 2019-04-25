@@ -11,7 +11,7 @@ namespace BlackJack.DataAccess.ResponseModels
         public string PlayerName { get; set; }
 
         public PlayerType PlayerType { get; set; }
-
+        
         public List<Card> Cards { get; set; }
 
         public RoundState State { get; set; }

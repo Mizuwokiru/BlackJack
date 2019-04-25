@@ -1,5 +1,6 @@
 ﻿using BlackJack.DataAccess.Entities;
 using BlackJack.DataAccess.Repositories.Interfaces;
+using BlackJack.DataAccess.ResponseModels;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -24,6 +25,18 @@ namespace BlackJack.DataAccess.Repositories.EntityFrameworkCore
                 .Select(roundCard => roundCard.Card);
 
             return cards;
+        }
+
+        public void GetRoundCards(IEnumerable<RoundInfoModel> roundInfoModels)
+        {
+            foreach (var roundInfoModel in roundInfoModels)
+            {
+                List<Card> cards = _dbContext.RoundCards
+                    .Where(roundCard => roundCard.RoundId == roundInfoModel.RoundId)
+                    .Select(roundCard => roundCard.Card)
+                    .ToList();
+                roundInfoModel.Cards = cards;
+            }
         }
     }
 }

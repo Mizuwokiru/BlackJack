@@ -1,10 +1,12 @@
 ﻿using BlackJack.DataAccess.Entities;
 using BlackJack.DataAccess.Repositories.Interfaces;
+using BlackJack.DataAccess.ResponseModels;
 using BlackJack.Shared.Options;
 using Dapper;
 using Microsoft.Extensions.Options;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.Linq;
 
 namespace BlackJack.DataAccess.Repositories.Dapper
 {
@@ -32,6 +34,22 @@ namespace BlackJack.DataAccess.Repositories.Dapper
                 IEnumerable<Card> cards =
                     connection.Query<Card>(sqlQuery, new { GameId = gameId, PlayerId = playerId });
                 return cards;
+            }
+        }
+
+        public void GetRoundCards(IEnumerable<RoundInfoModel> roundInfoModels)
+        {
+            string sqlQuery =
+                @"SELECT [Cards].* FROM [RoundCards]
+                  INNER JOIN [Cards] ON [Cards].[Id] = [RoundCards].[CardId]
+                  WHERE [RoundCards].[RoundId] = @RoundId";
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                foreach (var roundInfoModel in roundInfoModels)
+                {
+                    List<Card> cards = connection.Query<Card>(sqlQuery, roundInfoModel).ToList();
+                    roundInfoModel.Cards = cards;
+                }
             }
         }
     }
