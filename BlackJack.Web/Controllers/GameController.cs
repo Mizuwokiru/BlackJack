@@ -20,7 +20,7 @@ namespace BlackJack.Web.Controllers
         [HttpGet]
         public IActionResult Get()
         {
-            RoundInfoViewModel roundInfo = _gameService.GetRoundInfo();
+            GameViewModel roundInfo = _gameService.GetRoundInfo();
             return Ok(roundInfo);
         }
 
@@ -28,7 +28,7 @@ namespace BlackJack.Web.Controllers
         [HttpGet]
         public IActionResult Menu()
         {
-            MenuViewModel menu = _gameService.GetMenu();
+            MenuGameViewModel menu = _gameService.GetMenu();
             return Ok(menu);
         }
         

@@ -9,6 +9,6 @@ namespace BlackJack.Services.Services.Interfaces
 
         RoundsHistoryViewModel GetRoundsHistory(int gameSkipCount);
 
-        RoundInfoViewModel GetRoundInfo(int gameSkipCount, int roundSkipCount);
+        GameViewModel GetRoundInfo(int gameSkipCount, int roundSkipCount);
     }
 }

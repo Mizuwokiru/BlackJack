@@ -41,10 +41,10 @@ namespace BlackJack.Services.Services
             }
         }
 
-        public MenuViewModel GetMenu()
+        public MenuGameViewModel GetMenu()
         {
             Game unfinishedGame = _gameRepository.GetUnfinishedGame(_userId);
-            var menu = new MenuViewModel
+            var menu = new MenuGameViewModel
             {
                 HasUnfinishedGame = unfinishedGame != null,
                 MaxBotCount = Constants.MaxBotCount
@@ -52,7 +52,7 @@ namespace BlackJack.Services.Services
             return menu;
         }
 
-        public RoundInfoViewModel GetRoundInfo()
+        public GameViewModel GetRoundInfo()
         {
             Game game = _gameRepository.GetUnfinishedGame(_userId);
             if (game == null)
@@ -60,14 +60,14 @@ namespace BlackJack.Services.Services
                 throw new InvalidOperationException("Game is not found");
             }
             IEnumerable<RoundInfoModel> roundInfoModels = _roundRepository.GetLastRoundsInfo(game.Id);
-            List<PlayerStateViewModel> players = Mapper.Map<IEnumerable<RoundInfoModel>, List<PlayerStateViewModel>>(roundInfoModels);
+            List<PlayerGameViewModel> players = Mapper.Map<IEnumerable<RoundInfoModel>, List<PlayerGameViewModel>>(roundInfoModels);
             if (players[0].State == RoundState.None)
             {
-                PlayerStateViewModel dealer = players[players.Count - 1];
+                PlayerGameViewModel dealer = players[players.Count - 1];
                 dealer.Cards[1] = Constants.BlankCardCode;
                 dealer.Score = 0;
             }
-            var roundInfo = new RoundInfoViewModel { Players = players };
+            var roundInfo = new GameViewModel { Players = players };
             return roundInfo;
         }
 

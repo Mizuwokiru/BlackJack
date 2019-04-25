@@ -36,7 +36,7 @@ namespace BlackJack.Services.Services
             IEnumerable<GamesHistoryInfoModel> gamesHistoryInfo = _gameRepository.GetGamesHistory(_userId);
             var gamesHistory = new GamesHistoryViewModel
             {
-                Games = Mapper.Map<IEnumerable<GamesHistoryInfoModel>, IEnumerable<GameViewModel>>(gamesHistoryInfo)
+                Games = Mapper.Map<IEnumerable<GamesHistoryInfoModel>, IEnumerable<GameGamesHistoryViewModel>>(gamesHistoryInfo)
             };
             return gamesHistory;
         }
@@ -48,17 +48,17 @@ namespace BlackJack.Services.Services
             return gameRoundsViewModel;
         }
 
-        public RoundInfoViewModel GetRoundInfo(int gameSkipCount, int roundSkipCount)
+        public GameViewModel GetRoundInfo(int gameSkipCount, int roundSkipCount)
         {
             IEnumerable<RoundInfoModel> roundInfos = _roundRepository.GetRoundInfo(_userId, gameSkipCount, roundSkipCount);
-            List<PlayerStateViewModel> players = Mapper.Map<IEnumerable<RoundInfoModel>, IEnumerable<PlayerStateViewModel>>(roundInfos).ToList();
+            List<PlayerGameViewModel> players = Mapper.Map<IEnumerable<RoundInfoModel>, IEnumerable<PlayerGameViewModel>>(roundInfos).ToList();
             if (players[0].State == RoundState.None)
             {
-                PlayerStateViewModel dealer = players[players.Count - 1];
+                PlayerGameViewModel dealer = players[players.Count - 1];
                 dealer.Cards[1] = Constants.BlankCardCode;
                 dealer.Score = 0;
             }
-            var roundInfo = new RoundInfoViewModel
+            var roundInfo = new GameViewModel
             {
                 Players = players
             };

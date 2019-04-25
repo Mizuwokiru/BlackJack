@@ -3,12 +3,12 @@ using System.Collections.Generic;
 
 namespace BlackJack.ViewModels.Game
 {
-    public class RoundInfoViewModel
+    public class GameViewModel
     {
-        public IEnumerable<PlayerStateViewModel> Players { get; set; }
+        public IEnumerable<PlayerGameViewModel> Players { get; set; }
     }
 
-    public class PlayerStateViewModel
+    public class PlayerGameViewModel
     {
         public string PlayerName { get; set; }
 

@@ -50,7 +50,7 @@ namespace BlackJack.Services.Configuration
 
             Mapper.Initialize(config =>
             {
-                config.CreateMap<RoundInfoModel, PlayerStateViewModel>()
+                config.CreateMap<RoundInfoModel, PlayerGameViewModel>()
                     .ForMember(
                         playerStateViewModel => playerStateViewModel.Cards,
                         options => options.MapFrom(
@@ -60,7 +60,7 @@ namespace BlackJack.Services.Configuration
                         playerStateViewModel => playerStateViewModel.Score,
                         options => options.MapFrom(
                             roundInfoModel => GameService.CalculateCardScore(roundInfoModel.Cards)));
-                config.CreateMap<GamesHistoryInfoModel, GameViewModel>();
+                config.CreateMap<GamesHistoryInfoModel, GameGamesHistoryViewModel>();
             });
 
             services.AddTransient<ILoginService, LoginService>();

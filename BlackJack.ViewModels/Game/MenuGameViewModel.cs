@@ -1,6 +1,6 @@
 ﻿namespace BlackJack.ViewModels.Game
 {
-    public class MenuViewModel
+    public class MenuGameViewModel
     {
         public bool HasUnfinishedGame { get; set; }
 

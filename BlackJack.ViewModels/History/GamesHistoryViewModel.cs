@@ -5,10 +5,10 @@ namespace BlackJack.ViewModels.History
 {
     public class GamesHistoryViewModel
     {
-        public IEnumerable<GameViewModel> Games { get; set; }
+        public IEnumerable<GameGamesHistoryViewModel> Games { get; set; }
     }
 
-    public class GameViewModel
+    public class GameGamesHistoryViewModel
     {
         public int RoundCount { get; set; }
 

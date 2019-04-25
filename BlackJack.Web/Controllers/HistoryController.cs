@@ -37,7 +37,7 @@ namespace BlackJack.Web.Controllers
         [HttpGet]
         public IActionResult Get(int gameSkipCount, int roundSkipCount)
         {
-            RoundInfoViewModel roundInfo = _historyService.GetRoundInfo(gameSkipCount, roundSkipCount);
+            GameViewModel roundInfo = _historyService.GetRoundInfo(gameSkipCount, roundSkipCount);
             return Ok(roundInfo);
         }
     }
