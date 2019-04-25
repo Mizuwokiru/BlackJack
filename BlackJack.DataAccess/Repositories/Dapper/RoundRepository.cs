@@ -128,7 +128,11 @@ namespace BlackJack.DataAccess.Repositories.Dapper
                   INNER JOIN [Players] ON [Players].[Id] = [Rounds].[PlayerId]
                   INNER JOIN [RoundCards] ON [RoundCards].[RoundId] = [Rounds].[Id]
                   INNER JOIN [Cards] ON [Cards].[Id] = [RoundCards].[CardId]
-                  WHERE [Rounds].[CreationTime] = (
+                  WHERE [Rounds].[GameId] IN (
+                      SELECT [GameId] FROM [Rounds]
+                      INNER JOIN [Games] ON [Games].[Id] = [Rounds].[GameId]
+                      WHERE [PlayerId] = @UserId
+                  ) AND [Rounds].[CreationTime] = (
                       SELECT [RoundsBySkippedGames].[CreationTime] FROM (
                           SELECT [CreationTime], ROW_NUMBER() OVER (ORDER BY [CreationTime]) AS RowIndex FROM [Rounds]
                           WHERE [Rounds].[GameId] = (
