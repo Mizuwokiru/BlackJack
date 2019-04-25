@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { MenuComponent } from './menu/menu.component';
 import { AuthenticationGuard } from './shared/guards/authentication.guard';
-import { NoAuthenticationGuard } from './shared/guards/no-authentication.guard';
 
 const routes: Routes = [
   {
@@ -12,8 +11,7 @@ const routes: Routes = [
   },
   {
     path: 'Authentication',
-    loadChildren: './authentication/authentication.module#AuthenticationModule',
-    canActivate: [NoAuthenticationGuard]
+    loadChildren: './authentication/authentication.module#AuthenticationModule'
   },
   {
     path: 'Game',

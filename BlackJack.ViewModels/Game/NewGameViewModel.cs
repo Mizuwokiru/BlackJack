@@ -3,10 +3,8 @@ using System.ComponentModel.DataAnnotations;
 
 namespace BlackJack.ViewModels.Game
 {
-    public class MenuGameViewModel
+    public class NewGameViewModel
     {
-        public bool HasUnfinishedGame { get; set; }
-
         [Range(0, Constants.MaxBotCount)]
         public int BotCount { get; set; }
     }

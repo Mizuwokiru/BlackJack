@@ -7,6 +7,6 @@ namespace BlackJack.Services.Services.Interfaces
     public interface ILoginService
     {
         UserNamesViewModel GetUsers();
-        Task<ClaimsIdentity> Login(UserViewModel userViewModel);
+        Task<ClaimsIdentity> Login(string userName);
     }
 }

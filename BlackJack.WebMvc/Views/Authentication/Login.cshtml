@@ -1,22 +1,24 @@
 ﻿@model LoginViewModel
 @{
-    ViewData["Title"] = "Login";
+    ViewBag.Title = "Login";
 }
 
-<form id="main-block" class="d-flex text-center h-100 justify-content-center align-items-center need-validate">
+<link href="~/css/Authentication/Login.css" rel="stylesheet" />
+
+<form method="post" id="main-block" class="d-flex text-center h-100 justify-content-center align-items-center need-validate">
     <div class="w-25">
         <div class="mb-3" id="login-block">
             <div class="form-group">
                 <label for="user-name-input">User name</label>
-                <input asp-for="@Model.User.Name" name="user-name-input" id="user-name-input" type="text" class="form-control dropdown-toggle"
-                       data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" autocomplete="off" required />
+                <input asp-for="Name" id="user-name-input" type="text" class="form-control dropdown-toggle"
+                       data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" autocomplete="off" required oninput="changeUserName()" />
                 <div class="invalid-feedback">
-                    @Html.ValidationMessageFor(Model => Model.User.Name)
+                    @Html.ValidationMessageFor(Model => Model.Name)
                 </div>
-                <div class="dropdown-menu dropdown-scrollable w-25">
-                    @foreach (var userName in Model.UserNames.UserNames)
+                <div id="user-names-list" class="dropdown-menu dropdown-scrollable w-25">
+                    @foreach (var userName in Model.UserNames)
                     {
-                        <button class="dropdown-item">@userName</button>
+                        <input type="button" class="dropdown-item" value="@userName" onclick="chooseUserNameFromDropdown(event.target.value)" />
                     }
                 </div>
             </div>
@@ -24,3 +26,5 @@
         <button type="submit" class="btn btn-primary w-100">Sign in</button>
     </div>
 </form>
+
+<script src="~/js/Authentication/Login.js"></script>

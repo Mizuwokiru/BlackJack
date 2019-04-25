@@ -42,7 +42,7 @@ namespace BlackJack.Web.Controllers
                 return BadRequest(ModelState);
             }
             
-            ClaimsIdentity claimsIdentity = await _loginService.Login(user);
+            ClaimsIdentity claimsIdentity = await _loginService.Login(user.Name);
 
             var now = DateTime.UtcNow;
             var claims = new[]
@@ -61,7 +61,7 @@ namespace BlackJack.Web.Controllers
                 now.AddMinutes(_jwtSettings.Lifetime),
                 new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256));
             string encryptedToken = new JwtSecurityTokenHandler().WriteToken(token);
-            var apiUser = new ApiUserViewModel { Name = user.Name, Token = encryptedToken };
+            var apiUser = new UserViewModel { Name = user.Name, Token = encryptedToken };
             return Ok(apiUser);
         }
     }

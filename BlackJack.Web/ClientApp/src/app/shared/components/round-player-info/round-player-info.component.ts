@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { Player } from '../../models/player';
+import { PlayerGameViewModel } from '../../models/player-game.view-model';
 
 @Component({
   selector: 'app-round-player-info',
@@ -7,7 +7,7 @@ import { Player } from '../../models/player';
   styleUrls: ['./round-player-info.component.scss']
 })
 export class RoundPlayerInfoComponent {
-  @Input() player: Player;
+  @Input() player: PlayerGameViewModel;
 
   readonly colorClasses: string[][] = [
     [ '', 'border-success', 'border-danger', 'border-primary' ],

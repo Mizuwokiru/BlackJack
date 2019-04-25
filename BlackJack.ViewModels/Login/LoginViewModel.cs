@@ -1,9 +1,14 @@
-﻿namespace BlackJack.ViewModels.Login
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+
+namespace BlackJack.ViewModels.Login
 {
     public class LoginViewModel
     {
-        public UserNamesViewModel UserNames { get; set; }
+        public IEnumerable<string> UserNames { get; set; }
 
-        public UserViewModel User { get; set; }
+        [RegularExpression(@"^\w+$", ErrorMessage = "Name has invalid characters")]
+        [StringLength(32, MinimumLength = 2, ErrorMessage = "Name has too much characters")]
+        public string Name { get; set; }
     }
 }

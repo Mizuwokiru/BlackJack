@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { User } from '../../shared/models/user';
+import { UserViewModel } from '../../shared/models/user.view-model';
 import { UserService } from '../../shared/services/user.service';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -10,7 +10,10 @@ import { ActivatedRoute, Router } from '@angular/router';
 })
 export class LoginComponent implements OnInit {
   private userNames: Array<string>;
-  private user: User = new User();
+  private user: UserViewModel = {
+    name: '',
+    token: ''
+  };
 
   private errors: Array<string> | null = null;
 
@@ -20,14 +23,16 @@ export class LoginComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    if (this.userService.isLoggedIn) {
+      this.router.navigate(['/']);
+    }
     this.userService.getUserNames()
       .subscribe(response => {
           this.userNames = response;
           if (this.userNames.length > 0) {
             this.user.name = this.userNames[0];
           }
-        },
-        error => console.error(error));
+        });
   }
 
   login(): void {

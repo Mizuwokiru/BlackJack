@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { RoundInfo } from '../../shared/models/round-info';
+import { GameViewModel } from '../../shared/models/game.view-model';
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +11,7 @@ export class GameService {
   constructor(private http: HttpClient) { }
 
   getRoundInfo() {
-    return this.http.get<RoundInfo>(this.url);
+    return this.http.get<GameViewModel>(this.url);
   }
 
   step() {

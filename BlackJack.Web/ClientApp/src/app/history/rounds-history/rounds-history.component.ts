@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { RoundState } from '../../shared/enums/round-state.enum';
-import { RoundsHistory } from './rounds-history';
+import { RoundsHistoryViewModel } from './rounds-history.view-model';
 import { HistoryService } from '../history.service';
 import { ActivatedRoute } from '@angular/router';
 
@@ -10,7 +10,7 @@ import { ActivatedRoute } from '@angular/router';
   styleUrls: ['./rounds-history.component.scss']
 })
 export class RoundsHistoryComponent implements OnInit {
-  private roundsHistory: RoundsHistory;
+  private roundsHistory: RoundsHistoryViewModel;
   private gameId: number;
 
   readonly stateHelper: Map<RoundState, RoundStateInfo> = new Map<RoundState, RoundStateInfo>([

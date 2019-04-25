@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { RoundInfo } from '../../shared/models/round-info';
+import { GameViewModel } from '../../shared/models/game.view-model';
 import { GameService } from './game.service';
 import { Router } from '@angular/router';
 import { RoundState } from '../../shared/enums/round-state.enum';
@@ -10,7 +10,7 @@ import { RoundState } from '../../shared/enums/round-state.enum';
   styleUrls: ['./game.component.scss']
 })
 export class GameComponent implements OnInit {
-  private roundInfo: RoundInfo;
+  private roundInfo: GameViewModel;
 
   isCanToStep: boolean | null = null;
 

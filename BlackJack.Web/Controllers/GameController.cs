@@ -28,12 +28,12 @@ namespace BlackJack.Web.Controllers
         [HttpGet]
         public IActionResult Menu()
         {
-            MenuMenuGameViewModel menu = _gameService.GetMenu();
+            MenuViewModel menu = _gameService.GetMenu();
             return Ok(menu);
         }
         
         [HttpPost]
-        public IActionResult New([FromBody]NewMenuGameViewModel newGameViewModel)
+        public IActionResult New([FromBody]NewGameViewModel newGameViewModel)
         {
             if (!ModelState.IsValid)
             {

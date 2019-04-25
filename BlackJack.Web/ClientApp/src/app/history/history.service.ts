@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
-import { GamesHistory } from './games-history/games-history';
+import { GamesHistoryViewModel } from './games-history/games-history.view-model';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { RoundsHistory } from './rounds-history/rounds-history';
-import { RoundInfo } from '../shared/models/round-info';
+import { RoundsHistoryViewModel } from './rounds-history/rounds-history.view-model';
+import { GameViewModel } from '../shared/models/game.view-model';
 
 @Injectable({
   providedIn: 'root'
@@ -13,15 +13,15 @@ export class HistoryService {
 
   constructor(private http: HttpClient) { }
 
-  getGamesHistory(): Observable<GamesHistory> {
-    return this.http.get<GamesHistory>(this.url);
+  getGamesHistory(): Observable<GamesHistoryViewModel> {
+    return this.http.get<GamesHistoryViewModel>(this.url);
   }
 
-  getRoundsHistory(gameSkipCount: number): Observable<RoundsHistory> {
-    return this.http.get<RoundsHistory>(`${this.url}/${gameSkipCount}`);
+  getRoundsHistory(gameSkipCount: number): Observable<RoundsHistoryViewModel> {
+    return this.http.get<RoundsHistoryViewModel>(`${this.url}/${gameSkipCount}`);
   }
 
-  getRoundInfo(gameSkipCount: number, roundSkipCount: number): Observable<RoundInfo> {
-    return this.http.get<RoundInfo>(`${this.url}/${gameSkipCount}/${roundSkipCount}`);
+  getRoundInfo(gameSkipCount: number, roundSkipCount: number): Observable<GameViewModel> {
+    return this.http.get<GameViewModel>(`${this.url}/${gameSkipCount}/${roundSkipCount}`);
   }
 }

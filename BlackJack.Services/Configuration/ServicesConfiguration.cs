@@ -12,9 +12,11 @@ using BlackJack.ViewModels.History;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using System;
 using System.Linq;
 using System.Text;
 
@@ -111,13 +113,20 @@ namespace BlackJack.Services.Configuration
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(options =>
                 {
-                    options.LoginPath = new PathString("/Authentication/Login");
+                    options.LoginPath = "/Authentication/Login";
                 });
-
-            services.AddIdentityCore<User>()
+            services.AddIdentity<User, IdentityRole>()
                 .AddEntityFrameworkStores<GameDbContext>();
 
             services.AddAuthorization();
+
+            services.ConfigureApplicationCookie(options =>
+            {
+                options.Cookie.HttpOnly = true;
+                options.Cookie.Expiration = TimeSpan.FromMinutes(10);
+                options.LoginPath = "/Authentication/Login";
+                options.SlidingExpiration = true;
+            });
 
             return services;
         }

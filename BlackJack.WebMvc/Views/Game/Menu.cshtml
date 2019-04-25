@@ -5,7 +5,7 @@
 
 <main class="d-flex align-items-center justify-content-center">
     <div class="btn-group-vertical w-25">
-        @if (Model.Menu.HasUnfinishedGame)
+        @if (Model.HasUnfinishedGame)
         {
             <button asp-action="Continue" class="btn btn-outline-info">Continue</button>
         }
@@ -23,9 +23,9 @@
                 </div>
                 <div class="modal-body">
                     <label for="bot-count-select-box">Bot count:</label>
-                    <select asp-for="@Model.NewGame.BotCount" id="bot-count-select-box" class="form-control">
+                    <select asp-for="BotCount" id="bot-count-select-box" class="form-control">
                         <option selected>0</option>
-                        @for (int i = 1; i <= Model.Menu.MaxBotCount; i++)
+                        @for (int i = 1; i <= Constants.MaxBotCount; i++)
                         {
                             <option>@i</option>
                         }

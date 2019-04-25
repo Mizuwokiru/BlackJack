@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { RoundInfo } from '../../shared/models/round-info';
+import { GameViewModel } from '../../shared/models/game.view-model';
 import { HistoryService } from '../history.service';
 import { ActivatedRoute } from '@angular/router';
 
@@ -9,7 +9,7 @@ import { ActivatedRoute } from '@angular/router';
   styleUrls: ['./round.component.scss']
 })
 export class RoundComponent implements OnInit {
-  private roundInfo: RoundInfo;
+  private roundInfo: GameViewModel;
 
   constructor(
     private historyService: HistoryService,

@@ -2,7 +2,8 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { User } from '../models/user';
+import { UserViewModel } from '../models/user.view-model';
+import { UserNamesViewModel } from '../models/user-names.view-model';
 
 @Injectable({
   providedIn: 'root'
@@ -21,15 +22,15 @@ export class UserService {
   }
 
   getUserNames(): Observable<Array<string>> {
-    return this.http.get<{ userNames: Array<string> }>(this.url)
+    return this.http.get<UserNamesViewModel>(this.url)
       .pipe(map(userNames => {
         return userNames.userNames;
       }));
   }
 
-  login(user: User) {
+  login(user: UserViewModel) {
     return this.http.post(this.url, user)
-      .pipe(map((respondUser: User) => {
+      .pipe(map((respondUser: UserViewModel) => {
         if (respondUser && respondUser.token) {
           localStorage.setItem('user_name', respondUser.name);
           localStorage.setItem('access_token', respondUser.token);

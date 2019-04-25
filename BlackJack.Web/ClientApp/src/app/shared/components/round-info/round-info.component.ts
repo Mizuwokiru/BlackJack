@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { RoundInfo } from '../../models/round-info';
-import { Player } from '../../models/player';
+import { GameViewModel } from '../../models/game.view-model';
+import { PlayerGameViewModel } from '../../models/player-game.view-model';
 
 @Component({
   selector: 'app-round-info',
@@ -8,10 +8,10 @@ import { Player } from '../../models/player';
   styleUrls: ['./round-info.component.scss']
 })
 export class RoundInfoComponent implements OnInit {
-  @Input() roundInfo: RoundInfo;
+  @Input() roundInfo: GameViewModel;
 
-  players: Array<Player>;
-  dealer: Player;
+  players: Array<PlayerGameViewModel>;
+  dealer: PlayerGameViewModel;
 
   ngOnInit() {
       this.players = this.roundInfo.players;

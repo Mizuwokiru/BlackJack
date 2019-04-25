@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { HistoryService } from '../history.service';
-import { GamesHistory } from './games-history';
+import { GamesHistoryViewModel } from './games-history.view-model';
 
 @Component({
   selector: 'app-games-history',
@@ -8,7 +8,7 @@ import { GamesHistory } from './games-history';
   styleUrls: ['./games-history.component.scss']
 })
 export class GamesHistoryComponent implements OnInit {
-  private gamesHistory: GamesHistory;
+  private gamesHistory: GamesHistoryViewModel;
 
   constructor(private historyService: HistoryService) { }
 

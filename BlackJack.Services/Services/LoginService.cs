@@ -31,14 +31,14 @@ namespace BlackJack.Services.Services
             return userNames;
         }
 
-        public async Task<ClaimsIdentity> Login(UserViewModel userViewModel)
+        public async Task<ClaimsIdentity> Login(string userName)
         {
-            User user = await _userManager.FindByNameAsync(userViewModel.Name);
+            User user = await _userManager.FindByNameAsync(userName);
             if (user == null)
             {
-                Player player = new Player { Name = userViewModel.Name, Type = PlayerType.User };
+                Player player = new Player { Name = userName, Type = PlayerType.User };
                 _playerRepository.Add(player);
-                user = new User { UserName = userViewModel.Name, PlayerId = player.Id };
+                user = new User { UserName = userName, PlayerId = player.Id };
                 await _userManager.CreateAsync(user);
             }
 
