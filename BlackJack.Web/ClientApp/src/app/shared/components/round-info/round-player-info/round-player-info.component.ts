@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { PlayerGameViewModel } from '../../models/player-game.view-model';
+import { PlayerGameViewModel } from '../../../models/player-game.view-model';
 
 @Component({
   selector: 'app-round-player-info',
