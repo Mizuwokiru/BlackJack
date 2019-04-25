@@ -29,14 +29,14 @@ namespace BlackJack.DataAccess.Repositories.EntityFrameworkCore
 
         public void GetRoundCards(IEnumerable<RoundInfoModel> roundInfoModels)
         {
-            foreach (var roundInfoModel in roundInfoModels)
-            {
-                List<Card> cards = _dbContext.RoundCards
-                    .Where(roundCard => roundCard.RoundId == roundInfoModel.RoundId)
-                    .Select(roundCard => roundCard.Card)
-                    .ToList();
-                roundInfoModel.Cards = cards;
-            }
+            IQueryable<IGrouping<long, RoundCard>> roundCardsByRounds = _dbContext.RoundCards
+                .Where(roundCard => roundInfoModels.Any(roundInfoModel => roundInfoModel.RoundId == roundCard.RoundId))
+                .GroupBy(roundCard => roundCard.RoundId);
+            roundInfoModels.AsParallel()
+                .ForAll(roundInfoModel =>
+                    roundInfoModel.Cards = roundCardsByRounds.First(roundCardsByRound => roundCardsByRound.Key == roundInfoModel.RoundId)
+                        .Select(roundCard => roundCard.Card)
+                        .ToList());
         }
     }
 }
