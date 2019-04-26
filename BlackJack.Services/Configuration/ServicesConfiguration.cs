@@ -100,7 +100,7 @@ namespace BlackJack.Services.Configuration
                 };
             });
 
-            services.AddIdentityCore<User>()
+            services.AddIdentity<User, IdentityRole>()
                 .AddEntityFrameworkStores<GameDbContext>();
 
             services.AddAuthorization();

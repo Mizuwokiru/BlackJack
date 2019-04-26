@@ -42,7 +42,7 @@ namespace BlackJack.Web.Controllers
                 return BadRequest(ModelState);
             }
             
-            ClaimsIdentity claimsIdentity = await _loginService.Login(user.Name);
+            await _loginService.Login(user.Name);
 
             var now = DateTime.UtcNow;
             var claims = new[]
@@ -50,7 +50,6 @@ namespace BlackJack.Web.Controllers
                 new Claim(JwtRegisteredClaimNames.Sub, user.Name),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                 new Claim(JwtRegisteredClaimNames.Iat, new DateTimeOffset(now).ToUnixTimeSeconds().ToString(), ClaimValueTypes.Integer64),
-                claimsIdentity.FindFirst(Constants.ClaimPlayerId)
             };
             byte[] key = Encoding.ASCII.GetBytes(_jwtSettings.TokenSecret);
             var token = new JwtSecurityToken(

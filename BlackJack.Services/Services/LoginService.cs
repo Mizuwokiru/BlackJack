@@ -14,12 +14,15 @@ namespace BlackJack.Services.Services
     {
         private readonly IPlayerRepository _playerRepository;
         private readonly UserManager<User> _userManager;
+        private readonly SignInManager<User> _signInManager;
 
         public LoginService(IPlayerRepository playerRepository,
-            UserManager<User> userManager)
+            UserManager<User> userManager,
+            SignInManager<User> signInManager)
         {
             _playerRepository = playerRepository;
             _userManager = userManager;
+            _signInManager = signInManager;
         }
 
         public UserNamesViewModel GetUsers()
@@ -31,7 +34,7 @@ namespace BlackJack.Services.Services
             return userNames;
         }
 
-        public async Task<ClaimsIdentity> Login(string userName)
+        public async Task Login(string userName)
         {
             User user = await _userManager.FindByNameAsync(userName);
             if (user == null)
@@ -40,14 +43,9 @@ namespace BlackJack.Services.Services
                 _playerRepository.Add(player);
                 user = new User { UserName = userName, PlayerId = player.Id };
                 await _userManager.CreateAsync(user);
+                await _userManager.AddClaimAsync(user, new Claim(Constants.ClaimPlayerId, user.PlayerId.ToString(), ClaimValueTypes.Integer64));
             }
-
-            var claimsIdentity = new ClaimsIdentity(new[]
-            {
-                new Claim(Constants.ClaimPlayerId, user.PlayerId.ToString(), ClaimValueTypes.Integer64)
-            });
-
-            return await Task.FromResult(claimsIdentity);
+            await _signInManager.SignInAsync(user, false);
         }
     }
 }

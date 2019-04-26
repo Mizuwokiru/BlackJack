@@ -54,9 +54,10 @@ namespace BlackJack.WebMvc.Controllers
                 return View("Login", loginViewModel);
             }
 
-            await _loginService.Login(loginViewModel.Name);
+            ClaimsIdentity claimsIdentity = await _loginService.Login(loginViewModel.Name);
             User user = await _userManager.FindByNameAsync(loginViewModel.Name);
             await _signInManager.SignInAsync(user, true);
+            ((ClaimsIdentity)User.Identity).AddClaims(claimsIdentity.Claims);
             Debug.WriteLine(User.Identity.Name);
             Debug.WriteLine(User.Identity.IsAuthenticated);
             return RedirectToAction("Menu", "Game");
