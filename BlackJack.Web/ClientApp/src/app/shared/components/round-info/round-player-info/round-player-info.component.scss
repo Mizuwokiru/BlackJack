@@ -1,25 +1,12 @@
-.player-cards {
-  height: 12rem;
-  overflow-x: hidden;
-  overflow-y: auto;
+:host {
+  display: flex;
+  width: 100%;
 }
 
-.player-cards::-webkit-scrollbar {
-  width: 0.5rem
+.card {
+  flex: 1;
 }
 
-.player-cards::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.player-cards::-webkit-scrollbar-thumb {
-  background: rgba(0, 0, 0, 0.05);
-}
-
-.player-cards::-webkit-scrollbar-thumb:hover {
-  background: rgba(0, 0, 0, 0.1);
-}
-
-.player-cards::-webkit-scrollbar-thumb:active {
-  background: rgba(0, 0, 0, 0.15);
+.card-score {
+  flex: none;
 }
