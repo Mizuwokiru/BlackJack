@@ -11,6 +11,6 @@ namespace BlackJack.DataAccess.Repositories.Interfaces
         StepInfoModel GetStepInfo(long userId, long gameId);
         void UpdateLastRoundInfo(IEnumerable<RoundInfoModel> roundInfoModels);
         IEnumerable<RoundState> GetRoundStates(long userId, int gameSkipCount);
-        IEnumerable<RoundInfoModel> GetRoundInfo(long userId, int gameSkipCount, int roundSkipCount);
+        IEnumerable<RoundInfoModel> GetRoundInfo(long userId, long gameId, int roundSkipCount);
     }
 }

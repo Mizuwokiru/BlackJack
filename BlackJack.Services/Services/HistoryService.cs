@@ -53,7 +53,8 @@ namespace BlackJack.Services.Services
 
         public GameViewModel GetRoundInfo(int gameSkipCount, int roundSkipCount)
         {
-            IEnumerable<RoundInfoModel> roundInfos = _roundRepository.GetRoundInfo(_userId, gameSkipCount, roundSkipCount).ToList();
+            long gameId = _gameRepository.GetGameIdBySkipCount(_userId, gameSkipCount);
+            IEnumerable<RoundInfoModel> roundInfos = _roundRepository.GetRoundInfo(_userId, gameId, roundSkipCount).ToList();
             _cardRepository.GetRoundCards(roundInfos);
             List<PlayerGameViewModel> players = Mapper.Map<IEnumerable<RoundInfoModel>, IEnumerable<PlayerGameViewModel>>(roundInfos).ToList();
             if (players[0].State == RoundState.None)

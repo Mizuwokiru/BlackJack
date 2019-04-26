@@ -55,5 +55,21 @@ namespace BlackJack.DataAccess.Repositories.EntityFrameworkCore
                 .OrderByDescending(gameInfo => gameInfo.CreationTime);
             return userGames;
         }
+
+        public long GetGameIdBySkipCount(long userId, int gameSkipCount)
+        {
+            long gameId = _dbContext.Games
+                .GroupJoin(
+                    _dbContext.Rounds
+                        .Where(round => round.PlayerId == userId),
+                    game => game.Id,
+                    round => round.GameId,
+                    (game, rounds) => new { game.Id, game.CreationTime })
+                .OrderByDescending(game => game.CreationTime)
+                .Skip(gameSkipCount)
+                .First()
+                .Id;
+            return gameId;
+        }
     }
 }

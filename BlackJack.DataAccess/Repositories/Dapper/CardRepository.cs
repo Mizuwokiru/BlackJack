@@ -19,15 +19,12 @@ namespace BlackJack.DataAccess.Repositories.Dapper
         public IEnumerable<Card> GetPlayerCards(long playerId, long gameId)
         {
             string sqlQuery =
-                @"SELECT [Cards].* FROM [Cards]
-                  INNER JOIN [RoundCards] ON [Cards].[Id] = [RoundCards].[CardId]
-                  WHERE [RoundCards].[RoundId] = (
-                      SELECT TOP 1 [Id] FROM [Rounds]
-	                  WHERE [CreationTime] = (
-                          SELECT MAX([CreationTime])
-		                  FROM [Rounds]
-		                  WHERE [GameId] = @GameId AND [PlayerId] = @PlayerId
-                      )
+                @"SELECT Cards.* FROM Cards
+                  INNER JOIN RoundCards ON Cards.Id = RoundCards.CardId
+                  WHERE RoundId = (
+                      SELECT TOP 1 Id FROM Rounds
+	                  WHERE GameId = @GameId AND PlayerId = @PlayerId
+	                  ORDER BY CreationTime DESC
                   )";
             using (var connection = new SqlConnection(_connectionString))
             {
@@ -40,9 +37,9 @@ namespace BlackJack.DataAccess.Repositories.Dapper
         public void GetRoundCards(IEnumerable<RoundInfoModel> roundInfoModels)
         {
             string sqlQuery =
-                @"SELECT [Cards].* FROM [RoundCards]
-                  INNER JOIN [Cards] ON [Cards].[Id] = [RoundCards].[CardId]
-                  WHERE [RoundCards].[RoundId] = @RoundId";
+                @"SELECT Cards.* FROM RoundCards
+                  INNER JOIN Cards ON Cards.Id = RoundCards.CardId
+                  WHERE RoundId = @RoundId";
             using (var connection = new SqlConnection(_connectionString))
             {
                 foreach (var roundInfoModel in roundInfoModels)

@@ -18,8 +18,8 @@ namespace BlackJack.DataAccess.Repositories.Dapper
         public IEnumerable<string> GetUsers()
         {
             string sqlQuery =
-                @"SELECT [Name] FROM [Players]
-                  WHERE [Type] = @Type";
+                @"SELECT Name FROM Players
+                  WHERE Type = @Type";
             using (var connection = new SqlConnection(_connectionString))
             {
                 IEnumerable<string> userNames = connection.Query<string>(sqlQuery, new { Type = (int)PlayerType.User });
@@ -30,8 +30,8 @@ namespace BlackJack.DataAccess.Repositories.Dapper
         public int GetBotCount()
         {
             string sqlQuery =
-                @"SELECT COUNT(*) FROM [Players]
-                  WHERE [Type] = @Type";
+                @"SELECT COUNT(*) FROM Players
+                  WHERE Type = @Type";
             using (var connection = new SqlConnection(_connectionString))
             {
                 int botCount = connection.QuerySingle<int>(sqlQuery, new { Type = (int)PlayerType.Bot });
@@ -42,8 +42,8 @@ namespace BlackJack.DataAccess.Repositories.Dapper
         public IEnumerable<Player> GetBots(int count)
         {
             string sqlQuery =
-                $@"SELECT TOP {count} * FROM [Players]
-                   WHERE [Type] = @Type";
+                $@"SELECT TOP {count} * FROM Players
+                   WHERE Type = @Type";
             using (var connection = new SqlConnection(_connectionString))
             {
                 IEnumerable<Player> players = connection.Query<Player>(sqlQuery, new { Type = (int)PlayerType.Bot });

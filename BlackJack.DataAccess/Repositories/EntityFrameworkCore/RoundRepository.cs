@@ -88,20 +88,10 @@ namespace BlackJack.DataAccess.Repositories.EntityFrameworkCore
             return roundStates;
         }
 
-        public IEnumerable<RoundInfoModel> GetRoundInfo(long userId, int gameSkipCount, int roundSkipCount)
+        public IEnumerable<RoundInfoModel> GetRoundInfo(long userId, long gameId, int roundSkipCount)
         {
             IEnumerable<RoundInfoModel> roundInfos = _dbContext.Rounds
-                .Where(round => round.GameId == _dbContext.Rounds
-                    .Where(tmpRound => tmpRound.PlayerId == userId)
-                    .Select(tmpRound => tmpRound.Game)
-                    .Distinct()
-                    .OrderByDescending(game => game.CreationTime)
-                    .Skip(gameSkipCount)
-                    .First()
-                    .Id)
-                .GroupBy(round => round.CreationTime)
-                .Skip(roundSkipCount)
-                .First()
+                .Where(round => round.GameId == gameId)
                 .Join(
                     _dbContext.Players,
                     round => round.PlayerId,
@@ -109,12 +99,12 @@ namespace BlackJack.DataAccess.Repositories.EntityFrameworkCore
                     (round, player) => new RoundInfoModel
                     {
                         RoundId = round.Id,
+                        State = round.State,
                         PlayerName = player.Name,
-                        PlayerType = player.Type,
-                        State = round.State
+                        PlayerType = player.Type
                     })
-                .OrderBy(roundInfoModel => roundInfoModel.PlayerType)
-                .ThenBy(roundInfoModel => roundInfoModel.RoundId);
+                    .OrderBy(roundInfo => roundInfo.PlayerType)
+                    .ThenBy(roundInfo => roundInfo.RoundId);
             return roundInfos;
         }
     }
