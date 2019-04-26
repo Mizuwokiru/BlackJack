@@ -13,6 +13,6 @@ body {
     overflow-x: hidden;
 }
 
-header > nav.row {
+header>nav.row {
     margin: 0;
 }

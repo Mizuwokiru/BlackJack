@@ -1,0 +1,7 @@
+﻿.player {
+    flex: 1;
+}
+
+.player-score {
+    flex: none;
+}

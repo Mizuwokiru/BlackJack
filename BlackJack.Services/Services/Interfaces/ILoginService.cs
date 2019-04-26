@@ -8,5 +8,6 @@ namespace BlackJack.Services.Services.Interfaces
     {
         UserNamesViewModel GetUsers();
         Task Login(string userName);
+        Task Logout();
     }
 }

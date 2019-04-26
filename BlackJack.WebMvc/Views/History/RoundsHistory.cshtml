@@ -1,7 +1,54 @@
-﻿
+﻿@model RoundsHistoryViewModel
 @{
-    ViewData["Title"] = "RoundsHistory";
+    ViewBag.Title = "RoundsHistory";
+    int roundIndex = 0;
 }
 
-<h2>RoundsHistory</h2>
+@functions {
+    string GetStateColor(RoundState state)
+    {
+        if (state == RoundState.Won)
+        {
+            return "success";
+        }
+        if (state == RoundState.Lose)
+        {
+            return "danger";
+        }
+        if (state == RoundState.Push)
+        {
+            return "primary";
+        }
+        return "light";
+    }
 
+    string DisplayStateText(RoundState state)
+    {
+        if (state == RoundState.Won)
+        {
+            return "Won";
+        }
+        if (state == RoundState.Lose)
+        {
+            return "Lose";
+        }
+        if (state == RoundState.Push)
+        {
+            return "Push";
+        }
+        return "Not finished";
+    }
+}
+
+<div class="my-4 w-75 mx-auto">
+    @foreach (var roundState in Model.RoundStates)
+    {
+        <div class="card">
+            <a asp-action="RoundInfo" asp-route-gameSkipCount="@ViewContext.RouteData.Values["gameSkipCount"].ToString()" asp-route-roundSkipCount="@roundIndex" class="btn btn-@GetStateColor(roundState) p-3">
+                Round @(roundIndex + 1)
+                @DisplayStateText(roundState)
+            </a>
+        </div>
+        roundIndex++;
+    }
+</div>

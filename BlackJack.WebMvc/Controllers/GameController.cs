@@ -15,17 +15,20 @@ namespace BlackJack.WebMvc.Controllers
             _gameService = gameService;
         }
 
+        [HttpGet]
         public IActionResult Index()
         {
             return RedirectToAction(nameof(Menu));
         }
 
+        [HttpGet]
         public IActionResult Game()
         {
             GameViewModel game = _gameService.GetRoundInfo();
             return View(game);
         }
 
+        [HttpGet]
         public IActionResult Menu()
         {
             var menu = new MenuGameViewModel
@@ -46,30 +49,35 @@ namespace BlackJack.WebMvc.Controllers
             return RedirectToAction(nameof(Game));
         }
 
+        [HttpGet]
         public IActionResult Step()
         {
             _gameService.Step();
             return RedirectToAction(nameof(Game));
         }
 
+        [HttpGet]
         public IActionResult EndRound()
         {
             _gameService.Skip();
             return RedirectToAction(nameof(Game));
         }
 
+        [HttpGet]
         public IActionResult NextRound()
         {
             _gameService.NextRound();
             return RedirectToAction(nameof(Game));
         }
 
+        [HttpGet]
         public IActionResult EndGame()
         {
             _gameService.EndGame();
             return RedirectToAction(nameof(Menu));
         }
 
+        [HttpGet]
         public IActionResult Quit()
         {
             return RedirectToAction(nameof(Menu));

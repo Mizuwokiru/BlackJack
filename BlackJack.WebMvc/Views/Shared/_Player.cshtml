@@ -1,0 +1,52 @@
+﻿@model PlayerGameViewModel
+
+@{ 
+    string textColorClass = string.Empty;
+    string borderColorClass = string.Empty;
+    if (Model.State == RoundState.Won)
+    {
+        textColorClass = "text-success";
+        borderColorClass = "border-success";
+    }
+    if (Model.State == RoundState.Lose)
+    {
+        textColorClass = "text-danger";
+        borderColorClass = "border-danger";
+    }
+    if (Model.State == RoundState.Push)
+    {
+        textColorClass = "text-primary";
+        borderColorClass = "border-primary";
+    }
+}
+
+<link href="~/css/_Player.css" rel="stylesheet" />
+
+<div class="col-md-3 d-flex w-100">
+    <div class="card player mb-4 shadow-sm @borderColorClass">
+        <div class="card-header @textColorClass">
+            @Model.PlayerName
+        </div>
+        <div class="card-body player-cards">
+            <p class="card-text">
+                @foreach (var card in Model.Cards)
+                {
+                    <partial name="_Card" model="card" />
+                }
+            </p>
+        </div>
+        <div class="card-body player-score border-top @borderColorClass px-4 py-3">
+            <div class="d-flex justify-content-between align-items-center @textColorClass">
+                <span>Points:</span>
+                    @if (Model.Score == 0)
+                    {
+                        <strong>?</strong>
+                    }
+                    @if (Model.Score != 0)
+                    {
+                        <strong>@Model.Score</strong>
+                    }
+            </div>
+        </div>
+    </div>
+</div>

@@ -22,7 +22,7 @@
                 {
                     <div class="inner">
                         <span class="navbar-text mr-2"><strong>@User.Identity.Name</strong> is logged</span>
-                        <button class="btn btn-outline-primary mb-1">Sign out</button>
+                        <a asp-controller="Authentication" asp-action="Logout" class="btn btn-outline-primary mb-1">Sign out</a>
                     </div>
                 }
             </nav>

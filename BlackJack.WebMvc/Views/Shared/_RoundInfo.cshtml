@@ -1,0 +1,16 @@
+﻿@model GameViewModel
+
+@{ 
+    PlayerGameViewModel dealer = Model.Players[Model.Players.Count - 1];
+    Model.Players.Remove(dealer);
+}
+
+<div style="margin: 0.5rem" class="row">
+    @foreach (var player in Model.Players)
+    {
+        <partial name="_Player" model="player" />
+    }
+</div>
+<div class="row justify-content-center">
+    <partial name="_Player" model="dealer" />
+</div>

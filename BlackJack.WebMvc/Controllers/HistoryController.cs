@@ -22,6 +22,7 @@ namespace BlackJack.WebMvc.Controllers
         }
 
         [Route("")]
+        [HttpGet]
         public IActionResult GamesHistory()
         {
             GamesHistoryViewModel gamesHistory = _historyService.GetGamesHistory();
@@ -29,6 +30,7 @@ namespace BlackJack.WebMvc.Controllers
         }
 
         [Route("{gameSkipCount}")]
+        [HttpGet]
         public IActionResult RoundsHistory(int gameSkipCount)
         {
             RoundsHistoryViewModel roundsHistory = _historyService.GetRoundsHistory(gameSkipCount);
@@ -36,6 +38,7 @@ namespace BlackJack.WebMvc.Controllers
         }
 
         [Route("{gameSkipCount}/{roundSkipCount}")]
+        [HttpGet]
         public IActionResult RoundInfo(int gameSkipCount, int roundSkipCount)
         {
             GameViewModel roundInfo = _historyService.GetRoundInfo(gameSkipCount, roundSkipCount);

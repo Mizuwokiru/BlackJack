@@ -27,6 +27,7 @@ namespace BlackJack.WebMvc.Controllers
             _userManager = userManager;
         }
 
+        [HttpGet]
         public IActionResult Index()
         {
             return RedirectToAction(nameof(Login));
@@ -54,13 +55,15 @@ namespace BlackJack.WebMvc.Controllers
                 return View("Login", loginViewModel);
             }
 
-            ClaimsIdentity claimsIdentity = await _loginService.Login(loginViewModel.Name);
-            User user = await _userManager.FindByNameAsync(loginViewModel.Name);
-            await _signInManager.SignInAsync(user, true);
-            ((ClaimsIdentity)User.Identity).AddClaims(claimsIdentity.Claims);
-            Debug.WriteLine(User.Identity.Name);
-            Debug.WriteLine(User.Identity.IsAuthenticated);
+            await _loginService.Login(loginViewModel.Name);
             return RedirectToAction("Menu", "Game");
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Logout()
+        {
+            await _loginService.Logout();
+            return RedirectToAction(nameof(Login));
         }
     }
 }

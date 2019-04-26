@@ -47,5 +47,10 @@ namespace BlackJack.Services.Services
             }
             await _signInManager.SignInAsync(user, false);
         }
+
+        public async Task Logout()
+        {
+            await _signInManager.SignOutAsync();
+        }
     }
 }

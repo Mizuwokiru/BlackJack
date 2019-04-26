@@ -3,14 +3,16 @@
     ViewData["Title"] = "Menu";
 }
 
+<link href="~/css/Game/Menu.css" rel="stylesheet" />
+
 <main class="d-flex align-items-center justify-content-center">
     <div class="btn-group-vertical w-25">
         @if (Model.HasUnfinishedGame)
         {
-            <button asp-action="Continue" class="btn btn-outline-info">Continue</button>
+            <a asp-action="Game" class="btn btn-outline-info">Continue</a>
         }
         <button class="btn btn-outline-primary" data-toggle="modal" data-target="#bot-count-modal">New game</button>
-        <button asp-controller="History" asp-action="Index" class="btn btn-outline-success">History</button>
+        <a asp-controller="History" asp-action="Index" class="btn btn-outline-success">History</a>
     </div>
     <div id="bot-count-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="bot-count-modal-title" aria-hidden="true">
         <form class="modal-dialog modal-dialog-centered" role="document">

@@ -5,7 +5,7 @@ namespace BlackJack.ViewModels.Game
 {
     public class GameViewModel
     {
-        public IEnumerable<PlayerGameViewModel> Players { get; set; }
+        public List<PlayerGameViewModel> Players { get; set; }
     }
 
     public class PlayerGameViewModel

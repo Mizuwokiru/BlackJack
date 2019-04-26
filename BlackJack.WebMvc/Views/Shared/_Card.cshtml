@@ -1,0 +1,19 @@
+﻿@model int
+
+@{
+    const int BlankCard = 0x1F0A0;
+    const int HeartsSuit = 0x1F0B0;
+    const int CubesSuit = 0x1F0D0;
+
+    string color = "#000000";
+    if ((Model > HeartsSuit && Model < CubesSuit) || Model == BlankCard)
+    {
+        color = "#B94442";
+    }
+
+    string card = char.ConvertFromUtf32(Model);
+}
+
+<link href="~/css/_Card.css" rel="stylesheet" />
+
+<span class="card-span" style="color: @color">@card</span>

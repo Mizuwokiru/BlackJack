@@ -1,7 +1,38 @@
-﻿
+﻿@model GameViewModel
 @{
     ViewData["Title"] = "Game";
+    bool isCanToStep = Model.Players[0].State == RoundState.None;
 }
 
-<h2>Game</h2>
+<link href="~/css/Game/Game.css" rel="stylesheet" />
 
+<main class="mb-5">
+    <partial name="_RoundInfo" model="Model" />
+</main>
+
+<footer class="fixed-bottom shadow-up-sm">
+    <nav *ngIf="isCanToStep !== null" class="navbar navbar-expand-lg navbar-light bg-light justify-content-center">
+        @if (isCanToStep)
+        {
+            <a class="nav-item nav-link btn btn-primary text-white w-100 m-1" asp-action="Step">
+                Get a card
+            </a>
+            <a class="nav-item nav-link btn btn-primary text-white w-100 m-1" asp-action="Skip">
+                Skip
+            </a>
+        }
+        @if (!isCanToStep)
+        {
+            <a class="nav-item nav-link btn btn-primary text-white w-100 m-1" asp-action="NextRound">
+                Next round
+            </a>
+            <a class="nav-item nav-link btn btn-primary text-white w-100 m-1" asp-action="EndGame">
+                End game
+            </a>
+        }
+
+        <a class="nav-item nav-link btn btn-primary text-white w-100 m-1" asp-action="Menu">
+            Quit
+        </a>
+    </nav>
+</footer>
