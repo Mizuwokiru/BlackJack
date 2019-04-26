@@ -63,5 +63,12 @@ namespace BlackJack.Web.Controllers
             var apiUser = new UserViewModel { Name = user.Name, Token = encryptedToken };
             return Ok(apiUser);
         }
+
+        [HttpDelete]
+        public async Task<IActionResult> Logout()
+        {
+            await _loginService.Logout();
+            return Ok();
+        }
     }
 }

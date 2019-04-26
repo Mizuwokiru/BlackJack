@@ -39,6 +39,8 @@ export class UserService {
   }
 
   logout(): void {
+    this.http.delete(this.url)
+      .subscribe();
     localStorage.removeItem('user_name');
     localStorage.removeItem('access_token');
   }
