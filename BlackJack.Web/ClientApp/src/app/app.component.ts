@@ -1,5 +1,4 @@
-import { Component, Inject } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { Component } from '@angular/core';
 import { UserService } from './shared/services/user.service';
 import { Router } from '@angular/router';
 
