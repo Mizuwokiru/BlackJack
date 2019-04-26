@@ -19,3 +19,7 @@
 .player-cards::-webkit-scrollbar-thumb:hover {
   background: rgba(0, 0, 0, 0.1);
 }
+
+.player-cards::-webkit-scrollbar-thumb:active {
+  background: rgba(0, 0, 0, 0.15);
+}
