@@ -57,7 +57,7 @@ namespace BlackJack.WebMvc.Controllers
         }
 
         [HttpGet]
-        public IActionResult EndRound()
+        public IActionResult Skip()
         {
             _gameService.Skip();
             return RedirectToAction(nameof(Game));
@@ -74,12 +74,6 @@ namespace BlackJack.WebMvc.Controllers
         public IActionResult EndGame()
         {
             _gameService.EndGame();
-            return RedirectToAction(nameof(Menu));
-        }
-
-        [HttpGet]
-        public IActionResult Quit()
-        {
             return RedirectToAction(nameof(Menu));
         }
     }
