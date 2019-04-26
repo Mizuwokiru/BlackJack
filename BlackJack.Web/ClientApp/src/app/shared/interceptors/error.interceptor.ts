@@ -19,6 +19,9 @@ export class ErrorInterceptor implements HttpInterceptor {
       if (error.error && error.error.Name) {
         return throwError(error.error.Name as Array<string>);
       }
+      if (error.error && error.error.StatusCode && error.error.StatusText) {
+        return throwError(`${error.error.StatusCode} ${error.error.StatusText}`);
+      }
       return throwError(`${error.status} ${error.statusText}`);
     }));
   }

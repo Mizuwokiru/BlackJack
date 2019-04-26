@@ -40,7 +40,9 @@ export class LoginComponent implements OnInit {
       .subscribe(
         response => this.router.navigate(['/']),
         error => {
-          this.errors = error as Array<string>;
+          if (typeof(error) !== 'string') {
+            this.errors = error as Array<string>;
+          }
         }
       );
   }
