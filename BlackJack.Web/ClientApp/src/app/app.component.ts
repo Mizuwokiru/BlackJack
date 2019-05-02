@@ -8,12 +8,12 @@ import { Router } from '@angular/router';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  constructor(
+  public constructor(
     private userService: UserService,
     private router: Router
   ) { }
 
-  signOut() {
+  public signOut() {
     this.userService.logout();
     this.router.navigate(['/Authentication/Login']);
   }

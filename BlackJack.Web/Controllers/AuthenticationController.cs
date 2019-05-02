@@ -1,5 +1,4 @@
 ﻿using BlackJack.Services.Services.Interfaces;
-using BlackJack.Shared.Helpers;
 using BlackJack.Shared.Options;
 using BlackJack.ViewModels.Login;
 using Microsoft.AspNetCore.Mvc;
@@ -15,34 +14,34 @@ namespace BlackJack.Web.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class LoginController : ControllerBase
+    public class AuthenticationController : ControllerBase
     {
-        private readonly ILoginService _loginService;
+        private readonly IAuthenticationService _authenticationService;
         private readonly JwtSettingsOptions _jwtSettings;
 
-        public LoginController(ILoginService loginService,
+        public AuthenticationController(IAuthenticationService authenticationService,
             IOptions<JwtSettingsOptions> options)
         {
-            _loginService = loginService;
+            _authenticationService = authenticationService;
             _jwtSettings = options.Value;
         }
 
-        [HttpGet]
+        [HttpGet("Login")]
         public IActionResult GetUsers()
         {
-            UserNamesViewModel users = _loginService.GetUsers();
+            UserNamesViewModel users = _authenticationService.GetUserNames();
             return Ok(users);
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Login([FromBody]UserViewModel user)
+        [HttpPost("Login")]
+        public async Task<IActionResult> LoginAsync([FromBody] UserViewModel user)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-            
-            await _loginService.Login(user.Name);
+
+            await _authenticationService.Login(user.Name);
 
             var now = DateTime.UtcNow;
             var claims = new[]
@@ -64,10 +63,10 @@ namespace BlackJack.Web.Controllers
             return Ok(apiUser);
         }
 
-        [HttpDelete]
+        [HttpPost("Logout")]
         public async Task<IActionResult> Logout()
         {
-            await _loginService.Logout();
+            await _authenticationService.Logout();
             return Ok();
         }
     }

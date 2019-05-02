@@ -9,9 +9,9 @@ import { UserNamesViewModel } from '../models/user-names.view-model';
   providedIn: 'root'
 })
 export class UserService {
-  private readonly url: string = 'api/Login';
+  private readonly url: string = 'api/Authentication';
 
-  constructor(private http: HttpClient) { }
+  public constructor(private http: HttpClient) { }
 
   public get userName(): string {
     return localStorage.getItem('user_name');
@@ -21,15 +21,15 @@ export class UserService {
     return localStorage.getItem('access_token') !== null;
   }
 
-  getUserNames(): Observable<Array<string>> {
-    return this.http.get<UserNamesViewModel>(this.url)
+  public getUserNames(): Observable<Array<string>> {
+    return this.http.get<UserNamesViewModel>(`${this.url}/Login`)
       .pipe(map(userNames => {
         return userNames.userNames;
       }));
   }
 
-  login(user: UserViewModel) {
-    return this.http.post(this.url, user)
+  public login(user: UserViewModel) {
+    return this.http.post(`${this.url}/Login`, user)
       .pipe(map((respondUser: UserViewModel) => {
         if (respondUser && respondUser.token) {
           localStorage.setItem('user_name', respondUser.name);
@@ -38,8 +38,8 @@ export class UserService {
       }));
   }
 
-  logout(): void {
-    this.http.delete(this.url)
+  public logout(): void {
+    this.http.post(`${this.url}/Logout`, {})
       .subscribe();
     localStorage.removeItem('user_name');
     localStorage.removeItem('access_token');

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { GameViewModel } from '../../shared/models/game.view-model';
-import { GameService } from './game.service';
+import { GameService } from '../../shared/services/game.service';
 import { Router } from '@angular/router';
 import { RoundState } from '../../shared/enums/round-state.enum';
 
@@ -12,14 +12,14 @@ import { RoundState } from '../../shared/enums/round-state.enum';
 export class GameComponent implements OnInit {
   private roundInfo: GameViewModel;
 
-  isCanToStep: boolean | null = null;
+  private isCanToStep: boolean | null = null;
 
-  constructor(
+  public constructor(
     private gameService: GameService,
     private router: Router
   ) { }
 
-  ngOnInit() {
+  public ngOnInit() {
     this.roundInfo = null;
     this.gameService.getRoundInfo()
       .subscribe(
@@ -30,22 +30,22 @@ export class GameComponent implements OnInit {
       );
   }
 
-  step() {
+  public step() {
     this.gameService.step()
       .subscribe(() => this.ngOnInit());
   }
 
-  skip() {
+  public skip() {
     this.gameService.skip()
       .subscribe(() => this.ngOnInit());
   }
 
-  nextRound() {
+  public nextRound() {
     this.gameService.nextRound()
       .subscribe(() => this.ngOnInit());
   }
 
-  endGame() {
+  public endGame() {
     this.gameService.endGame()
       .subscribe(() => this.router.navigate(['/']));
   }

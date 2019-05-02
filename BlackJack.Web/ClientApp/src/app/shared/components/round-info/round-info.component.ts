@@ -8,14 +8,13 @@ import { PlayerGameViewModel } from '../../models/player-game.view-model';
   styleUrls: ['./round-info.component.scss']
 })
 export class RoundInfoComponent implements OnInit {
-  @Input() roundInfo: GameViewModel;
+  @Input() private roundInfo: GameViewModel;
 
-  players: Array<PlayerGameViewModel>;
-  dealer: PlayerGameViewModel;
+  private players: Array<PlayerGameViewModel>;
+  private dealer: PlayerGameViewModel;
 
-  ngOnInit() {
+  public ngOnInit() {
       this.players = this.roundInfo.players;
       this.dealer = this.players.pop();
   }
-
 }

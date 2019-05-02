@@ -1,5 +1,7 @@
 ﻿using BlackJack.Shared.Enums;
 using System;
+using System.Collections.Generic;
+using System.Text;
 
 namespace BlackJack.Shared.Helpers
 {
@@ -12,7 +14,7 @@ namespace BlackJack.Shared.Helpers
             return Tuple.Create(suit, rank);
         }
 
-        public static int GetCardValue(Rank rank)
+        public static int GetValue(this Rank rank)
         {
             if (rank >= Rank.Ten && rank <= Rank.King)
             {

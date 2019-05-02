@@ -1,6 +1,6 @@
 ﻿using BlackJack.DataAccess.Entities;
 using BlackJack.DataAccess.Repositories.Interfaces;
-using BlackJack.DataAccess.ResponseModels;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -12,32 +12,43 @@ namespace BlackJack.DataAccess.Repositories.EntityFrameworkCore
         {
         }
 
-        public IEnumerable<Card> GetPlayerCards(long playerId, long gameId)
+        public void FillRoundPlayersCards(IEnumerable<RoundPlayer> roundPlayers)
         {
-            IEnumerable<Card> cards = _dbContext.RoundCards
-                .Where(roundCard => roundCard.RoundId ==
-                    _dbContext.Rounds
-                        .First(round => round.PlayerId == playerId && round.GameId == gameId && round.CreationTime ==
-                            _dbContext.Rounds
-                                .Where(tmpRound => tmpRound.PlayerId == playerId && tmpRound.GameId == gameId)
-                                .Max(tmpRound => tmpRound.CreationTime))
-                                .Id)
-                .Select(roundCard => roundCard.Card);
+            List<IGrouping<long, RoundPlayerCard>> cardsByRoundPlayers = _dbContext.RoundPlayerCards
+                .Where(roundPlayerCard => roundPlayers.Any(roundPlayer => roundPlayer.Id == roundPlayerCard.RoundPlayerId))
+                .Include(roundPlayerCard => roundPlayerCard.Card)
+                .GroupBy(roundPlayerCard => roundPlayerCard.RoundPlayerId)
+                .ToList();
+            roundPlayers.AsParallel()
+                .ForAll(roundPlayer =>
+                    roundPlayer.Cards = cardsByRoundPlayers.First(roundPlayerCards => roundPlayerCards.Key == roundPlayer.Id).ToList());
+                    
+        }
 
+        public IEnumerable<Card> GetLastRoundCards(long gameId)
+        {
+            IEnumerable<Card> cards = _dbContext.RoundPlayers
+                .Where(roundPlayer => roundPlayer.GameId == gameId && roundPlayer.CreationTime ==
+                    _dbContext.RoundPlayers
+                        .Where(tmpRoundPlayer => tmpRoundPlayer.GameId == gameId)
+                        .Max(tmpRoundPlayer => tmpRoundPlayer.CreationTime))
+                .Include(roundPlayer => roundPlayer.Cards)
+                .ThenInclude(roundPlayerCard => roundPlayerCard.Card)
+                .SelectMany(roundPlayer => roundPlayer.Cards.Select(roundPlayerCard => roundPlayerCard.Card));
             return cards;
         }
 
-        public void GetRoundCards(IEnumerable<RoundInfoModel> roundInfoModels)
+        public IEnumerable<Card> GetLastRoundPlayerCards(long playerId, long gameId)
         {
-            List<IGrouping<long, RoundCard>> roundCardsByRounds = _dbContext.RoundCards
-                .Where(roundCard => roundInfoModels.Any(roundInfoModel => roundInfoModel.RoundId == roundCard.RoundId))
-                .GroupBy(roundCard => roundCard.RoundId)
-                .ToList();
-            roundInfoModels.AsParallel()
-                .ForAll(roundInfoModel =>
-                    roundInfoModel.Cards = roundCardsByRounds.First(roundCardsByRound => roundCardsByRound.Key == roundInfoModel.RoundId)
-                        .Select(roundCard => roundCard.Card)
-                        .ToList());
+            IEnumerable<Card> playerCards = _dbContext.RoundPlayerCards
+                .Where(roundPlayerCard => roundPlayerCard.RoundPlayerId == _dbContext.RoundPlayers
+                    .Where(roundPlayer => roundPlayer.PlayerId == playerId && roundPlayer.GameId == gameId)
+                    .OrderByDescending(roundPlayer => roundPlayer.CreationTime)
+                    .First()
+                    .Id)
+                .Include(roundPlayerCard => roundPlayerCard.Card)
+                .Select(roundPlayerCard => roundPlayerCard.Card);
+            return playerCards;
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using BlackJack.DataAccess.Entities;
 using BlackJack.DataAccess.Repositories.Interfaces;
-using BlackJack.DataAccess.ResponseModels;
+using BlackJack.Shared.Enums;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -12,64 +13,70 @@ namespace BlackJack.DataAccess.Repositories.EntityFrameworkCore
         {
         }
 
-        public Game GetUnfinishedGame(long userId)
+        public int GetBotCount(long gameId)
         {
-            Game unfinishedGame = _dbContext.Rounds
-                .Where(round => round.PlayerId == userId)
-                .Join(
-                    _dbContext.Games.Where(game => !game.IsFinished),
-                    round => round.GameId,
-                    game => game.Id,
-                    (round, game) => game)
-                .FirstOrDefault();
-            return unfinishedGame;
-        }
-
-        public int GetPlayerCount(long gameId)
-        {
-            int playerCount = _dbContext.Rounds
-                .Where(round => round.GameId == gameId && round.CreationTime == _dbContext.Rounds
-                    .Where(someRound => someRound.GameId == gameId)
-                    .Select(someRound => someRound.CreationTime)
-                    .FirstOrDefault())
-                .Count();
-            return playerCount;
-        }
-
-        public IEnumerable<GamesHistoryInfoModel> GetGamesHistory(long userId)
-        {
-            IEnumerable<GamesHistoryInfoModel> userGames = _dbContext.Rounds
-                .Where(round => round.PlayerId == userId)
-                .Select(round => round.Game)
+            int botCount = _dbContext.RoundPlayers
+                .Where(roundPlayer => roundPlayer.GameId == gameId)
+                .Select(roundPlayer => roundPlayer.PlayerId)
                 .Distinct()
-                .GroupJoin(
-                    _dbContext.Rounds,
+                .Count() - 2;
+            return botCount;
+        }
+
+        public Game GetContinueableGame(long userId)
+        {
+            Game continueableGame = _dbContext.Games
+                .Where(game => !game.IsFinished)
+                .Join(
+                    _dbContext.RoundPlayers.Where(roundPlayer => roundPlayer.PlayerId == userId),
                     game => game.Id,
                     round => round.GameId,
-                    (game, rounds) => new GamesHistoryInfoModel
-                    {
-                        PlayerCount = rounds.GroupBy(round => round.PlayerId).Count(),
-                        RoundCount = rounds.Count(round => round.PlayerId == userId),
-                        CreationTime = game.CreationTime.Value
-                    })
-                .OrderByDescending(gameInfo => gameInfo.CreationTime);
-            return userGames;
+                    (game, round) => game)
+                .FirstOrDefault();
+            return continueableGame;
+        }
+
+        public IEnumerable<Game> GetGamesHistory(long userId)
+        {
+            IEnumerable<Game> gamesHistory = _dbContext.Games
+                .Include(game => game.RoundPlayers)
+                .GroupJoin(
+                    _dbContext.RoundPlayers.Where(roundPlayer => roundPlayer.PlayerId == userId),
+                    game => game.Id,
+                    roundPlayer => roundPlayer.GameId,
+                    (game, roundPlayers) => game);
+            return gamesHistory;
         }
 
         public long GetGameIdBySkipCount(long userId, int gameSkipCount)
         {
             long gameId = _dbContext.Games
                 .GroupJoin(
-                    _dbContext.Rounds
-                        .Where(round => round.PlayerId == userId),
+                    _dbContext.RoundPlayers
+                        .Where(roundPlayer => roundPlayer.PlayerId == userId),
                     game => game.Id,
-                    round => round.GameId,
-                    (game, rounds) => new { game.Id, game.CreationTime })
+                    roundPlayer => roundPlayer.GameId,
+                    (game, roundPlayers) => new { game.Id, game.CreationTime })
                 .OrderByDescending(game => game.CreationTime)
                 .Skip(gameSkipCount)
                 .First()
                 .Id;
             return gameId;
+        }
+
+        public IEnumerable<RoundPlayerState> GetGameInfo(long userId, int gameSkipCount)
+        {
+            IEnumerable<RoundPlayerState> roundStates = _dbContext.RoundPlayers
+                .Where(roundPlayer => roundPlayer.PlayerId == userId && roundPlayer.GameId == _dbContext.RoundPlayers
+                    .Where(tmpRoundPlayer => tmpRoundPlayer.PlayerId == userId)
+                    .Select(tmpRoundPlayer => tmpRoundPlayer.Game)
+                    .Distinct()
+                    .OrderByDescending(game => game.CreationTime)
+                    .Skip(gameSkipCount)
+                    .First()
+                    .Id)
+                .Select(roundPlayer => roundPlayer.State);
+            return roundStates;
         }
     }
 }

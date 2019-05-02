@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
+using BlackJack.DataAccess.Entities;
 using BlackJack.DataAccess.Repositories.Interfaces;
-using BlackJack.DataAccess.ResponseModels;
 using BlackJack.Services.Services.Interfaces;
 using BlackJack.Shared.Enums;
 using BlackJack.Shared.Helpers;
@@ -16,12 +16,12 @@ namespace BlackJack.Services.Services
     {
         private readonly ICardRepository _cardRepository;
         private readonly IGameRepository _gameRepository;
-        private readonly IRoundRepository _roundRepository;
+        private readonly IRoundPlayerRepository _roundRepository;
         private readonly long _userId;
 
         public HistoryService(ICardRepository cardRepository,
             IGameRepository gameRepository,
-            IRoundRepository roundRepository,
+            IRoundPlayerRepository roundRepository,
             IHttpContextAccessor httpContextAccessor)
         {
             _cardRepository = cardRepository;
@@ -36,28 +36,28 @@ namespace BlackJack.Services.Services
 
         public GamesHistoryViewModel GetGamesHistory()
         {
-            IEnumerable<GamesHistoryInfoModel> gamesHistoryInfo = _gameRepository.GetGamesHistory(_userId);
+            List<Game> gamesHistoryInfo = _gameRepository.GetGamesHistory(_userId).ToList();
             var gamesHistory = new GamesHistoryViewModel
             {
-                Games = Mapper.Map<IEnumerable<GamesHistoryInfoModel>, IEnumerable<GameGamesHistoryViewModel>>(gamesHistoryInfo)
+                Games = Mapper.Map<List<Game>, IEnumerable<GameGamesHistoryViewModel>>(gamesHistoryInfo)
             };
             return gamesHistory;
         }
 
         public RoundsHistoryViewModel GetRoundsHistory(int gameSkipCount)
         {
-            IEnumerable<RoundState> roundStates = _roundRepository.GetRoundStates(_userId, gameSkipCount);
-            var gameRoundsViewModel = new RoundsHistoryViewModel { RoundStates = roundStates };
+            IEnumerable<RoundPlayerState> roundStates = _gameRepository.GetGameInfo(_userId, gameSkipCount).ToList();
+            var gameRoundsViewModel = new RoundsHistoryViewModel { PlayerStates = roundStates };
             return gameRoundsViewModel;
         }
 
         public GameViewModel GetRoundInfo(int gameSkipCount, int roundSkipCount)
         {
             long gameId = _gameRepository.GetGameIdBySkipCount(_userId, gameSkipCount);
-            IEnumerable<RoundInfoModel> roundInfos = _roundRepository.GetRoundInfo(_userId, gameId, roundSkipCount).ToList();
-            _cardRepository.GetRoundCards(roundInfos);
-            List<PlayerGameViewModel> players = Mapper.Map<IEnumerable<RoundInfoModel>, IEnumerable<PlayerGameViewModel>>(roundInfos).ToList();
-            if (players[0].State == RoundState.None)
+            List<RoundPlayer> roundPlayers = _roundRepository.GetRoundInfo(gameId, roundSkipCount).ToList();
+            _cardRepository.FillRoundPlayersCards(roundPlayers);
+            List<PlayerGameViewModel> players = Mapper.Map<List<RoundPlayer>, List<PlayerGameViewModel>>(roundPlayers);
+            if (players[0].State == RoundPlayerState.None)
             {
                 PlayerGameViewModel dealer = players[players.Count - 1];
                 dealer.Cards[1] = Constants.BlankCardCode;

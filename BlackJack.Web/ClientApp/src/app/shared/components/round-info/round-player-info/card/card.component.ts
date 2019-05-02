@@ -13,14 +13,12 @@ const cubesSuit = 0x1F0D0;
   styleUrls: ['./card.component.scss']
 })
 export class CardComponent implements OnInit {
-  @Input() card: number;
+  @Input() private card: number;
 
   private cardColor: string;
   private cardValue: string;
 
-  constructor() { }
-
-  ngOnInit() {
+  public ngOnInit() {
     this.cardValue = String.fromCodePoint(this.card);
     this.cardColor = black;
     if ((this.card > heartsSuit && this.card < cubesSuit) || this.card === blankCard) {

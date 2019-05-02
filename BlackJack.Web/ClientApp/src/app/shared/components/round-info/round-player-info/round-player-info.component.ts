@@ -7,9 +7,9 @@ import { PlayerGameViewModel } from '../../../models/player-game.view-model';
   styleUrls: ['./round-player-info.component.scss']
 })
 export class RoundPlayerInfoComponent {
-  @Input() player: PlayerGameViewModel;
+  @Input() private player: PlayerGameViewModel;
 
-  readonly colorClasses: string[][] = [
+  private readonly colorClasses: string[][] = [
     [ '', 'border-success', 'border-danger', 'border-primary' ],
     [ '', 'text-success', 'text-danger', 'text-primary' ]
   ];

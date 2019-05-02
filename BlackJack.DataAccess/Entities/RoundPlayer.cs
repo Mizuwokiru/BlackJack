@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace BlackJack.DataAccess.Entities
 {
-    public class Round : BaseEntity
+    public class RoundPlayer : BaseEntity
     {
         public long GameId { get; set; }
         public virtual Game Game { get; set; }
@@ -11,8 +11,8 @@ namespace BlackJack.DataAccess.Entities
         public long PlayerId { get; set; }
         public virtual Player Player { get; set; }
 
-        public RoundState State { get; set; }
+        public RoundPlayerState State { get; set; }
 
-        public virtual ICollection<RoundCard> Cards { get; set; }
+        public virtual ICollection<RoundPlayerCard> Cards { get; set; }
     }
 }

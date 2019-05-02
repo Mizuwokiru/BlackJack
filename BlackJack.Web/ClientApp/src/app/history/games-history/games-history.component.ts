@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { HistoryService } from '../history.service';
-import { GamesHistoryViewModel } from './games-history.view-model';
+import { HistoryService } from '../../shared/services/history.service';
+import { GamesHistoryViewModel } from '../../shared/models/games-history.view-model';
 
 @Component({
   selector: 'app-games-history',
@@ -10,11 +10,10 @@ import { GamesHistoryViewModel } from './games-history.view-model';
 export class GamesHistoryComponent implements OnInit {
   private gamesHistory: GamesHistoryViewModel;
 
-  constructor(private historyService: HistoryService) { }
+  public constructor(private historyService: HistoryService) { }
 
-  ngOnInit() {
+  public ngOnInit() {
     this.historyService.getGamesHistory()
       .subscribe(gamesHistory => this.gamesHistory = gamesHistory);
   }
-
 }

@@ -1,10 +1,10 @@
 ﻿namespace BlackJack.Shared.Enums
 {
-    public enum RoundState
+    public enum RoundPlayerState
     {
         None = 0,
         Won = 1,
         Lose = 2,
-        Push = 3
+        Draw = 3
     }
 }

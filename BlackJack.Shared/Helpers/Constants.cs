@@ -6,7 +6,7 @@ namespace BlackJack.Shared.Helpers
     public static class Constants
     {
         public const long DealerId = 1;
-        
+
         public static readonly int SuitCount = Enum.GetValues(typeof(Suit)).Length;
         public static readonly int RankCount = Enum.GetValues(typeof(Rank)).Length;
         public static readonly int CardCount = SuitCount * RankCount;

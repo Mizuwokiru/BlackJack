@@ -7,12 +7,12 @@ import { UserService } from '../services/user.service';
   providedIn: 'root'
 })
 export class AuthenticationGuard implements CanActivate {
-  constructor(
+  public constructor(
     private router: Router,
     private userService: UserService
   ) { }
 
-  canActivate(
+  public canActivate(
     next: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
     const currentUser = this.userService.userName;

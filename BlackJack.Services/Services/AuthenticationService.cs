@@ -10,40 +10,40 @@ using System.Threading.Tasks;
 
 namespace BlackJack.Services.Services
 {
-    public class LoginService : ILoginService
+    public class AuthenticationService : IAuthenticationService
     {
         private readonly IPlayerRepository _playerRepository;
-        private readonly UserManager<User> _userManager;
-        private readonly SignInManager<User> _signInManager;
+        private readonly UserManager<IdentityUser> _userManager;
+        private readonly SignInManager<IdentityUser> _signInManager;
 
-        public LoginService(IPlayerRepository playerRepository,
-            UserManager<User> userManager,
-            SignInManager<User> signInManager)
+        public AuthenticationService(IPlayerRepository playerRepository,
+            UserManager<IdentityUser> userManager,
+            SignInManager<IdentityUser> signInManager)
         {
             _playerRepository = playerRepository;
             _userManager = userManager;
             _signInManager = signInManager;
         }
 
-        public UserNamesViewModel GetUsers()
+        public UserNamesViewModel GetUserNames()
         {
             var userNames = new UserNamesViewModel
             {
-                UserNames = _playerRepository.GetUsers()
+                UserNames = _playerRepository.GetUserNames()
             };
             return userNames;
         }
 
         public async Task Login(string userName)
         {
-            User user = await _userManager.FindByNameAsync(userName);
+            IdentityUser user = await _userManager.FindByNameAsync(userName);
             if (user == null)
             {
                 Player player = new Player { Name = userName, Type = PlayerType.User };
                 _playerRepository.Add(player);
-                user = new User { UserName = userName, PlayerId = player.Id };
+                user = new IdentityUser { UserName = userName };
                 await _userManager.CreateAsync(user);
-                await _userManager.AddClaimAsync(user, new Claim(Constants.ClaimPlayerId, user.PlayerId.ToString(), ClaimValueTypes.Integer64));
+                await _userManager.AddClaimAsync(user, new Claim(Constants.ClaimPlayerId, player.Id.ToString(), ClaimValueTypes.Integer64));
             }
             await _signInManager.SignInAsync(user, false);
         }

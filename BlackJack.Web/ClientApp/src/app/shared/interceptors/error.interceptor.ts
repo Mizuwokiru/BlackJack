@@ -7,9 +7,9 @@ import { UserService } from '../services/user.service';
 
 @Injectable()
 export class ErrorInterceptor implements HttpInterceptor {
-  constructor(private userService: UserService, private router: Router) { }
+  public constructor(private userService: UserService, private router: Router) { }
 
-  intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+  public intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     return next.handle(request).pipe(catchError(error => {
       if (error.status === 401) {
         this.userService.logout();

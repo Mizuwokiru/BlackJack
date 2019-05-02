@@ -1,14 +1,15 @@
 ﻿using BlackJack.DataAccess.Entities;
-using BlackJack.DataAccess.ResponseModels;
+using BlackJack.Shared.Enums;
 using System.Collections.Generic;
 
 namespace BlackJack.DataAccess.Repositories.Interfaces
 {
     public interface IGameRepository : IRepository<Game>
     {
-        Game GetUnfinishedGame(long userId);
-        int GetPlayerCount(long gameId);
-        IEnumerable<GamesHistoryInfoModel> GetGamesHistory(long userId);
+        Game GetContinueableGame(long userId);
+        int GetBotCount(long gameId);
+        IEnumerable<Game> GetGamesHistory(long userId);
+        IEnumerable<RoundPlayerState> GetGameInfo(long userId, int gameSkipCount);
         long GetGameIdBySkipCount(long userId, int gameSkipCount);
     }
 }

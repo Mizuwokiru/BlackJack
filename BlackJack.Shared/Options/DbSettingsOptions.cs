@@ -2,6 +2,8 @@
 {
     public class DbSettingsOptions
     {
-        public string ConnectionString { get; set; }       
+        public string GameConnectionString { get; set; }
+
+        public string UserConnectionString { get; set; }
     }
 }

@@ -20,18 +20,17 @@ namespace BlackJack.Web.Controllers
         [HttpGet]
         public IActionResult Get()
         {
-            GameViewModel roundInfo = _gameService.GetRoundInfo();
+            GameViewModel roundInfo = _gameService.GetLastRoundInfo();
             return Ok(roundInfo);
         }
 
-        [Route("[action]")]
-        [HttpGet]
+        [HttpGet("Menu")]
         public IActionResult Menu()
         {
             MenuViewModel menu = _gameService.GetMenu();
             return Ok(menu);
         }
-        
+
         [HttpPost]
         public IActionResult New([FromBody]NewGameViewModel newGameViewModel)
         {
@@ -43,33 +42,29 @@ namespace BlackJack.Web.Controllers
             _gameService.NewGame(newGameViewModel.BotCount);
             return Ok();
         }
-
-        [Route("[action]")]
-        [HttpPost]
+        
+        [HttpPost("Step")]
         public IActionResult Step()
         {
             _gameService.Step();
             return Ok();
         }
 
-        [Route("[action]")]
-        [HttpPost]
+        [HttpPost("Skip")]
         public IActionResult Skip()
         {
             _gameService.Skip();
             return Ok();
         }
 
-        [Route("[action]")]
-        [HttpPost]
+        [HttpPost("NextRound")]
         public IActionResult NextRound()
         {
             _gameService.NextRound();
             return Ok();
         }
 
-        [Route("[action]")]
-        [HttpPost]
+        [HttpPost("EndGame")]
         public IActionResult EndGame()
         {
             _gameService.EndGame();

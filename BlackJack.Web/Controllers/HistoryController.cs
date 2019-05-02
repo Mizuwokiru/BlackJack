@@ -24,17 +24,15 @@ namespace BlackJack.Web.Controllers
             GamesHistoryViewModel gamesHistory = _historyService.GetGamesHistory();
             return Ok(gamesHistory);
         }
-
-        [Route("{gameSkipCount}")]
-        [HttpGet]
+        
+        [HttpGet("{gameSkipCount}")]
         public IActionResult Get(int gameSkipCount)
         {
             RoundsHistoryViewModel roundsHistory = _historyService.GetRoundsHistory(gameSkipCount);
             return Ok(roundsHistory);
         }
-
-        [Route("{gameSkipCount}/{roundSkipCount}")]
-        [HttpGet]
+        
+        [HttpGet("{gameSkipCount}/{roundSkipCount}")]
         public IActionResult Get(int gameSkipCount, int roundSkipCount)
         {
             GameViewModel roundInfo = _historyService.GetRoundInfo(gameSkipCount, roundSkipCount);

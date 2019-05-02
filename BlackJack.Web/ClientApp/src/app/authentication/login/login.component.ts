@@ -17,12 +17,12 @@ export class LoginComponent implements OnInit {
 
   private errors: Array<string> | null = null;
 
-  constructor(
+  public constructor(
     private userService: UserService,
     private router: Router
   ) { }
 
-  ngOnInit(): void {
+  public ngOnInit(): void {
     if (this.userService.isLoggedIn) {
       this.router.navigate(['/']);
     }
@@ -35,7 +35,7 @@ export class LoginComponent implements OnInit {
         });
   }
 
-  login(): void {
+  public login(): void {
     this.userService.login(this.user)
       .subscribe(
         response => this.router.navigate(['/']),
@@ -47,16 +47,16 @@ export class LoginComponent implements OnInit {
       );
   }
 
-  clearErrors(): void {
+  public clearErrors(): void {
     this.errors = null;
   }
 
-  changeUserName(): void {
+  public changeUserName(): void {
     // @ts-ignore
     $('#user-name-input').dropdown('hide');
   }
 
-  chooseUserNameFromDropdown(userName: string): void {
+  public chooseUserNameFromDropdown(userName: string): void {
     this.user.name = userName;
   }
 }

@@ -14,7 +14,7 @@ namespace BlackJack.ViewModels.Game
 
         public List<int> Cards { get; set; }
 
-        public RoundState State { get; set; }
+        public RoundPlayerState State { get; set; }
 
         public int Score { get; set; }
     }

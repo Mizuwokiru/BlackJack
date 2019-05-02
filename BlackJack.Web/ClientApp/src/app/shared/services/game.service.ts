@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { GameViewModel } from '../../shared/models/game.view-model';
+import { GameViewModel } from '../models/game.view-model';
 
 @Injectable({
   providedIn: 'root'
@@ -8,25 +8,25 @@ import { GameViewModel } from '../../shared/models/game.view-model';
 export class GameService {
   private readonly url: string = 'api/Game';
 
-  constructor(private http: HttpClient) { }
+  public constructor(private http: HttpClient) { }
 
-  getRoundInfo() {
+  public getRoundInfo() {
     return this.http.get<GameViewModel>(this.url);
   }
 
-  step() {
+  public step() {
     return this.http.post(`${this.url}/Step`, {});
   }
 
-  skip() {
+  public skip() {
     return this.http.post(`${this.url}/Skip`, {});
   }
 
-  nextRound() {
+  public nextRound() {
     return this.http.post(`${this.url}/NextRound`, {});
   }
 
-  endGame() {
+  public endGame() {
     return this.http.post(`${this.url}/EndGame`, {});
   }
 }

@@ -6,6 +6,6 @@ namespace BlackJack.DataAccess.Entities
     {
         public bool IsFinished { get; set; }
 
-        public virtual ICollection<Round> Rounds { get; set; }
+        public virtual ICollection<RoundPlayer> RoundPlayers { get; set; }
     }
 }

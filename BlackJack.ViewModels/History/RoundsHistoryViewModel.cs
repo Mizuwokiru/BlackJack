@@ -5,6 +5,6 @@ namespace BlackJack.ViewModels.History
 {
     public class RoundsHistoryViewModel
     {
-        public IEnumerable<RoundState> RoundStates { get; set; }
+        public IEnumerable<RoundPlayerState> PlayerStates { get; set; }
     }
 }

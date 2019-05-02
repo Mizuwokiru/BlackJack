@@ -2,9 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { range } from 'rxjs';
-import { MenuViewModel } from './menu.view-model';
+import { MenuViewModel } from '../shared/models/menu.view-model';
 import { HttpClient } from '@angular/common/http';
-import { NewGameViewModel } from './new-game.view-model';
+import { NewGameViewModel } from '../shared/models/new-game.view-model';
 
 @Component({
   selector: 'app-menu',
@@ -22,12 +22,12 @@ export class MenuComponent implements OnInit {
 
   private readonly url: string = 'api/Game';
 
-  constructor(
+  public constructor(
     private http: HttpClient,
     private router: Router
   ) { }
 
-  ngOnInit(): void {
+  public ngOnInit(): void {
     this.http.get<MenuViewModel>(`${this.url}/Menu`)
       .subscribe(
         response => {
@@ -39,7 +39,7 @@ export class MenuComponent implements OnInit {
       );
   }
 
-  newGame() {
+  public newGame() {
     return this.http.post(this.url, this.newGameViewModel)
       .subscribe(
         () => this.router.navigate(['/Game'])

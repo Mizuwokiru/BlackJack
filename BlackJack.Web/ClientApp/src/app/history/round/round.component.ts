@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { GameViewModel } from '../../shared/models/game.view-model';
-import { HistoryService } from '../history.service';
+import { HistoryService } from '../../shared/services/history.service';
 import { ActivatedRoute } from '@angular/router';
 
 @Component({
@@ -11,12 +11,12 @@ import { ActivatedRoute } from '@angular/router';
 export class RoundComponent implements OnInit {
   private roundInfo: GameViewModel;
 
-  constructor(
+  public constructor(
     private historyService: HistoryService,
     private route: ActivatedRoute
   ) { }
 
-  ngOnInit() {
+  public ngOnInit() {
     const gameId: number = +this.route.snapshot.paramMap.get('gameId');
     const roundId: number = +this.route.snapshot.paramMap.get('roundId');
     this.historyService.getRoundInfo(gameId, roundId)

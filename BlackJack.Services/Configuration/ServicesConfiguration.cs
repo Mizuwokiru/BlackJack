@@ -2,7 +2,6 @@
 using BlackJack.DataAccess;
 using BlackJack.DataAccess.Entities;
 using BlackJack.DataAccess.Repositories.Interfaces;
-using BlackJack.DataAccess.ResponseModels;
 using BlackJack.Services.Services;
 using BlackJack.Services.Services.Interfaces;
 using BlackJack.Shared.Helpers;
@@ -32,40 +31,59 @@ namespace BlackJack.Services.Configuration
             services.Configure<DbSettingsOptions>(configuration.GetSection("DbSettings"));
 
             bool isDapperEnabled = bool.Parse(configuration["IsDapperEnabled"]);
-            if (isDapperEnabled)
+            /*if (isDapperEnabled)
             {
                 services.AddTransient<ICardRepository, DataAccess.Repositories.Dapper.CardRepository>();
                 services.AddTransient<IPlayerRepository, DataAccess.Repositories.Dapper.PlayerRepository>();
                 services.AddTransient<IGameRepository, DataAccess.Repositories.Dapper.GameRepository>();
                 services.AddTransient<IRoundRepository, DataAccess.Repositories.Dapper.RoundRepository>();
                 services.AddTransient<IRoundCardRepository, DataAccess.Repositories.Dapper.RoundCardRepository>();
-            }
+            }*/
 
             if (!isDapperEnabled)
             {
                 services.AddTransient<ICardRepository, DataAccess.Repositories.EntityFrameworkCore.CardRepository>();
                 services.AddTransient<IPlayerRepository, DataAccess.Repositories.EntityFrameworkCore.PlayerRepository>();
                 services.AddTransient<IGameRepository, DataAccess.Repositories.EntityFrameworkCore.GameRepository>();
-                services.AddTransient<IRoundRepository, DataAccess.Repositories.EntityFrameworkCore.RoundRepository>();
-                services.AddTransient<IRoundCardRepository, DataAccess.Repositories.EntityFrameworkCore.RoundCardRepository>();
+                services.AddTransient<IRoundPlayerRepository, DataAccess.Repositories.EntityFrameworkCore.RoundPlayerRepository>();
+                services.AddTransient<IRoundPlayerCardRepository, DataAccess.Repositories.EntityFrameworkCore.RoundPlayerCardRepository>();
             }
 
             Mapper.Initialize(config =>
             {
-                config.CreateMap<RoundInfoModel, PlayerGameViewModel>()
+                config.CreateMap<RoundPlayer, PlayerGameViewModel>()
                     .ForMember(
-                        playerStateViewModel => playerStateViewModel.Cards,
+                        playerGameViewModel => playerGameViewModel.PlayerName,
                         options => options.MapFrom(
-                            roundInfoModel => roundInfoModel.Cards
-                                .Select(card => CardHelper.GetCardCode(card.Suit, card.Rank))))
+                            roundPlayer => roundPlayer.Player.Name))
                     .ForMember(
-                        playerStateViewModel => playerStateViewModel.Score,
+                        playerGameViewModel => playerGameViewModel.State,
                         options => options.MapFrom(
-                            roundInfoModel => GameService.CalculateCardScore(roundInfoModel.Cards)));
-                config.CreateMap<GamesHistoryInfoModel, GameGamesHistoryViewModel>();
+                            roundPlayer => roundPlayer.State))
+                    .ForMember(
+                        playerGameViewModel => playerGameViewModel.Cards,
+                        options => options.MapFrom(
+                            roundPlayer => roundPlayer.Cards.Select(roundPlayerCard => CardHelper.GetCardCode(roundPlayerCard.Card.Suit, roundPlayerCard.Card.Rank))))
+                    .ForMember(
+                        playerGameViewModel => playerGameViewModel.Score,
+                        options => options.MapFrom(
+                            roundPlayer => GameService.CalculateCardScore(roundPlayer.Cards.Select(roundPlayerCard => roundPlayerCard.Card))));
+                config.CreateMap<Game, GameGamesHistoryViewModel>()
+                    .ForMember(
+                        gameGamesHistoryViewModel => gameGamesHistoryViewModel.CreationTime,
+                        options => options.MapFrom(
+                            game => game.CreationTime))
+                    .ForMember(
+                        gameGamesHistoryViewModel => gameGamesHistoryViewModel.PlayerCount,
+                        options => options.MapFrom(
+                            game => game.RoundPlayers.GroupBy(roundPlayer => roundPlayer.PlayerId).Count()))
+                    .ForMember(
+                        gameGamesHistoryViewModel => gameGamesHistoryViewModel.RoundCount,
+                        options => options.MapFrom(
+                            game => game.RoundPlayers.GroupBy(roundPlayer => roundPlayer.CreationTime).Count()));
             });
 
-            services.AddTransient<ILoginService, LoginService>();
+            services.AddTransient<IAuthenticationService, AuthenticationService>();
             services.AddTransient<IGameService, GameService>();
             services.AddTransient<IHistoryService, HistoryService>();
 
@@ -100,10 +118,9 @@ namespace BlackJack.Services.Configuration
                 };
             });
 
-            services.AddIdentity<User, IdentityRole>()
-                .AddEntityFrameworkStores<GameDbContext>();
-
-            services.AddAuthorization();
+            services.AddDbContext<UserDbContext>();
+            services.AddIdentity<IdentityUser, IdentityRole>()
+                .AddEntityFrameworkStores<UserDbContext>();
 
             return services;
         }
@@ -115,8 +132,9 @@ namespace BlackJack.Services.Configuration
                 {
                     options.LoginPath = "/Authentication/Login";
                 });
-            services.AddIdentity<User, IdentityRole>()
-                .AddEntityFrameworkStores<GameDbContext>();
+            services.AddDbContext<UserDbContext>();
+            services.AddIdentity<IdentityUser, IdentityRole>()
+                .AddEntityFrameworkStores<UserDbContext>();
 
             services.AddAuthorization();
 
