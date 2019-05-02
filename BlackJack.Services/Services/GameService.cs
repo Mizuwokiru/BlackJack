@@ -59,6 +59,7 @@ namespace BlackJack.Services.Services
                 throw new InvalidOperationException("Game is not found");
             }
             List<RoundPlayer> lastRoundInfo = _roundPlayerRepository.GetLastRoundInfo(game.Id).ToList();
+            _cardRepository.FillRoundPlayersCards(lastRoundInfo);
             List<PlayerGameViewModel> players = Mapper.Map<List<RoundPlayer>, List<PlayerGameViewModel>>(lastRoundInfo);
             if (players[0].State == RoundPlayerState.None)
             {
@@ -116,6 +117,7 @@ namespace BlackJack.Services.Services
                 throw new InvalidOperationException("Game is not found");
             }
             List<RoundPlayer> lastRoundInfo = _roundPlayerRepository.GetLastRoundInfo(game.Id).ToList();
+            _cardRepository.FillRoundPlayersCards(lastRoundInfo);
             if (lastRoundInfo[0].State != RoundPlayerState.None)
             {
                 throw new InvalidOperationException("Round already finished");

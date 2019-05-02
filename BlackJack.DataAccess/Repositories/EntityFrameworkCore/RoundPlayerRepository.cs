@@ -20,8 +20,6 @@ namespace BlackJack.DataAccess.Repositories.EntityFrameworkCore
                         .Where(tmpRoundPlayer => tmpRoundPlayer.GameId == gameId)
                         .Max(tmpRoundPlayer => tmpRoundPlayer.CreationTime))
                 .Include(roundPlayer => roundPlayer.Player)
-                .Include(roundPlayer => roundPlayer.Cards)
-                .ThenInclude(roundPlayerCard => roundPlayerCard.Card)
                 .OrderBy(roundPlayer => roundPlayer.Player.Type)
                 .ThenBy(roundPlayer => roundPlayer.Id);
             return roundPlayers;
@@ -35,8 +33,6 @@ namespace BlackJack.DataAccess.Repositories.EntityFrameworkCore
                         .Where(tmpRoundPlayer => tmpRoundPlayer.GameId == gameId)
                         .Max(tmpRoundPlayer => tmpRoundPlayer.CreationTime))
                 .Include(roundPlayer => roundPlayer.Player)
-                .Include(roundPlayer => roundPlayer.Cards)
-                .ThenInclude(roundPlayerCard => roundPlayerCard.Card)
                 .First();
             return roundPlayerInfo;
         }

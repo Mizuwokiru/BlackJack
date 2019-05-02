@@ -31,14 +31,14 @@ namespace BlackJack.Services.Configuration
             services.Configure<DbSettingsOptions>(configuration.GetSection("DbSettings"));
 
             bool isDapperEnabled = bool.Parse(configuration["IsDapperEnabled"]);
-            /*if (isDapperEnabled)
+            if (isDapperEnabled)
             {
                 services.AddTransient<ICardRepository, DataAccess.Repositories.Dapper.CardRepository>();
                 services.AddTransient<IPlayerRepository, DataAccess.Repositories.Dapper.PlayerRepository>();
                 services.AddTransient<IGameRepository, DataAccess.Repositories.Dapper.GameRepository>();
-                services.AddTransient<IRoundRepository, DataAccess.Repositories.Dapper.RoundRepository>();
-                services.AddTransient<IRoundCardRepository, DataAccess.Repositories.Dapper.RoundCardRepository>();
-            }*/
+                services.AddTransient<IRoundPlayerRepository, DataAccess.Repositories.Dapper.RoundPlayerRepository>();
+                services.AddTransient<IRoundPlayerCardRepository, DataAccess.Repositories.Dapper.RoundPlayerCardRepository>();
+            }
 
             if (!isDapperEnabled)
             {
