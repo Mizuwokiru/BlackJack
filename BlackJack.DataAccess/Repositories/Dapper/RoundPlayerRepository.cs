@@ -88,7 +88,7 @@ namespace BlackJack.DataAccess.Repositories.Dapper
                         roundPlayer.Player = player;
                         return roundPlayer;
                     },
-                    new { GameId = gameId, RoundSkipCount = roundSkipCount })
+                    new { GameId = gameId, RoundSkip = roundSkipCount })
                     .Distinct()
                     .ToList();
                 return roundInfo;

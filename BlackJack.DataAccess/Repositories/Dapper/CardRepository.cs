@@ -44,7 +44,7 @@ namespace BlackJack.DataAccess.Repositories.Dapper
         {
             string sqlQuery =
                 @"SELECT Cards.* FROM Cards
-                  INNER JOIN RoundPlayerCards ON CardId = RoundPlayerCards.CardId
+                  INNER JOIN RoundPlayerCards ON RoundPlayerCards.CardId = Cards.Id
                   WHERE RoundPlayerId IN (
 	                  SELECT Id FROM RoundPlayers
 	                  WHERE GameId = @GameId AND CreationTime = (

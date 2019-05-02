@@ -90,7 +90,11 @@ namespace BlackJack.DataAccess.Repositories.Dapper
             string sqlQuery =
                 @"SELECT * FROM Games
                   INNER JOIN RoundPlayers ON RoundPlayers.GameId = Games.Id
-                  WHERE PlayerId = @UserId";
+                  WHERE GameId IN (
+                      SELECT GameId FROM RoundPlayers
+                      WHERE PlayerId = @UserId
+                  )
+                  ORDER BY Games.CreationTime DESC";
             using (var connection = new SqlConnection(_connectionString))
             {
                 var gamesDictionary = new Dictionary<long, Game>();
