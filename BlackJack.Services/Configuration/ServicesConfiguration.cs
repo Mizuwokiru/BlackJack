@@ -26,7 +26,6 @@ namespace BlackJack.Services.Configuration
         public static IServiceCollection AddBlackJackServices(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddTransient<IHttpContextAccessor, HttpContextAccessor>();
-            services.AddDbContext<GameDbContext>();
             
             services.Configure<DbSettingsOptions>(configuration.GetSection("DbSettings"));
 
@@ -42,6 +41,7 @@ namespace BlackJack.Services.Configuration
 
             if (!isDapperEnabled)
             {
+                services.AddDbContext<GameDbContext>();
                 services.AddTransient<ICardRepository, DataAccess.Repositories.EntityFrameworkCore.CardRepository>();
                 services.AddTransient<IPlayerRepository, DataAccess.Repositories.EntityFrameworkCore.PlayerRepository>();
                 services.AddTransient<IGameRepository, DataAccess.Repositories.EntityFrameworkCore.GameRepository>();
