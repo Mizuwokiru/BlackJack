@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+
+import { RoundState } from '../../shared/enums/round-state.enum';
 import { GameViewModel } from '../../shared/models/game.view-model';
 import { GameService } from '../../shared/services/game.service';
-import { Router } from '@angular/router';
-import { RoundState } from '../../shared/enums/round-state.enum';
 
 @Component({
   selector: 'app-game',

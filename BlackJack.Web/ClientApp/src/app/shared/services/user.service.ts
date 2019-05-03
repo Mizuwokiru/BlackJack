@@ -1,9 +1,10 @@
-import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { UserViewModel } from '../models/user.view-model';
+
 import { UserNamesViewModel } from '../models/user-names.view-model';
+import { UserViewModel } from '../models/user.view-model';
 
 @Injectable({
   providedIn: 'root'

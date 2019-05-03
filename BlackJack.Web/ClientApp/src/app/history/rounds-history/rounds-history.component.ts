@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+
 import { RoundState } from '../../shared/enums/round-state.enum';
 import { RoundsHistoryViewModel } from '../../shared/models/rounds-history.view-model';
 import { HistoryService } from '../../shared/services/history.service';
-import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-rounds-history',

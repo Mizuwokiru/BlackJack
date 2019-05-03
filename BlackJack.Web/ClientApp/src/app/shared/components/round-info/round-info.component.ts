@@ -1,4 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
+
 import { GameViewModel } from '../../models/game.view-model';
 import { PlayerGameViewModel } from '../../models/player-game.view-model';
 

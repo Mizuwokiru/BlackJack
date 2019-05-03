@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { HistoryService } from '../../shared/services/history.service';
+
 import { GamesHistoryViewModel } from '../../shared/models/games-history.view-model';
+import { HistoryService } from '../../shared/services/history.service';
 
 @Component({
   selector: 'app-games-history',

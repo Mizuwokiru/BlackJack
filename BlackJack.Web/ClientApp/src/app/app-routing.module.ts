@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
+import { RouterModule, Routes } from '@angular/router';
+
 import { MenuComponent } from './menu/menu.component';
 import { AuthenticationGuard } from './shared/guards/authentication.guard';
 

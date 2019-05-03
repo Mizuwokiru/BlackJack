@@ -1,9 +1,9 @@
+import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-
 import { range } from 'rxjs';
+
 import { MenuViewModel } from '../shared/models/menu.view-model';
-import { HttpClient } from '@angular/common/http';
 import { NewGameViewModel } from '../shared/models/new-game.view-model';
 
 @Component({

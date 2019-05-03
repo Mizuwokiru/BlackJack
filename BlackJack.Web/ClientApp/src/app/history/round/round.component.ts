@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+
 import { GameViewModel } from '../../shared/models/game.view-model';
 import { HistoryService } from '../../shared/services/history.service';
-import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-round',

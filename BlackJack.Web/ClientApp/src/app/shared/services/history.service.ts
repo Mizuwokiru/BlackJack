@@ -1,9 +1,10 @@
-import { Injectable } from '@angular/core';
-import { GamesHistoryViewModel } from '../models/games-history.view-model';
 import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { RoundsHistoryViewModel } from '../models/rounds-history.view-model';
+
 import { GameViewModel } from '../models/game.view-model';
+import { GamesHistoryViewModel } from '../models/games-history.view-model';
+import { RoundsHistoryViewModel } from '../models/rounds-history.view-model';
 
 @Injectable({
   providedIn: 'root'

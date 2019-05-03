@@ -1,8 +1,9 @@
 import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
+import { RouterModule, Routes } from '@angular/router';
+
 import { GamesHistoryComponent } from './games-history/games-history.component';
-import { RoundsHistoryComponent } from './rounds-history/rounds-history.component';
 import { RoundComponent } from './round/round.component';
+import { RoundsHistoryComponent } from './rounds-history/rounds-history.component';
 
 const routes: Routes = [
   {
