@@ -5,34 +5,34 @@
 }
 
 @functions {
-    string GetStateColor(RoundState state)
+    string GetStateColor(RoundPlayerState state)
     {
-        if (state == RoundState.Won)
+        if (state == RoundPlayerState.Won)
         {
             return "success";
         }
-        if (state == RoundState.Lose)
+        if (state == RoundPlayerState.Lose)
         {
             return "danger";
         }
-        if (state == RoundState.Push)
+        if (state == RoundPlayerState.Draw)
         {
             return "primary";
         }
         return "light";
     }
 
-    string DisplayStateText(RoundState state)
+    string DisplayStateText(RoundPlayerState state)
     {
-        if (state == RoundState.Won)
+        if (state == RoundPlayerState.Won)
         {
             return "Won";
         }
-        if (state == RoundState.Lose)
+        if (state == RoundPlayerState.Lose)
         {
             return "Lose";
         }
-        if (state == RoundState.Push)
+        if (state == RoundPlayerState.Draw)
         {
             return "Push";
         }
@@ -41,7 +41,7 @@
 }
 
 <div class="my-4 w-75 mx-auto">
-    @foreach (var roundState in Model.RoundStates)
+    @foreach (var roundState in Model.PlayerStates)
     {
         <div class="card">
             <a asp-action="RoundInfo" asp-route-gameSkipCount="@ViewContext.RouteData.Values["gameSkipCount"].ToString()" asp-route-roundSkipCount="@roundIndex" class="btn btn-@GetStateColor(roundState) p-3">

@@ -1,7 +1,7 @@
 ﻿@model GameViewModel
 @{
     ViewData["Title"] = "Game";
-    bool isCanToStep = Model.Players[0].State == RoundState.None;
+    bool isCanToStep = Model.Players[0].State == RoundPlayerState.None;
 }
 
 <link href="~/css/Game/Game.css" rel="stylesheet" />

@@ -3,17 +3,17 @@
 @{ 
     string textColorClass = string.Empty;
     string borderColorClass = string.Empty;
-    if (Model.State == RoundState.Won)
+    if (Model.State == RoundPlayerState.Won)
     {
         textColorClass = "text-success";
         borderColorClass = "border-success";
     }
-    if (Model.State == RoundState.Lose)
+    if (Model.State == RoundPlayerState.Lose)
     {
         textColorClass = "text-danger";
         borderColorClass = "border-danger";
     }
-    if (Model.State == RoundState.Push)
+    if (Model.State == RoundPlayerState.Draw)
     {
         textColorClass = "text-primary";
         borderColorClass = "border-primary";

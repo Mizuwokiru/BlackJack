@@ -24,7 +24,7 @@ namespace BlackJack.WebMvc.Controllers
         [HttpGet]
         public IActionResult Game()
         {
-            GameViewModel game = _gameService.GetRoundInfo();
+            GameViewModel game = _gameService.GetLastRoundInfo();
             return View(game);
         }
 

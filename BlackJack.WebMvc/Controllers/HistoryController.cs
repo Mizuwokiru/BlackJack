@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using BlackJack.Services.Services.Interfaces;
+﻿using BlackJack.Services.Services.Interfaces;
 using BlackJack.ViewModels.Game;
 using BlackJack.ViewModels.History;
 using Microsoft.AspNetCore.Authorization;
@@ -20,8 +16,7 @@ namespace BlackJack.WebMvc.Controllers
         {
             _historyService = historyService;
         }
-
-        [Route("")]
+        
         [HttpGet]
         public IActionResult GamesHistory()
         {
